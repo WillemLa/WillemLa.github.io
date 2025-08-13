@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Student Readability Dashboard</title>
+    <link rel="stylesheet" href="index.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <div class="dashboard">
+      <h1>Simple dashboard prototypes</h1>
+      <h2>Student Readability Scores</h1>
+      <div style="margin-bottom: 1rem">
+        <label
+          ><input type="radio" name="mode" value="mirroring" checked />
+          Mirroring</label
+        >
+        <label
+          ><input type="radio" name="mode" value="alerting" /> Alerting</label
+        >
+        <label
+          ><input type="radio" name="mode" value="advising" /> Advising</label
+        >
+      </div>
+      <canvas id="readabilityChart" width="800" height="400"></canvas>
+      <div
+        id="feedbackBox"
+        class="feedback-box"
+        style="
+          display: none;
+          margin-top: 1rem;
+          padding: 1rem;
+          border: 1px solid #ccc;
+          border-radius: 8px;
+          background: #f9f9f9;
+        "
+      ></div>
+      <h2>Student testing/debugging behaviour</h2>
+      <canvas id="behaviorTimelineChart" width="800" height="500"></canvas>
+      <h2>Student time and functionality</h2>
+      <canvas id="timeAndFunctionalityChart" width="800" height="500"></canvas>
+
+    </div>
+    <script src="index.js"></script>
+  </body>
+</html>

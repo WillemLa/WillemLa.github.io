@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="nl">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Oefening</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="exercise-header">
+      <button
+        class="back-arrow"
+        onclick="window.location.href='../index.html'"
+        title="Terug"
+      >
+        &#8592;
+      </button>
+      <span id="exercise-header" class="student-name header-title"></span>
+    </header>
+    <main>
+      <h2 id="exercise-title"></h2>
+      <div class="controls">
+        <label
+          ><input type="checkbox" id="highlightFunctionCase" checked />
+          Inconsistente functienamen</label
+        >
+        <label
+          ><input type="checkbox" id="highlightVariableCase" checked />
+          Inconsistente variabelenamen</label
+        >
+        <label
+          ><input type="checkbox" id="highlightOneLetter" checked />
+          Niet-descriptieve naamgeving</label
+        >
+        <label
+          ><input type="checkbox" id="toggleAdvice" checked /> Advies</label
+        >
+      </div>
+      <div class="container">
+        <div class="editor-container">
+          <pre class="highlighted-code" id="highlightedCode"></pre>
+          <textarea
+            class="editor"
+            id="codeInput"
+            placeholder="Voer hier je code in..."
+            spellcheck="false"
+          ></textarea>
+        </div>
+        <div class="advice-block" id="adviceBlock">
+          <h3>Advies voor de leerkracht</h3>
+          <ul id="advice-list"></ul>
+        </div>
+      </div>
+    </main>
+    <script src="script.js"></script>
+  </body>
+</html>
