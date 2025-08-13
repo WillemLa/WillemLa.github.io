@@ -17,38 +17,38 @@ const alertDefs = {
   multipleIssues: {
     type: "issue",
     icon: "‼️",
-    text: "Meerdere opmerkingen",
+    text: "Meerdere Opmerkingen",
     title: "Meerdere opmerkingen",
   },
   naming: {
     type: "issue",
     icon: "⚠️",
-    text: "Naamgeving",
-    title: "Inconsistente naamgeving",
+    text: "Inconsistente Naamgeving",
+    title: "Inconsistente Functienamen",
   },
   oneletter: {
     type: "issue",
     icon: "⚠️",
-    text: "1-letter var",
-    title: "Variabelen van één letter",
+    text: "Niet-descriptieve Naamgeving",
+    title: "Niet-descriptieve Naamgeving",
   },
   mixed: {
     type: "issue",
     icon: "⚠️",
-    text: "Gemengde conventies",
-    title: "Gemengde conventies",
+    text: "Inconsistente Variabelenamen",
+    title: "Inconsistente Variabelenamen",
   },
   comments: {
     type: "issue",
     icon: "⚠️",
-    text: "Ontbrekend commentaar",
-    title: "Ontbrekend commentaar",
+    text: "Ontbrekend Commentaar",
+    title: "Ontbrekend Commentaar",
   },
   correct: {
     type: "correct",
     icon: "✅",
     text: "Correct",
-    title: "Geen opmerkingen",
+    title: "Geen Opmerkingen",
   },
 };
 
