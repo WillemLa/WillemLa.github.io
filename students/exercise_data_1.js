@@ -1,52 +1,94 @@
 window.exerciseData_1 = {
   1: {
     student: "Alice Morgan",
-    code: `int distance = 100;
-int speed = 80;
+    code: `
 
-void setup() {
-  Serial.begin(9600);
-  pinMode(9, OUTPUT);
+int periodeRechts;
+
+int wachtPeriode;
+
+void schrijfNaarScherm(int tekst) {
+  dwenguinoLCD.clear();
+  dwenguinoLCD.setCursor(0,0);
+  dwenguinoLCD.print(tekst);
 }
 
-void moveForward() {
-  // Move forward for a set distance
-  analogWrite(9, speed);
-  delay(distance);
-  analogWrite(9, 0);
-  Serial.println("Moved forward");
+DCMotor dcMotor1(MOTOR_1_0, MOTOR_1_1);
+
+DCMotor dcMotor2(MOTOR_2_0, MOTOR_2_1);
+
+// Deze functie beschrijven...
+void loopDoor(int wachtPeriode) {
+  schrijfNaarScherm(String("Vooruit!"));
+  dcMotor1.setSpeed(180);
+  dcMotor2.setSpeed(180);
+  delay(wachtPeriode);
 }
 
-void loop() {
-  moveForward();
-  delay(1000);
-}`,
+// Deze functie beschrijven...
+void naarRechts(int periodeRechts) {
+  schrijfNaarScherm(String("Rechts!"));
+  dcMotor1.setSpeed(55);
+  delay(periodeRechts);
+}
+
+void setup()
+{
+  initDwenguino();
+
+  wachtPeriode = 150;
+  periodeRechts = 500;
+}
+
+void loop()
+{
+    loopDoor(x);
+    naarRechts(TijdNaarRechts);
+
+}
+    `,
     advice: [
-      "Gebruik deze code om te bevestigen dat Alice de basisprincipes van duidelijke naamgeving en structuur beheerst. Geef haar positieve feedback en moedig haar aan deze aanpak vol te houden.",
+      "Geef Alice positieve feedback en moedig haar aan deze aanpak vol te houden.",
     ],
   },
   2: {
     student: "Alice Morgan",
-    code: `int speed = 150;
-int ledPin = 13;
+    code: `
+int lamp;
 
-void setup() {
-  pinMode(ledPin, OUTPUT);
+void knipperLampjes() {
+  while (lamp > 1) {
+    lamp = lamp / 2;
+    schrijfNaarScherm(String("Ledje ") + String(lamp));
+    delay(300);
+  }
+  while (lamp < 128) {
+    lamp = lamp * 2;
+    schrijfNaarScherm(String("Ledje ") + String(lamp));
+    delay(300);
+  }
 }
 
-void turnLeft() {
-  // Turn left by blinking LED
-  digitalWrite(ledPin, HIGH);
-  delay(speed);
-  digitalWrite(ledPin, LOW);
-  delay(speed);
+void schrijfNaarScherm(int tekst) {
+  dwenguinoLCD.clear();
+  dwenguinoLCD.setCursor(0,0);
+  dwenguinoLCD.print(tekst);
 }
 
-void loop() {
-  turnLeft();
+void setup()
+{
+  initDwenguino();
+
+  lamp = 1;
+}
+
+
+void loop()
+{
+    knipperLampjes();
 }`,
     advice: [
-      "Benadruk bij Alice dat haar consistente naamgeving en eenvoudige logica het lezen van code vergemakkelijken. Vraag haar hoe ze tot deze keuzes komt.",
+      "Benadruk bij Alice dat haar consistente naamgeving en eenvoudige logica het lezen van code vergemakkelijken.",
     ],
   },
   3: {

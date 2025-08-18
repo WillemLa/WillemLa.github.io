@@ -1,14 +1,7 @@
 window.exerciseData_3 = {
   1: {
     student: "Carla Diaz",
-    code: `#include <Wire.h>
-
-#include <Dwenguino.h>
-
-#include <LiquidCrystal.h>
-
-#include <DwenguinoMotor.h>
-
+    code: `
 int TijdNaarRechts;
 
 int x;
@@ -60,52 +53,41 @@ void loop()
   },
   2: {
     student: "Carla Diaz",
-    code: `#include <Wire.h>
+    code: `int x;
 
-#include <Dwenguino.h>
-
-#include <LiquidCrystal.h>
-
-int ledLamp;
-int LEDLAMP;
-
-// Deze functie beschrijven...
-void knipperLeds() {
-  while (ledLamp > 1) {
-    ledLamp = ledLamp / 2;
-    LEDS = ledLamp;
-    schrijfNaarScherm(String("Waarde led: ") + String(ledLamp));
+void KNIPPERLeds() {
+  while (x > 1) {
+    x = x / 2;
+    LEDS = x;
+    schrijfNaarScherm(String("Waarde led: ") + String(x));
     delay(300);
   }
-  while (ledLamp < 128) {
-    ledLamp = ledLamp * 2;
-    schrijfNaarScherm(String("Waarde led: ") + String(ledLamp));
-    LEDS = ledLamp;
+  while (x < 128) {
+    x = x * 2;
+    schrijfNaarScherm(String("Waarde led: ") + String(x));
     delay(300);
   }
 }
 
-// Deze functie beschrijven...
-void schrijfNaarScherm(int tekst) {
+void schrijfNaarScherm(int y) {
   dwenguinoLCD.clear();
   dwenguinoLCD.setCursor(0,0);
-  dwenguinoLCD.print(tekst);
+  dwenguinoLCD.print(y);
 }
 
 void setup()
 {
   initDwenguino();
 
-  ledLamp = 1;
+  x = 1;
 }
-
 
 void loop()
 {
     knipperLeds();
 }`,
     advice: [
-      "Vraag Carla om de verschillende naamgevingsconventies in haar code aan te wijzen. Bespreek samen waarom consistentie belangrijk is.",
+      "Vraag Carla om de verschillende naamgevingsconventies in haar code te wijzen en descriptievere namen te gebruiken. Bespreek samen waarom consistentie belangrijk is.",
     ],
   },
   3: {

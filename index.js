@@ -8,8 +8,8 @@ const students = [
 const exercises = [
   { id: 1, label: "Oefening 1" },
   { id: 2, label: "Oefening 2" },
-  { id: 3, label: "Oefening 3" },
-  { id: 4, label: "Oefening 4" },
+  //{ id: 3, label: "Oefening 3" },
+  //{ id: 4, label: "Oefening 4" },
 ];
 
 // Standard alert definitions
@@ -74,7 +74,7 @@ const results = {
   },
   3: {
     1: ["multipleIssues"],
-    2: ["mixed"], // error: mixed
+    2: ["multipleIssues"], // error: mixed
     3: ["correct"],
     4: ["correct"],
     5: ["correct"],
@@ -83,7 +83,7 @@ const results = {
   },
   4: {
     1: ["correct"],
-    2: ["correct"],
+    2: ["oneletter"],
     3: ["correct"],
     4: ["correct"],
     5: ["correct"],

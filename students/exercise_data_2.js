@@ -1,52 +1,93 @@
 window.exerciseData_2 = {
   1: {
     student: "Ben Thompson",
-    code: `int distance = 120;
-int speed = 90;
+    code: `
+int rechtsPeriode;
 
-void setup() {
-  Serial.begin(9600);
-  pinMode(8, OUTPUT);
+int wacht;
+
+void schrijfNaarLCD(int tekst) {
+  dwenguinoLCD.clear();
+  dwenguinoLCD.setCursor(0,0);
+  dwenguinoLCD.print(tekst);
 }
 
-void moveForward() {
-  // Move forward for a set distance
-  analogWrite(8, speed);
-  delay(distance);
-  analogWrite(8, 0);
-  Serial.println("Moved forward");
+DCMotor dcMotor1(MOTOR_1_0, MOTOR_1_1);
+
+DCMotor dcMotor2(MOTOR_2_0, MOTOR_2_1);
+
+void rechtdoor(int wacht) {
+  schrijfNaarScherm(String("vooruit"));
+  dcMotor1.setSpeed(180);
+  dcMotor2.setSpeed(180);
+  delay(wacht);
 }
 
-void loop() {
-  moveForward();
-  delay(1000);
-}`,
+void rechts(int rechtsPeriode) {
+  schrijfNaarScherm(String("rechts"));
+  dcMotor1.setSpeed(55);
+  delay(rechtsPeriode);
+}
+
+void setup()
+{
+  initDwenguino();
+
+  wacht = 150;
+  rechtsPeriode = 500;
+}
+
+void loop()
+{
+    loopDoor(x);
+    naarRechts(rechtsPeriode);
+
+}
+
+
+  `,
     advice: [
-      "Geef Ben complimenten voor zijn duidelijke namen en structuur. Vraag hem hoe hij deze aanpak heeft geleerd.",
+      "Geef Ben complimenten voor zijn duidelijke namen en structuur. Vraag hem waarom dit belangrijk is.",
     ],
   },
   2: {
     student: "Ben Thompson",
-    code: `int speed = 80;
-int ledPin = 7;
+    code: `
+int ledLamp;
 
-void setup() {
-  pinMode(ledPin, OUTPUT);
+void knipperLeds() {
+  while (ledLamp > 1) {
+    ledLamp = ledLamp / 2;
+    schrijfNaarScherm(String("Waarde led: ") + String(ledLamp));
+    delay(300);
+  }
+  while (ledLamp < 128) {
+    ledLamp = ledLamp * 2;
+    schrijfNaarScherm(String("Waarde led: ") + String(ledLamp));
+    delay(300);
+  }
 }
 
-void turnRight() {
-  // Turn right by blinking LED
-  digitalWrite(ledPin, HIGH);
-  delay(speed);
-  digitalWrite(ledPin, LOW);
-  delay(speed);
+void schrijfNaarScherm(int tekst) {
+  dwenguinoLCD.clear();
+  dwenguinoLCD.setCursor(0,0);
+  dwenguinoLCD.print(tekst);
 }
 
-void loop() {
-  turnRight();
+void setup()
+{
+  initDwenguino();
+
+  ledLamp = 1;
+}
+
+
+void loop()
+{
+    knipperLeds();
 }`,
     advice: [
-      "Vraag Ben om uit te leggen waarom zijn code goed leesbaar is. Laat hem voorbeelden geven van goede naamgeving.",
+      "Laat Ben weten dat hij consistent werkt en dat zijn code goed leesbaar is.",
     ],
   },
   3: {

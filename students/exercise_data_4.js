@@ -1,52 +1,90 @@
 window.exerciseData_4 = {
   1: {
     student: "Daniel Wu",
-    code: `int distance = 140;
-int speed = 85;
+    code: `
+    int draaiTijd;
 
-void setup() {
-  Serial.begin(9600);
-  pinMode(3, OUTPUT);
+int looptijd;
+
+void schrijfWeg(int tekst) {
+  dwenguinoLCD.clear();
+  dwenguinoLCD.setCursor(0,0);
+  dwenguinoLCD.print(tekst);
 }
 
-void moveForward() {
-  // Move forward for a set distance
-  analogWrite(3, speed);
-  delay(distance);
-  analogWrite(3, 0);
-  Serial.println("Moved forward");
+DCMotor dcMotor1(MOTOR_1_0, MOTOR_1_1);
+
+DCMotor dcMotor2(MOTOR_2_0, MOTOR_2_1);
+
+void rechtdoor(int looptijd) {
+  schrijfWeg(String("vooruit"));
+  dcMotor1.setSpeed(180);
+  dcMotor2.setSpeed(180);
+  delay(looptijd);
 }
 
-void loop() {
-  moveForward();
-  delay(1000);
-}`,
-    advice: [
-      "Vraag Daniel waarom zijn code goed leesbaar is. Laat hem benoemen wat hij belangrijk vindt aan duidelijke namen en structuur.",
-    ],
+void draai(int draaiTijd) {
+  schrijfWeg(String("rechts"));
+  dcMotor1.setSpeed(55);
+  delay(draaiTijd);
+}
+
+void setup()
+{
+  initDwenguino();
+
+  looptijd = 150;
+  draaiTijd = 500;
+}
+
+void loop()
+{
+    loop(x);
+    draai(draaiTijd);
+
+}
+
+    `,
+    advice: ["Laat Daniel weten dat zijn code goed leesbaar is."],
   },
   2: {
     student: "Daniel Wu",
-    code: `int speed = 70;
-int ledPin = 5;
+    code: `
+int led;
 
-void setup() {
-  pinMode(ledPin, OUTPUT);
+void knipper() {
+  while (led > 1) {
+    led = led / 2;
+    schrijf(String(led));
+    delay(300);
+  }
+  while (led < 128) {
+    led = led * 2;
+    schrijf(String(led));
+    delay(300);
+  }
 }
 
-void turnLeft() {
-  // Turn left by blinking LED
-  digitalWrite(ledPin, HIGH);
-  delay(speed);
-  digitalWrite(ledPin, LOW);
-  delay(speed);
+// Deze functie beschrijven...
+void schrijf(int x) {
+  dwenguinoLCD.clear();
+  dwenguinoLCD.setCursor(0,0);
+  dwenguinoLCD.print(x);
 }
 
-void loop() {
-  turnLeft();
+void setup()
+{
+  initDwenguino();
+  led = 1;
+}
+
+
+void loop()
+{
+    knipper();
 }`,
     advice: [
-      "Vraag Daniel om uit te leggen waarom zijn code goed leesbaar is.",
+      "Leg Ben uit waarom meer descriptieve, betekenisvolle namen code leesbaarder en duidelijker maken in vergelijking met namen zoals 'x'.",
     ],
   },
   3: {
