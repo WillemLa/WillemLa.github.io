@@ -57,7 +57,7 @@ const results = {
   1: {
     1: ["correct"],
     2: ["correct"],
-    3: ["naming"], // error: naming
+    3: ["oneletter"], // error: naming
     4: ["correct"],
     5: ["correct"],
     6: ["correct"],

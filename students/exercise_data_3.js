@@ -67,6 +67,7 @@ void loop()
 #include <LiquidCrystal.h>
 
 int ledLamp;
+int LEDLAMP;
 
 // Deze functie beschrijven...
 void knipperLeds() {
