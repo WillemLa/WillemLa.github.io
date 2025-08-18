@@ -142,9 +142,8 @@ header {
 
 .dashboard-table th:not(:first-child),
 .dashboard-table td:not(:first-child) {
-  width: 120px;
-  min-width: 120px;
-  max-width: 120px;
+  width: 20vw;
+  height: 9vh;
   text-align: center;
 }
 
@@ -175,6 +174,7 @@ header {
   min-width: 7em;
   box-sizing: border-box;
   background: var(--exercise-cell-bg) !important;
+  height: 10em;
 }
 
 .exercise-cell:hover {
