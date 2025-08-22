@@ -50,6 +50,7 @@ void loop()
     advice: [
       "Geef Alice positieve feedback en moedig haar aan deze aanpak vol te houden.",
     ],
+    metrics: { elapsedSeconds: 9 * 60, wroteTests: true, usedDebugger: false },
   },
   2: {
     student: "Alice Morgan",
@@ -90,6 +91,7 @@ void loop()
     advice: [
       "Benadruk bij Alice dat haar consistente naamgeving en eenvoudige logica het lezen van code vergemakkelijken.",
     ],
+    metrics: { elapsedSeconds: 12 * 60, wroteTests: false, usedDebugger: true },
   },
   3: {
     student: "Alice Morgan",
@@ -114,6 +116,7 @@ void loop() {
     advice: [
       "Vraag Alice waarom ze voor korte namen als 'd', 's' en 'mf' heeft gekozen. Bespreek samen hoe meer beschrijvende namen de code begrijpelijker maken.",
     ],
+    metrics: { elapsedSeconds: 6 * 60, wroteTests: false, usedDebugger: false },
   },
   4: {
     student: "Alice Morgan",
@@ -138,6 +141,7 @@ void loop() {
     advice: [
       "Gebruik deze code om Alice te laten uitleggen waarom haar naamgeving en structuur goed werken. Laat haar reflecteren op haar eigen keuzes.",
     ],
+    metrics: { elapsedSeconds: 10 * 60, wroteTests: true, usedDebugger: false },
   },
   5: {
     student: "Alice Morgan",
@@ -162,6 +166,7 @@ void loop() {
     advice: [
       "Vraag Alice om haar keuzes in naamgeving en structuur toe te lichten. Laat haar voorbeelden geven van hoe dit het werken aan code makkelijker maakt.",
     ],
+    metrics: { elapsedSeconds: 7 * 60, wroteTests: false, usedDebugger: true },
   },
   6: {
     student: "Alice Morgan",
@@ -186,6 +191,7 @@ void loop() {
     advice: [
       "Vraag Alice waarom ze voor deze korte, duidelijke functie heeft gekozen. Bespreek samen het belang van onderhoudbare code.",
     ],
+    metrics: { elapsedSeconds: 8 * 60, wroteTests: true, usedDebugger: true },
   },
   7: {
     student: "Alice Morgan",
@@ -209,5 +215,6 @@ void loop() {
     advice: [
       "Vraag Alice waarom er geen commentaar in haar code staat. Bespreek samen wanneer en waarom commentaar belangrijk kan zijn.",
     ],
+    metrics: { elapsedSeconds: 5 * 60, wroteTests: false, usedDebugger: false },
   },
 };

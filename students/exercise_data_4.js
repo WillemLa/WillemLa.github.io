@@ -46,6 +46,7 @@ void loop()
 
     `,
     advice: ["Laat Daniel weten dat zijn code goed leesbaar is."],
+    metrics: { elapsedSeconds: 3 * 60, wroteTests: false, usedDebugger: false },
   },
   2: {
     student: "Daniel Wu",
@@ -86,6 +87,7 @@ void loop()
     advice: [
       "Leg Ben uit waarom meer descriptieve, betekenisvolle namen code leesbaarder en duidelijker maken in vergelijking met namen zoals 'x'.",
     ],
+    metrics: { elapsedSeconds: 10 * 60, wroteTests: true, usedDebugger: false },
   },
   3: {
     student: "Daniel Wu",
@@ -110,6 +112,7 @@ void loop() {
     advice: [
       "Gebruik deze code om Daniel te laten uitleggen waarom zijn naamgeving en structuur goed werken.",
     ],
+    metrics: { elapsedSeconds: 9 * 60, wroteTests: false, usedDebugger: true },
   },
   4: {
     student: "Daniel Wu",
@@ -134,6 +137,7 @@ void loop() {
     advice: [
       "Vraag Daniel waarom deze code prettig leesbaar is. Laat hem reflecteren op zijn eigen keuzes.",
     ],
+    metrics: { elapsedSeconds: 7 * 60, wroteTests: true, usedDebugger: false },
   },
   5: {
     student: "Daniel Wu",
@@ -157,6 +161,7 @@ void loop() {
     advice: [
       "Vraag Daniel om voorbeelden te geven van hoe goede naamgeving en structuur hem helpen bij het programmeren.",
     ],
+    metrics: { elapsedSeconds: 8 * 60, wroteTests: false, usedDebugger: true },
   },
   6: {
     student: "Daniel Wu",
@@ -181,6 +186,7 @@ void loop() {
     advice: [
       "Vraag Daniel waarom hij voor korte namen als 'x', 'y' en 'f' heeft gekozen. Bespreek samen alternatieven en het belang van betekenisvolle namen.",
     ],
+    metrics: { elapsedSeconds: 6 * 60, wroteTests: false, usedDebugger: false },
   },
   7: {
     student: "Daniel Wu",
@@ -203,5 +209,6 @@ void loop() {
   delay(1000);
 }`,
     advice: ["Vraag Daniel waarom zijn code goed leesbaar is."],
+    metrics: { elapsedSeconds: 5 * 60, wroteTests: false, usedDebugger: false },
   },
 };

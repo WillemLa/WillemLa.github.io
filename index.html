@@ -7,13 +7,41 @@
   </head>
   <body>
     <header>
-      <span class="header-title">Klasoverzicht - Leesbaarheid</span>
+      <span class="header-title"
+        >Klasoverzicht - <span id="criterion-label">Leesbaarheid</span></span
+      >
+      <select
+        id="criterion-select"
+        class="criterion-select"
+        title="Selecteer criterium"
+      >
+        <option value="readability" selected>Leesbaarheid</option>
+        <option value="concepts">Codeconcepten</option>
+        <option value="testDebug">Testen & Debuggen</option>
+        <option value="time">Tijdsbesteding</option>
+      </select>
+      <select
+        id="time-grouping"
+        class="criterion-select"
+        title="Groepering tijd"
+        style="display: none"
+      >
+        <option value="byStudent" selected>Groepeer per student</option>
+        <option value="byExercise">Groepeer per oefening</option>
+      </select>
     </header>
 
     <main class="dashboard-table">
       <table id="dashboard-table"></table>
+      <div id="graph-view" class="graph-view" style="display: none"></div>
     </main>
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-matrix@2.0.1/dist/chartjs-chart-matrix.umd.min.js"></script>
+    <script src="students/exercise_data_1.js"></script>
+    <script src="students/exercise_data_2.js"></script>
+    <script src="students/exercise_data_3.js"></script>
+    <script src="students/exercise_data_4.js"></script>
     <script src="index.js"></script>
   </body>
 </html>

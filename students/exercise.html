@@ -18,7 +18,7 @@
     </header>
     <main>
       <h2 id="exercise-title"></h2>
-      <div class="controls">
+      <div class="controls" id="controls-readability">
         <label
           ><input type="checkbox" id="highlightFunctionCase" checked />
           Inconsistente functienamen</label
@@ -34,6 +34,43 @@
         <label
           ><input type="checkbox" id="toggleAdvice" checked /> Advies</label
         >
+      </div>
+      <div class="controls" id="controls-concepts">
+        <label><input type="checkbox" class="concept" value="for" /> for</label>
+        <label
+          ><input type="checkbox" class="concept" value="while" /> while</label
+        >
+        <label
+          ><input type="checkbox" class="concept" value="do" /> do-while</label
+        >
+        <label><input type="checkbox" class="concept" value="if" /> if</label>
+        <label
+          ><input type="checkbox" class="concept" value="else" /> else</label
+        >
+        <label
+          ><input type="checkbox" class="concept" value="switch" />
+          switch</label
+        >
+        <label
+          ><input type="checkbox" class="concept" value="function" />
+          functie</label
+        >
+        <label
+          ><input type="checkbox" class="concept" value="return" />
+          return</label
+        >
+      </div>
+      <div class="controls" id="controls-graphs">
+        <div
+          id="graph-container"
+          style="
+            width: 100%;
+            height: 220px;
+            border: 1.5px solid var(--advice-border);
+            border-radius: 0.4em;
+            background: var(--advice-bg);
+          "
+        ></div>
       </div>
       <div class="container">
         <div class="editor-container">

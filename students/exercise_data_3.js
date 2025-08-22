@@ -50,6 +50,7 @@ void loop()
     advice: [
       "Wijs de verschillende naamconveties aan in de code van Carla. Duid haar bovendien op korte namen zoals 'x' die ze heeft gekozen. Bespreek samen waarom consistentie en beschrijvende namen belangrijk zijn en code leesbaarder maken.",
     ],
+    metrics: { elapsedSeconds: 15 * 60, wroteTests: false, usedDebugger: true },
   },
   2: {
     student: "Carla Diaz",
@@ -89,6 +90,7 @@ void loop()
     advice: [
       "Vraag Carla om de verschillende naamgevingsconventies in haar code te wijzen en descriptievere namen te gebruiken. Bespreek samen waarom consistentie belangrijk is.",
     ],
+    metrics: { elapsedSeconds: 4 * 60, wroteTests: false, usedDebugger: false },
   },
   3: {
     student: "Carla Diaz",
@@ -113,6 +115,7 @@ void loop() {
     advice: [
       "Gebruik deze code om Carla te laten uitleggen waarom haar naamgeving en structuur goed werken.",
     ],
+    metrics: { elapsedSeconds: 9 * 60, wroteTests: true, usedDebugger: false },
   },
   4: {
     student: "Carla Diaz",
@@ -137,6 +140,7 @@ void loop() {
     advice: [
       "Vraag Carla waarom deze code prettig leesbaar is. Laat haar reflecteren op haar eigen keuzes.",
     ],
+    metrics: { elapsedSeconds: 6 * 60, wroteTests: false, usedDebugger: false },
   },
   5: {
     student: "Carla Diaz",
@@ -161,6 +165,7 @@ void loop() {
     advice: [
       "Vraag Carla om voorbeelden te geven van hoe goede naamgeving en structuur haar helpen bij het programmeren.",
     ],
+    metrics: { elapsedSeconds: 10 * 60, wroteTests: false, usedDebugger: true },
   },
   6: {
     student: "Carla Diaz",
@@ -184,6 +189,7 @@ void loop() {
     advice: [
       "Gebruik deze code om met Carla te bespreken hoe korte, duidelijke functies bijdragen aan onderhoudbaarheid.",
     ],
+    metrics: { elapsedSeconds: 8 * 60, wroteTests: true, usedDebugger: true },
   },
   7: {
     student: "Carla Diaz",
@@ -206,5 +212,6 @@ void loop() {
   delay(1000);
 }`,
     advice: ["Vraag Carla waarom haar code goed leesbaar is."],
+    metrics: { elapsedSeconds: 5 * 60, wroteTests: false, usedDebugger: false },
   },
 };

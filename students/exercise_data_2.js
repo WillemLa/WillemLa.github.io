@@ -49,6 +49,7 @@ void loop()
     advice: [
       "Geef Ben complimenten voor zijn duidelijke namen en structuur. Vraag hem waarom dit belangrijk is.",
     ],
+    metrics: { elapsedSeconds: 7 * 60, wroteTests: true, usedDebugger: true },
   },
   2: {
     student: "Ben Thompson",
@@ -89,6 +90,7 @@ void loop()
     advice: [
       "Laat Ben weten dat hij consistent werkt en dat zijn code goed leesbaar is.",
     ],
+    metrics: { elapsedSeconds: 0, wroteTests: false, usedDebugger: false },
   },
   3: {
     student: "Ben Thompson",
@@ -113,6 +115,7 @@ void loop() {
     advice: [
       "Gebruik deze code om Ben te laten zien hoe goede naamgeving en structuur bijdragen aan samenwerking in een team.",
     ],
+    metrics: { elapsedSeconds: 9 * 60, wroteTests: false, usedDebugger: true },
   },
   4: {
     student: "Ben Thompson",
@@ -137,6 +140,7 @@ void loop() {
     advice: [
       "Vraag Ben waarom hij voor korte namen als 'x', 'y' en 'f' heeft gekozen. Bespreek samen alternatieven en het belang van betekenisvolle namen.",
     ],
+    metrics: { elapsedSeconds: 6 * 60, wroteTests: false, usedDebugger: false },
   },
   5: {
     student: "Ben Thompson",
@@ -161,6 +165,7 @@ void loop() {
     advice: [
       "Vraag Ben waarom deze code prettig leesbaar is. Laat hem reflecteren op zijn eigen keuzes.",
     ],
+    metrics: { elapsedSeconds: 11 * 60, wroteTests: true, usedDebugger: false },
   },
   6: {
     student: "Ben Thompson",
@@ -184,6 +189,7 @@ void loop() {
     advice: [
       "Gebruik deze code om met Ben te bespreken hoe korte, duidelijke functies bijdragen aan onderhoudbaarheid.",
     ],
+    metrics: { elapsedSeconds: 8 * 60, wroteTests: false, usedDebugger: true },
   },
   7: {
     student: "Ben Thompson",
@@ -208,5 +214,6 @@ void loop() {
     advice: [
       "Vraag Ben om voorbeelden te geven van hoe goede naamgeving en structuur hem helpen bij het programmeren.",
     ],
+    metrics: { elapsedSeconds: 5 * 60, wroteTests: false, usedDebugger: false },
   },
 };

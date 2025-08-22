@@ -118,20 +118,21 @@ document.addEventListener("DOMContentLoaded", function () {
     const params = new URLSearchParams(window.location.search);
     let studentId = params.get("student");
     let exerciseNum = params.get("exercise");
+    let criterion = params.get("criterion");
     if (studentId && exerciseNum) {
-      return { studentId, exerciseNum };
+      return { studentId, exerciseNum, criterion };
     }
     // Fallback: parse from path
     const match = window.location.pathname.match(
       /student_(\d+)\/exercise_(\d+)\.html$/
     );
     if (match) {
-      return { studentId: match[1], exerciseNum: match[2] };
+      return { studentId: match[1], exerciseNum: match[2], criterion: null };
     }
-    return { studentId: null, exerciseNum: null };
+    return { studentId: null, exerciseNum: null, criterion: null };
   }
 
-  const { studentId, exerciseNum } = getStudentAndExercise();
+  const { studentId, exerciseNum, criterion } = getStudentAndExercise();
   if (studentId && exerciseNum) {
     console.log("About to load:", `exercise_data_${studentId}.js`);
     const script = document.createElement("script");
@@ -169,6 +170,75 @@ document.addEventListener("DOMContentLoaded", function () {
           if (typeof data.checkboxes.toggleAdvice !== "undefined")
             document.getElementById("toggleAdvice").checked =
               data.checkboxes.toggleAdvice;
+        }
+
+        // Show relevant control groups based on selected criterion
+        const ctrReadability = document.getElementById("controls-readability");
+        const ctrConcepts = document.getElementById("controls-concepts");
+        const ctrGraphs = document.getElementById("controls-graphs");
+        const selected = criterion || "readability";
+        if (ctrReadability)
+          ctrReadability.style.display =
+            selected === "readability" ? "flex" : "none";
+        if (ctrConcepts)
+          ctrConcepts.style.display = selected === "concepts" ? "flex" : "none";
+        if (ctrGraphs)
+          ctrGraphs.style.display =
+            selected === "testDebug" || selected === "time" ? "flex" : "none";
+
+        // --- Concepts persistence ---
+        function conceptsKey(studentId, exerciseNum) {
+          return `exerciseConcepts:${studentId}:${exerciseNum}`;
+        }
+        function loadConcepts(studentId, exerciseNum) {
+          try {
+            return (
+              JSON.parse(
+                localStorage.getItem(conceptsKey(studentId, exerciseNum))
+              ) || []
+            );
+          } catch {
+            return [];
+          }
+        }
+        function saveConcepts(studentId, exerciseNum, list) {
+          localStorage.setItem(
+            conceptsKey(studentId, exerciseNum),
+            JSON.stringify(list)
+          );
+        }
+
+        const conceptBoxes = Array.from(
+          document.querySelectorAll("input.concept")
+        );
+        let concepts = loadConcepts(studentId, exerciseNum);
+        // seed from data if provided
+        if (
+          (!concepts || concepts.length === 0) &&
+          Array.isArray(data.concepts)
+        ) {
+          concepts = data.concepts;
+        }
+        conceptBoxes.forEach((cb) => {
+          cb.checked = concepts.includes(cb.value);
+          cb.addEventListener("change", () => {
+            const updated = Array.from(
+              document.querySelectorAll("input.concept:checked")
+            ).map((el) => el.value);
+            saveConcepts(studentId, exerciseNum, updated);
+          });
+        });
+
+        // --- Graph placeholder (for testing/debugging/time) ---
+        const graphContainer = document.getElementById("graph-container");
+        if (
+          graphContainer &&
+          (selected === "testDebug" || selected === "time")
+        ) {
+          graphContainer.innerHTML =
+            "<div style='padding:0.8em;color:#7c5e00'>Grafieken komen hier (Testen & Debuggen / Tijdsbesteding)</div>";
+        } else if (graphContainer) {
+          graphContainer.innerHTML = "";
         }
       } else {
         document.getElementById("exercise-header").textContent =
