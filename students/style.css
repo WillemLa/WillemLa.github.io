@@ -99,12 +99,50 @@ p {
   top: 0.05em;
   width: 0.35em;
   height: 0.7em;
-  border: solid var(--primary-yellow);
+  border: solid;
   border-width: 0 0.18em 0.18em 0;
   transform: rotate(45deg);
 }
-.controls input[type="checkbox"]:focus {
-  box-shadow: 0 0 0 2px #c6f5a6;
+
+#highlightFunctionCase:checked::after,
+#highlightLoops:checked::after {
+  border-color: var(--primary-yellow);
+}
+#highlightVariableCase:checked::after,
+#highlightFunctions:checked::after {
+  color: #1b8bcb;
+}
+#highlightOneLetter:checked::after,
+#highlightConditionals:checked::after {
+  color: #d32f2f;
+}
+#toggleAdvice:checked::after {
+  border-color: var(--primary-yellow);
+}
+
+.highlight-func {
+  color: #5a4400;
+  background: #ffeeba;
+}
+.highlight-var {
+  color: #1b8bcb;
+  background: #e3f7ff;
+}
+.highlight-one {
+  color: #d32f2f;
+  background: #ffe6e6;
+}
+.highlight-tag-loop {
+  color: #5a4400;
+  background: #ffeeba;
+}
+.highlight-tag-function {
+  background: #e3f7ff;
+  color: #1b8bcb;
+}
+.highlight-tag-conditional {
+  background: #ffe6e6;
+  color: #d32f2f;
 }
 
 .container {
@@ -225,19 +263,6 @@ p {
 }
 .back-arrow:focus {
   outline: 4px solid #ffe082;
-}
-
-.highlight-func {
-  color: #5a4400;
-  background: #ffeeba;
-}
-.highlight-var {
-  background: #e3f7ff;
-  color: #1b8bcb;
-}
-.highlight-one {
-  background: #ffe6e6;
-  color: #d32f2f;
 }
 
 .advice-block {

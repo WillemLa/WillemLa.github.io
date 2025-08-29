@@ -35,31 +35,22 @@
           ><input type="checkbox" id="toggleAdvice" checked /> Advies</label
         >
       </div>
+      <!-- Only the relevant checkboxes for code concepts -->
       <div class="controls" id="controls-concepts">
-        <label><input type="checkbox" class="concept" value="for" /> for</label>
-        <label
-          ><input type="checkbox" class="concept" value="while" /> while</label
-        >
-        <label
-          ><input type="checkbox" class="concept" value="do" /> do-while</label
-        >
-        <label><input type="checkbox" class="concept" value="if" /> if</label>
-        <label
-          ><input type="checkbox" class="concept" value="else" /> else</label
-        >
-        <label
-          ><input type="checkbox" class="concept" value="switch" />
-          switch</label
-        >
-        <label
-          ><input type="checkbox" class="concept" value="function" />
-          functie</label
-        >
-        <label
-          ><input type="checkbox" class="concept" value="return" />
-          return</label
-        >
+        <label>
+          <input type="checkbox" id="highlightLoops" checked />
+          Loops
+        </label>
+        <label>
+          <input type="checkbox" id="highlightFunctions" checked />
+          Functions
+        </label>
+        <label>
+          <input type="checkbox" id="highlightConditionals" checked />
+          Conditionals
+        </label>
       </div>
+
       <div class="controls" id="controls-graphs">
         <div
           id="graph-container"

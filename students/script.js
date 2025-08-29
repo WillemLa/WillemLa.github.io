@@ -3,6 +3,27 @@ const highlightedCode = document.getElementById("highlightedCode");
 const adviceBlock = document.getElementById("adviceBlock");
 const toggleAdvice = document.getElementById("toggleAdvice");
 
+// Parse student and exercise from query params or URL
+function getStudentAndExercise() {
+  const params = new URLSearchParams(window.location.search);
+  let studentId = params.get("student");
+  let exerciseNum = params.get("exercise");
+  let criterion = params.get("criterion");
+  if (studentId && exerciseNum) {
+    return { studentId, exerciseNum, criterion };
+  }
+  // Fallback: parse from path
+  const match = window.location.pathname.match(
+    /student_(\d+)\/exercise_(\d+)\.html$/
+  );
+  if (match) {
+    return { studentId: match[1], exerciseNum: match[2], criterion: null };
+  }
+  return { studentId: null, exerciseNum: null, criterion: null };
+}
+
+const { studentId, exerciseNum, criterion } = getStudentAndExercise();
+
 function escapeHtml(text) {
   return text
     .replace(/&/g, "&amp;")
@@ -20,9 +41,109 @@ function isCamelCase(name) {
   ); // not PascalCase
 }
 
-function highlightCode(code) {
-  let highlighted = escapeHtml(code);
+let currentExerciseType = "concepts"; // or "readability"
 
+function showExercise(type) {
+  currentExerciseType = type;
+  // Only show the relevant checkboxes
+  document.getElementById("conceptCheckboxes").style.display =
+    type === "concepts" ? "" : "none";
+  document.getElementById("readabilityCheckboxes").style.display =
+    type === "readability" ? "" : "none";
+  // Show the correct advice
+  updateAdvice();
+  // Update highlights
+  syncHighlighting();
+}
+
+function updateAdvice() {
+  if (currentExerciseType === "concepts") {
+    adviceBlock.innerText =
+      "Tip: Use the checkboxes above to highlight code concepts such as loops, functions, and conditionals.";
+  } else {
+    adviceBlock.innerText =
+      "Tip: Use the checkboxes above to highlight readability issues such as non-camelCase or one-letter variables.";
+  }
+}
+
+function syncHighlighting() {
+  const code = codeInput.value;
+  highlightedCode.innerHTML = highlightCode(code, currentExerciseType);
+}
+
+function highlightCode(code, type) {
+  let tagClassMap = {};
+  if (type === "concepts") {
+    tagClassMap = {
+      loop: document.getElementById("highlightLoops")?.checked
+        ? "highlight-tag-loop"
+        : "",
+      function: document.getElementById("highlightFunctions")?.checked
+        ? "highlight-tag-function"
+        : "",
+      conditional: document.getElementById("highlightConditionals")?.checked
+        ? "highlight-tag-conditional"
+        : "",
+    };
+  } else {
+    tagClassMap = {}; // or skip tag-based highlighting
+  }
+
+  let highlighted = code;
+
+  // Step 1: Apply tag-based highlighting
+  // Readability code
+  if (criterion == "concepts") {
+    highlighted = applyTagHighlighting(code, tagClassMap);
+  }
+
+  //Concept code
+  // Step 2: Apply regex-based highlights
+  if (criterion == "readability") {
+    highlighted = applyRegexHighlights(highlighted);
+  }
+  return highlighted;
+}
+
+function applyTagHighlighting(code, tagClassMap) {
+  const lines = code.split("\n");
+  let activeTag = null;
+  let taggedLines = [];
+
+  for (let i = 0; i < lines.length; i++) {
+    // Detect start of tag region
+    const startTagMatch = lines[i].match(/\/\/\s*<tag:([a-zA-Z]+)>/i);
+    if (startTagMatch) {
+      const tag = startTagMatch[1].toLowerCase();
+      if (tagClassMap[tag] !== undefined) {
+        activeTag = tag;
+      }
+      continue; // Skip tag marker line
+    }
+    // Detect end of tag region
+    const endTagMatch = lines[i].match(/\/\/\s*<\/tag:([a-zA-Z]+)>/i);
+    if (endTagMatch) {
+      activeTag = null;
+      continue; // Skip tag marker line
+    }
+    // Highlight if inside a tag region and highlight is enabled
+    if (
+      activeTag &&
+      tagClassMap[activeTag] &&
+      tagClassMap[activeTag] !== "" &&
+      lines[i].trim() !== ""
+    ) {
+      taggedLines.push(
+        `<span class="${tagClassMap[activeTag]}">${escapeHtml(lines[i])}</span>`
+      );
+    } else {
+      taggedLines.push(escapeHtml(lines[i]));
+    }
+  }
+  return taggedLines.join("\n");
+}
+
+function applyRegexHighlights(highlighted) {
   const functionRegex =
     /\b(?:int|float|void|char|double)\s+(\w+)\s*\(([^)]*)\)/g;
   const variableRegex = /\b(?:int|float|char|double)\s+(\w+)\s*(?==|;)/g;
@@ -93,10 +214,20 @@ function highlightCode(code) {
   return highlighted;
 }
 
-function syncHighlighting() {
-  const code = codeInput.value;
-  highlightedCode.innerHTML = highlightCode(code);
-}
+codeInput.addEventListener("input", syncHighlighting);
+[
+  "highlightLoops",
+  "highlightFunctions",
+  "highlightConditionals",
+  "highlightVariableCase",
+  "highlightOneLetter",
+].forEach((id) => {
+  const el = document.getElementById(id);
+  if (el) el.addEventListener("change", syncHighlighting);
+});
+
+// Initial highlight
+syncHighlighting();
 
 // Sync scroll positions
 codeInput.addEventListener("scroll", () => {
@@ -113,42 +244,59 @@ document.addEventListener("DOMContentLoaded", function () {
   )
     return;
 
-  // Parse student and exercise from query params or URL
-  function getStudentAndExercise() {
-    const params = new URLSearchParams(window.location.search);
-    let studentId = params.get("student");
-    let exerciseNum = params.get("exercise");
-    let criterion = params.get("criterion");
-    if (studentId && exerciseNum) {
-      return { studentId, exerciseNum, criterion };
-    }
-    // Fallback: parse from path
-    const match = window.location.pathname.match(
-      /student_(\d+)\/exercise_(\d+)\.html$/
-    );
-    if (match) {
-      return { studentId: match[1], exerciseNum: match[2], criterion: null };
-    }
-    return { studentId: null, exerciseNum: null, criterion: null };
+  // Ensure back button returns to index with the correct criterion
+  const backBtn = document.querySelector(".back-arrow");
+  if (backBtn) {
+    backBtn.onclick = function () {
+      try {
+        // Prefer browser history when available
+        if (window.history.length > 1) {
+          window.history.back();
+          return;
+        }
+      } catch {}
+      const crit = criterion || "readability";
+      window.location.href = `../index.html?criterion=${encodeURIComponent(
+        crit
+      )}`;
+    };
   }
 
-  const { studentId, exerciseNum, criterion } = getStudentAndExercise();
   if (studentId && exerciseNum) {
-    console.log("About to load:", `exercise_data_${studentId}.js`);
+    // Try new per-exercise, criterion-aware data structure first
+    const crit = criterion || "readability";
+    const newPath = `data/${studentId}/${crit}/exercise_${exerciseNum}.js`;
     const script = document.createElement("script");
-    script.src = `exercise_data_${studentId}.js`;
-    script.onload = function () {
-      console.log("Loaded:", script.src);
-      const dataObj = window[`exerciseData_${studentId}`];
-      const data = dataObj && dataObj[exerciseNum];
+    let usedFallback = false;
+
+    function handleLoaded() {
+      // Prefer new global payload if present
+      let data = window.exerciseData || null;
+      if (!data) {
+        // Fallback to legacy multi-exercise object
+        const dataObj = window[`exerciseData_${studentId}`];
+        data = dataObj && dataObj[exerciseNum];
+      }
       if (data) {
         document.title = `Oefening ${exerciseNum} - ${data.student}`;
         document.getElementById("exercise-header").textContent = data.student;
         document.getElementById(
           "exercise-title"
         ).textContent = `Oefening ${exerciseNum}`;
-        document.getElementById("codeInput").value = data.code;
-        if (typeof syncHighlighting === "function") syncHighlighting();
+        // If a sourceUrl is provided, fetch code from there; otherwise use inline code
+        const applyCode = (codeText) => {
+          document.getElementById("codeInput").value =
+            codeText || data.code || "";
+          if (typeof syncHighlighting === "function") syncHighlighting();
+        };
+        if (data.sourceUrl) {
+          fetch(data.sourceUrl)
+            .then((r) => (r.ok ? r.text() : Promise.reject()))
+            .then((t) => applyCode(t))
+            .catch(() => applyCode(data.code || ""));
+        } else {
+          applyCode(data.code || "");
+        }
         const adviceList = document.getElementById("advice-list");
         adviceList.innerHTML = "";
         data.advice.forEach((item) => {
@@ -176,6 +324,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const ctrReadability = document.getElementById("controls-readability");
         const ctrConcepts = document.getElementById("controls-concepts");
         const ctrGraphs = document.getElementById("controls-graphs");
+        console.log(criterion);
         const selected = criterion || "readability";
         if (ctrReadability)
           ctrReadability.style.display =
@@ -260,9 +409,35 @@ document.addEventListener("DOMContentLoaded", function () {
       });
       // Also set up input event listener for codeInput (in case it was not set yet)
       codeInput.addEventListener("input", syncHighlighting);
+    }
+
+    script.onload = function () {
+      handleLoaded();
     };
+    script.onerror = function () {
+      if (usedFallback) return; // avoid loops
+      // Fallback to legacy structure
+      usedFallback = true;
+      const legacy = document.createElement("script");
+      legacy.src = `exercise_data_${studentId}.js`;
+      legacy.onload = function () {
+        handleLoaded();
+      };
+      legacy.onerror = function () {
+        handleLoaded();
+      };
+      document.body.appendChild(legacy);
+    };
+
+    // Prefer new path
+    script.src = newPath;
     document.body.appendChild(script);
   }
 });
 
-window.exerciseData_1[1];
+function showTab(tab) {
+  document.getElementById("conceptsTab").style.display =
+    tab === "concepts" ? "" : "none";
+  document.getElementById("readabilityTab").style.display =
+    tab === "readability" ? "" : "none";
+}

@@ -60,14 +60,36 @@ const alertDefsByCriterion = {
     },
   },
   concepts: {
-    for: { type: "info", icon: "🔁", text: "for", title: "for-lus" },
-    while: { type: "info", icon: "🔁", text: "while", title: "while-lus" },
-    do: { type: "info", icon: "🔁", text: "do-while", title: "do-while" },
-    if: { type: "info", icon: "🔹", text: "if", title: "if-voorwaarde" },
-    else: { type: "info", icon: "🔹", text: "else", title: "else-tak" },
-    switch: { type: "info", icon: "🔀", text: "switch", title: "switch" },
-    function: { type: "info", icon: "ƒ", text: "functie", title: "Functie" },
-    return: { type: "info", icon: "↩️", text: "return", title: "return" },
+    multipleIssues: {
+      type: "issue",
+      icon: "‼️",
+      text: "Meerdere Opmerkingen",
+      title: "Meerdere opmerkingen",
+    },
+    loop: {
+      type: "issue",
+      icon: "⚠️",
+      text: "Loop",
+      title: "Loop (for/while/do-while)",
+    },
+    function: {
+      type: "issue",
+      icon: "⚠️",
+      text: "Function",
+      title: "Functie",
+    },
+    conditional: {
+      type: "issue",
+      icon: "⚠️",
+      text: "Conditional",
+      title: "Voorwaarde (if/else/switch)",
+    },
+    correct: {
+      type: "correct",
+      icon: "✅",
+      text: "Correct",
+      title: "Geen fouten",
+    },
   },
   // Combined: testing + debugging
   testDebug: {
@@ -162,8 +184,18 @@ const results = {
 
 // Criterion-aware results container
 const resultsByCriterion = {
-  readability: results, // migrate existing
-  concepts: {},
+  readability: {
+    1: { 1: ["correct"], 2: ["naming"] },
+    2: { 1: ["oneletter"], 2: ["correct"] },
+    3: { 1: ["multipleIssues"], 2: ["multipleIssues"] },
+    4: { 1: ["correct"], 2: ["oneletter"] },
+  },
+  concepts: {
+    1: { 1: ["loop"], 2: ["correct"] },
+    2: { 1: ["function"], 2: ["conditional"] },
+    3: { 1: ["correct"], 2: ["correct"] },
+    4: { 1: ["correct"], 2: ["loop"] },
+  },
   testDebug: {},
   time: {},
 };
@@ -203,7 +235,7 @@ function loadDerivedCriterionResults() {
       }
     }
   }
-  resultsByCriterion.concepts = concepts;
+  //resultsByCriterion.concepts = concepts; TODO to get it from the files themselves
 }
 
 function goToExercise(studentId, exerciseNum) {
@@ -213,6 +245,64 @@ function goToExercise(studentId, exerciseNum) {
 
 let selectedCriterion = "readability";
 let timeGrouping = "byStudent"; // or "byExercise"
+let barOrientation = "vertical"; // or "horizontal"
+
+// ---------------- URL/state sync helpers ----------------
+function parseQuery() {
+  try {
+    const params = new URLSearchParams(window.location.search);
+    return {
+      criterion: params.get("criterion") || null,
+      timeGrouping: params.get("timeGrouping") || null,
+      orientation: params.get("orientation") || null,
+    };
+  } catch {
+    return {};
+  }
+}
+
+function updateUrl(push = true) {
+  try {
+    const params = new URLSearchParams(window.location.search);
+    params.set("criterion", selectedCriterion);
+    params.set("timeGrouping", timeGrouping);
+    params.set("orientation", barOrientation);
+    const newUrl = `${window.location.pathname}?${params.toString()}`;
+    const state = { selectedCriterion, timeGrouping, barOrientation };
+    if (push) {
+      history.pushState(state, "", newUrl);
+    } else {
+      history.replaceState(state, "", newUrl);
+    }
+  } catch {}
+}
+
+function applyStateToUI(fromPopstate = false) {
+  // Update label and selects based on current globals
+  const select = document.getElementById("criterion-select");
+  const label = document.getElementById("criterion-label");
+  const timeGroupingEl = document.getElementById("time-grouping");
+  const barOrientationEl = document.getElementById("bar-orientation");
+  if (select) select.value = selectedCriterion;
+  const c = criteria.find((c) => c.id === selectedCriterion);
+  if (c && label) label.textContent = c.label;
+  if (timeGroupingEl) {
+    timeGroupingEl.style.display =
+      selectedCriterion === "time" || selectedCriterion === "testDebug"
+        ? "inline-block"
+        : "none";
+    timeGroupingEl.value = timeGrouping;
+  }
+  if (barOrientationEl) {
+    barOrientationEl.style.display =
+      selectedCriterion === "time" || selectedCriterion === "testDebug"
+        ? "inline-block"
+        : "none";
+    barOrientationEl.value = barOrientation;
+  }
+  loadDerivedCriterionResults();
+  maybeRenderGraphs();
+}
 
 function renderDashboardTable() {
   const table = document.getElementById("dashboard-table");
@@ -221,6 +311,7 @@ function renderDashboardTable() {
   if (table) table.style.display = "table";
   const criterionAlerts = alertDefsByCriterion[selectedCriterion] || {};
   const criterionResults = resultsByCriterion[selectedCriterion] || {};
+  console.log(resultsByCriterion);
   // Header
   let thead = "<thead><tr><th>Naam</th>";
   for (const ex of exercises) {
@@ -247,8 +338,14 @@ function renderDashboardTable() {
         alertKeys = [];
       }
       const alerts = alertKeys
-        .map((key) => criterionAlerts[key] || criterionAlerts.correct)
+        .map((key) => criterionAlerts[key])
         .filter(Boolean);
+      console.log(criterionAlerts);
+      console.log(alertKeys);
+      console.log(alerts);
+      console.log(selectedCriterion); //ok
+      console.log(criterionResults); //ok
+
       const hasIssue = alerts.some((a) => a.type === "issue");
       tbody += `<td class="exercise-cell${
         hasIssue ? " has-issue" : ""
@@ -290,27 +387,60 @@ document.addEventListener("DOMContentLoaded", function () {
   const select = document.getElementById("criterion-select");
   const label = document.getElementById("criterion-label");
   const timeGroupingEl = document.getElementById("time-grouping");
+  const barOrientationEl = document.getElementById("bar-orientation");
   if (select && label) {
     select.addEventListener("change", function (e) {
       selectedCriterion = e.target.value;
-      const c = criteria.find((c) => c.id === selectedCriterion);
-      if (c) label.textContent = c.label;
-      loadDerivedCriterionResults();
-      maybeRenderGraphs();
-      if (timeGroupingEl) {
-        timeGroupingEl.style.display =
-          selectedCriterion === "time" ? "inline-block" : "none";
-      }
+      applyStateToUI();
+      updateUrl();
+    });
+  }
+  const dropdown = document.getElementById("criterionDropdown");
+  if (dropdown) {
+    dropdown.addEventListener("change", function () {
+      selectedCriterion = dropdown.value;
+      renderDashboardTable();
     });
   }
   if (timeGroupingEl) {
     timeGroupingEl.addEventListener("change", (e) => {
       timeGrouping = e.target.value;
       maybeRenderGraphs();
+      updateUrl();
     });
   }
+  if (barOrientationEl) {
+    barOrientationEl.addEventListener("change", (e) => {
+      barOrientation = e.target.value;
+      maybeRenderGraphs();
+      updateUrl();
+    });
+  }
+  // initialize from URL (if present)
+  const q = parseQuery();
+  if (q.criterion && criteria.some((c) => c.id === q.criterion)) {
+    selectedCriterion = q.criterion;
+  }
+  if (
+    q.timeGrouping &&
+    (q.timeGrouping === "byStudent" || q.timeGrouping === "byExercise")
+  ) {
+    timeGrouping = q.timeGrouping;
+  }
+  if (
+    q.orientation &&
+    (q.orientation === "vertical" || q.orientation === "horizontal")
+  ) {
+    barOrientation = q.orientation;
+  }
+
   // initial derive + render
   loadDerivedCriterionResults();
+  // Preload per-exercise files to seed metrics from the new structure
+  preloadPerExerciseMetrics().finally(() => {
+    // After preload attempt completes, render with any seeded metrics
+    maybeRenderGraphs();
+  });
   // Auto seed demo metrics on first load if none exist
   const anyTimeData = (() => {
     for (const s of students) {
@@ -325,12 +455,18 @@ document.addEventListener("DOMContentLoaded", function () {
   })();
   if (!anyTimeData) {
     const seed = [
-      { s: 1, e: 1, secs: 8 * 60, tests: true, dbg: false },
-      { s: 1, e: 2, secs: 12 * 60, tests: false, dbg: true },
-      { s: 2, e: 1, secs: 5 * 60, tests: true, dbg: true },
-      { s: 2, e: 2, secs: 0, tests: false, dbg: false },
-      { s: 3, e: 1, secs: 15 * 60, tests: false, dbg: true },
-      { s: 4, e: 2, secs: 3 * 60, tests: false, dbg: false },
+      // Student 1
+      { s: 1, e: 1, secs: 18 * 60, tests: true, dbg: true }, // both
+      { s: 1, e: 2, secs: 6 * 60, tests: false, dbg: true }, // debugger only
+      // Student 2
+      { s: 2, e: 1, secs: 3 * 60, tests: true, dbg: false }, // tests only (short)
+      { s: 2, e: 2, secs: 28 * 60, tests: false, dbg: false }, // neither (long)
+      // Student 3
+      { s: 3, e: 1, secs: 12 * 60, tests: true, dbg: true }, // both
+      { s: 3, e: 2, secs: 9 * 60, tests: false, dbg: true }, // debugger only
+      // Student 4
+      { s: 4, e: 1, secs: 4 * 60, tests: false, dbg: false }, // neither (short)
+      { s: 4, e: 2, secs: 22 * 60, tests: true, dbg: false }, // tests only
     ];
     seed.forEach((x) => {
       const existing = getMetrics(x.s, x.e) || {};
@@ -346,9 +482,56 @@ document.addEventListener("DOMContentLoaded", function () {
   maybeRenderGraphs();
   if (timeGroupingEl) {
     timeGroupingEl.style.display =
-      selectedCriterion === "time" ? "inline-block" : "none";
+      selectedCriterion === "time" || selectedCriterion === "testDebug"
+        ? "inline-block"
+        : "none";
     timeGroupingEl.value = timeGrouping;
   }
+  if (barOrientationEl) {
+    barOrientationEl.style.display =
+      selectedCriterion === "time" || selectedCriterion === "testDebug"
+        ? "inline-block"
+        : "none";
+    barOrientationEl.value = barOrientation;
+  }
+  // sync URL without adding a new entry
+  updateUrl(false);
+});
+
+// Handle browser navigation (back/forward) to restore UI selection
+window.addEventListener("popstate", (event) => {
+  const state = event && event.state;
+  if (state && state.selectedCriterion) {
+    selectedCriterion = state.selectedCriterion;
+  } else {
+    const q = parseQuery();
+    if (q.criterion && criteria.some((c) => c.id === q.criterion)) {
+      selectedCriterion = q.criterion;
+    }
+  }
+  if (state && state.timeGrouping) {
+    timeGrouping = state.timeGrouping;
+  } else {
+    const q = parseQuery();
+    if (
+      q.timeGrouping &&
+      (q.timeGrouping === "byStudent" || q.timeGrouping === "byExercise")
+    ) {
+      timeGrouping = q.timeGrouping;
+    }
+  }
+  if (state && state.barOrientation) {
+    barOrientation = state.barOrientation;
+  } else {
+    const q = parseQuery();
+    if (
+      q.orientation &&
+      (q.orientation === "vertical" || q.orientation === "horizontal")
+    ) {
+      barOrientation = q.orientation;
+    }
+  }
+  applyStateToUI(true);
 });
 
 // ---------------- Graph rendering for time and test/debug ----------------
@@ -363,8 +546,14 @@ function destroyCurrentChart() {
 
 function getMetrics(studentId, exerciseId) {
   try {
-    // Prefer seeded data from exercise_data files if present
+    // Prefer seeded data from new per-exercise files if present
+    const cached =
+      window.__exerciseDataCache &&
+      window.__exerciseDataCache[studentId] &&
+      window.__exerciseDataCache[studentId][exerciseId] &&
+      window.__exerciseDataCache[studentId][exerciseId].metrics;
     const seeded =
+      cached ||
       (window[`exerciseData_${studentId}`] &&
         window[`exerciseData_${studentId}`][exerciseId] &&
         window[`exerciseData_${studentId}`][exerciseId].metrics) ||
@@ -400,11 +589,51 @@ function maybeRenderGraphs() {
         "<div style='padding:0.8em;color:#7c5e00'>Grafieken niet beschikbaar: Chart.js niet geladen. Controleer internet of voeg de bibliotheek lokaal toe.</div>";
       return;
     }
-    renderTestDebugHeatmap(graphView);
+    renderTestDebugBars(graphView);
   } else {
     destroyCurrentChart();
     graphView.style.display = "none";
     renderDashboardTable();
+  }
+}
+
+// ---------------- Preload per-exercise data to seed metrics ---------------
+window.__exerciseDataCache = window.__exerciseDataCache || {};
+
+function preloadPerExerciseMetrics() {
+  try {
+    const criterion = "readability"; // metrics currently seeded from readability files
+    const promises = [];
+    for (const s of students) {
+      for (const ex of exercises) {
+        const path = `students/data/${s.id}/${criterion}/exercise_${ex.id}.js`;
+        promises.push(
+          new Promise((resolve) => {
+            const script = document.createElement("script");
+            script.src = path;
+            script.onload = function () {
+              if (window.exerciseData) {
+                window.__exerciseDataCache[s.id] =
+                  window.__exerciseDataCache[s.id] || {};
+                window.__exerciseDataCache[s.id][ex.id] = window.exerciseData;
+              }
+              // cleanup global to avoid leaking between loads
+              try {
+                delete window.exerciseData;
+              } catch {}
+              resolve();
+            };
+            script.onerror = function () {
+              resolve();
+            };
+            document.body.appendChild(script);
+          })
+        );
+      }
+    }
+    return Promise.all(promises);
+  } catch (e) {
+    return Promise.resolve();
   }
 }
 
@@ -458,15 +687,35 @@ function renderTimeGraph(container) {
     data: { labels, datasets },
     options: {
       responsive: true,
+      maintainAspectRatio: false,
+      indexAxis: barOrientation === "horizontal" ? "y" : "x",
       scales: {
         x: {
           stacked: false,
-          title: { display: true, text: "Studenten" },
+          title: {
+            display: true,
+            text:
+              timeGrouping === "byStudent"
+                ? barOrientation === "horizontal"
+                  ? "Minuten"
+                  : "Studenten"
+                : barOrientation === "horizontal"
+                ? "Minuten"
+                : "Oefeningen",
+          },
         },
         y: {
           beginAtZero: true,
           stacked: false,
-          title: { display: true, text: "Minuten" },
+          title: {
+            display: true,
+            text:
+              barOrientation === "horizontal"
+                ? timeGrouping === "byStudent"
+                  ? "Studenten"
+                  : "Oefeningen"
+                : "Minuten",
+          },
         },
       },
       plugins: { legend: { position: "bottom" } },
@@ -594,6 +843,241 @@ function renderTestDebugHeatmap(container) {
           goToExercise(raw.studentId, raw.exerciseId);
         }
       },
+    },
+  });
+}
+
+function renderTestDebugBars(container) {
+  destroyCurrentChart();
+  container.innerHTML = "";
+  const canvas = document.createElement("canvas");
+  container.appendChild(canvas);
+
+  const SEGMENTS = 10; // max chronological segments per bar (varies per bar)
+  const GREEN = "#4caf50"; // debugger/logs
+  const RED = "#f44336"; // trial-and-error
+
+  function maxElapsedSeconds() {
+    let max = 0;
+    for (const s of students) {
+      for (const ex of exercises) {
+        const m = getMetrics(s.id, ex.id);
+        const secs =
+          m && typeof m.elapsedSeconds === "number" ? m.elapsedSeconds : 0;
+        if (secs > max) max = secs;
+      }
+    }
+    return max || 1;
+  }
+
+  function segmentsForTime(seconds, maxSecs) {
+    if (!seconds || seconds <= 0) return 2; // show minimal presence
+    const ratio = Math.min(1, seconds / maxSecs);
+    const segs = Math.max(2, Math.round(ratio * SEGMENTS));
+    return segs;
+  }
+
+  function buildPattern(metrics, studentId, exerciseId, totalSegs) {
+    const hasDebugger = !!(metrics && metrics.usedDebugger);
+    const hasTests = !!(metrics && metrics.wroteTests);
+    const seed = (studentId * 31 + exerciseId * 17) % 97;
+
+    // Alternate green/red more frequently; small random-ish streaks of length 1–3
+    const streakLens = [1, 2, 3];
+    let streakIdx = seed % streakLens.length;
+    let remaining = totalSegs;
+    const colors = [];
+
+    // Decide which color starts based on state
+    // both -> start green; debugger only -> green; tests/none -> red
+    let current = hasDebugger ? GREEN : RED;
+
+    while (remaining > 0) {
+      const len = Math.min(streakLens[streakIdx], remaining);
+      for (let i = 0; i < len; i++) colors.push(current);
+      remaining -= len;
+      streakIdx = (streakIdx + 1) % streakLens.length;
+      current = current === GREEN ? RED : GREEN;
+    }
+
+    // Pad to SEGMENTS with nulls (zero height later)
+    while (colors.length < SEGMENTS) colors.push(null);
+    return colors;
+  }
+
+  let labels = [];
+  // For segmented stacks, we build one dataset per segment index.
+  // Each dataset holds unit heights (1 or 0) and colors per bar.
+  let segmentDatasets = Array.from({ length: SEGMENTS }, (_, segIdx) => ({
+    label: `Segment ${segIdx + 1}`,
+    data: [],
+    backgroundColor: [], // per-point color (green/red)
+    stack: "tdSegments",
+    borderRadius: 0,
+    borderSkipped: false,
+  }));
+
+  const maxSecs = maxElapsedSeconds();
+
+  if (timeGrouping === "byStudent") {
+    // X axis: students; for each exercise we still render separate bars per student (like time)
+    labels = students.map((s) => s.name);
+    // Build per-exercise bars across students by stacking segments.
+    // We need to append data for each exercise as a separate logical bar in the same category.
+    // Chart.js creates grouped bars via datasets, so we create SEGMENTS datasets per exercise.
+    // To preserve separate bars per exercise, we will create a block of SEGMENTS datasets per exercise.
+
+    const allExerciseSegmentDatasets = [];
+    for (let exIdx = 0; exIdx < exercises.length; exIdx++) {
+      const ex = exercises[exIdx];
+      const exSegSets = Array.from({ length: SEGMENTS }, (_, segIdx) => ({
+        label: `${ex.label} · Seg ${segIdx + 1}`,
+        data: [],
+        backgroundColor: [],
+        stack: `td-${ex.id}`, // stack per exercise so each exercise forms its own stacked bar
+        borderRadius: 0,
+        borderSkipped: false,
+      }));
+      for (let sIdx = 0; sIdx < students.length; sIdx++) {
+        const s = students[sIdx];
+        const m = getMetrics(s.id, ex.id);
+        const secs =
+          m && typeof m.elapsedSeconds === "number" ? m.elapsedSeconds : 0;
+        const totalSegs = segmentsForTime(secs, maxSecs);
+        const pattern = buildPattern(m, s.id, ex.id, totalSegs);
+        for (let seg = 0; seg < SEGMENTS; seg++) {
+          const color = pattern[seg];
+          exSegSets[seg].data.push(color ? 1 : 0);
+          exSegSets[seg].backgroundColor.push(color || "rgba(0,0,0,0)");
+        }
+      }
+      allExerciseSegmentDatasets.push(...exSegSets);
+    }
+    segmentDatasets = allExerciseSegmentDatasets;
+  } else {
+    // byExercise: X axis exercises; create separate stacked bars per student
+    labels = exercises.map((ex) => ex.label);
+    const allStudentSegmentDatasets = [];
+    for (let sIdx = 0; sIdx < students.length; sIdx++) {
+      const s = students[sIdx];
+      const sSegSets = Array.from({ length: SEGMENTS }, (_, segIdx) => ({
+        label: `${s.name} · Seg ${segIdx + 1}`,
+        data: [],
+        backgroundColor: [],
+        stack: `td-stu-${s.id}`, // stack per student so each student forms its own stacked bar
+        borderRadius: 0,
+        borderSkipped: false,
+      }));
+      for (let exIdx = 0; exIdx < exercises.length; exIdx++) {
+        const ex = exercises[exIdx];
+        const m = getMetrics(s.id, ex.id);
+        const secs =
+          m && typeof m.elapsedSeconds === "number" ? m.elapsedSeconds : 0;
+        const totalSegs = segmentsForTime(secs, maxSecs);
+        const pattern = buildPattern(m, s.id, ex.id, totalSegs);
+        for (let seg = 0; seg < SEGMENTS; seg++) {
+          const color = pattern[seg];
+          sSegSets[seg].data.push(color ? 1 : 0);
+          sSegSets[seg].backgroundColor.push(color || "rgba(0,0,0,0)");
+        }
+      }
+      allStudentSegmentDatasets.push(...sSegSets);
+    }
+    segmentDatasets = allStudentSegmentDatasets;
+  }
+
+  const ctx = canvas.getContext("2d");
+  currentChart = new Chart(ctx, {
+    type: "bar",
+    data: { labels, datasets: segmentDatasets },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      indexAxis: barOrientation === "horizontal" ? "y" : "x",
+      scales: {
+        x: {
+          stacked: true,
+          title: {
+            display: true,
+            text:
+              timeGrouping === "byStudent"
+                ? barOrientation === "horizontal"
+                  ? "Segmenten"
+                  : "Studenten"
+                : barOrientation === "horizontal"
+                ? "Segmenten"
+                : "Oefeningen",
+          },
+        },
+        y: {
+          beginAtZero: true,
+          stacked: true,
+          ticks: { stepSize: 1 },
+          title: {
+            display: true,
+            text:
+              barOrientation === "horizontal"
+                ? timeGrouping === "byStudent"
+                  ? "Studenten"
+                  : "Oefeningen"
+                : "Chronologische segmenten",
+          },
+        },
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: function (context) {
+              if (!context || !context.parsed) return;
+              const val = context.parsed.y;
+              if (!val) return ""; // skip zero-height segment
+              // Determine color at this segment for this bar
+              const color = context.dataset.backgroundColor[context.dataIndex];
+              const kind = color === GREEN ? "Debugger" : "Trial-and-error";
+              // Map back to student/exercise for clarity
+              if (timeGrouping === "byStudent") {
+                const studentName = labels[context.dataIndex];
+                const exerciseLabel = context.dataset.label.split(" · ")[0];
+                return `${exerciseLabel} — ${studentName}: ${kind}`;
+              } else {
+                const exerciseLabel = labels[context.dataIndex];
+                const studentName = context.dataset.label.split(" · ")[0];
+                return `${studentName} — ${exerciseLabel}: ${kind}`;
+              }
+            },
+          },
+        },
+      },
+      onClick: (evt, elements) => {
+        if (!elements || elements.length === 0) return;
+        const el = elements[0];
+        let studentId, exerciseId;
+        if (timeGrouping === "byStudent") {
+          const studentIndex = el.index; // x-category
+          // Dataset label contains exercise
+          const exerciseLabel = el.dataset.label.split(" · ")[0];
+          const exerciseIndex = exercises.findIndex(
+            (e) => e.label === exerciseLabel
+          );
+          if (studentIndex < 0 || exerciseIndex < 0) return;
+          studentId = students[studentIndex].id;
+          exerciseId = exercises[exerciseIndex].id;
+        } else {
+          const exerciseIndex = el.index; // x-category
+          // Dataset label contains student
+          const studentLabel = el.dataset.label.split(" · ")[0];
+          const studentIndex = students.findIndex(
+            (s) => s.name === studentLabel
+          );
+          if (studentIndex < 0 || exerciseIndex < 0) return;
+          exerciseId = exercises[exerciseIndex].id;
+          studentId = students[studentIndex].id;
+        }
+        goToExercise(studentId, exerciseId);
+      },
+      categoryPercentage: 0.65,
+      barPercentage: 0.55,
     },
   });
 }
