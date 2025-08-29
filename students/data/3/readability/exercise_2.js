@@ -36,5 +36,18 @@ void loop()
   advice: [
     "Vraag Carla om de verschillende naamgevingsconventies in haar code te wijzen en descriptievere namen te gebruiken. Bespreek samen waarom consistentie belangrijk is.",
   ],
-  metrics: { elapsedSeconds: 4 * 60, wroteTests: false, usedDebugger: false },
+  metrics: {
+    elapsedSeconds: 4 * 60,
+    wroteTests: false,
+    usedDebugger: false,
+    sections: [
+      { minutes: 2, type: "programming" },
+      { minutes: 1, type: "trial" },
+      { minutes: 1, type: "programming" },
+    ],
+    timeAdvice:
+      "Hou de sessies kort en gefocust; plan mini-tests na elke bouwstap.",
+    tdAdvice:
+      "Vervang trial-and-error door doelgerichte observaties en kleine experimenten.",
+  },
 };

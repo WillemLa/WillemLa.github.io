@@ -35,7 +35,21 @@ void loop()
     knipper();
 }`,
   advice: [
-    "Leg Ben uit waarom meer descriptieve, betekenisvolle namen code leesbaarder en duidelijker maken in vergelijking met namen zoals 'x'.",
+    "Leg Daniel uit hoe hij na tests gericht kan debuggen om sneller vooruit te gaan.",
   ],
-  metrics: { elapsedSeconds: 10 * 60, wroteTests: true, usedDebugger: false },
+  metrics: {
+    elapsedSeconds: 16 * 60,
+    wroteTests: true,
+    usedDebugger: false,
+    sections: [
+      { minutes: 8, type: "programming" },
+      { minutes: 3, type: "testing" },
+      { minutes: 4, type: "programming" },
+      { minutes: 1, type: "trial" },
+    ],
+    timeAdvice:
+      "Balans tussen bouwen en testen. Stimuleer het groeperen van kleine testmomenten.",
+    tdAdvice:
+      "Introduceer kort debuggen bij falende tests om trial-and-error te beperken.",
+  },
 };

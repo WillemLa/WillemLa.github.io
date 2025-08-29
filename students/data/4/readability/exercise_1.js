@@ -44,6 +44,22 @@ void loop()
 }
 
     `,
-  advice: ["Laat Daniel weten dat zijn code goed leesbaar is."],
-  metrics: { elapsedSeconds: 3 * 60, wroteTests: false, usedDebugger: false },
+  advice: [
+    "Laat Daniel weten dat zijn code goed leesbaar is. Vraag hoe hij test- en debugmomenten inplant.",
+  ],
+  metrics: {
+    elapsedSeconds: 12 * 60,
+    wroteTests: true,
+    usedDebugger: true,
+    sections: [
+      { minutes: 5, type: "programming" },
+      { minutes: 2, type: "debugger" },
+      { minutes: 3, type: "programming" },
+      { minutes: 2, type: "testing" },
+    ],
+    timeAdvice:
+      "Gestructureerde blokken. Vraag Daniël hoe hij beslist wanneer te testen of debuggen.",
+    tdAdvice:
+      "Mooi afwisselend patroon: programmeren, debuggen, testen. Benadruk systematiek.",
+  },
 };

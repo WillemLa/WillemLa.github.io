@@ -49,5 +49,19 @@ void loop()
   advice: [
     "Wijs de verschillende naamconveties aan in de code van Carla. Duid haar bovendien op korte namen zoals 'x' die ze heeft gekozen. Bespreek samen waarom consistentie en beschrijvende namen belangrijk zijn en code leesbaarder maken.",
   ],
-  metrics: { elapsedSeconds: 15 * 60, wroteTests: false, usedDebugger: true },
+  metrics: {
+    elapsedSeconds: 15 * 60,
+    wroteTests: false,
+    usedDebugger: true,
+    sections: [
+      { minutes: 6, type: "programming" },
+      { minutes: 2, type: "trial" },
+      { minutes: 3, type: "programming" },
+      { minutes: 4, type: "debugger" },
+    ],
+    timeAdvice:
+      "Lang traject. Help Carla haar werk in kleinere deelstappen te plannen.",
+    tdAdvice:
+      "Beperk trial-and-error: formuleer hypothesen, zet breakpoints, test tussendoor.",
+  },
 };

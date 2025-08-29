@@ -37,5 +37,19 @@ void loop()
   advice: [
     "Benadruk bij Alice dat haar consistente naamgeving en eenvoudige logica het lezen van code vergemakkelijken.",
   ],
-  metrics: { elapsedSeconds: 12 * 60, wroteTests: false, usedDebugger: true },
+  metrics: {
+    elapsedSeconds: 14 * 60,
+    wroteTests: false,
+    usedDebugger: true,
+    sections: [
+      { minutes: 6, type: "programming" },
+      { minutes: 4, type: "debugger" },
+      { minutes: 3, type: "programming" },
+      { minutes: 1, type: "trial" },
+    ],
+    timeAdvice:
+      "Flinke debugsessies tussen programmeerblokken. Focus op hypothesen vooraf.",
+    tdAdvice:
+      "Stuur op systematische debugstappen en laat korte program/test-cycli zien.",
+  },
 };

@@ -48,5 +48,19 @@ void loop()
   advice: [
     "Geef Ben complimenten voor zijn duidelijke namen en structuur. Vraag hem waarom dit belangrijk is.",
   ],
-  metrics: { elapsedSeconds: 7 * 60, wroteTests: true, usedDebugger: true },
+  metrics: {
+    elapsedSeconds: 7 * 60,
+    wroteTests: true,
+    usedDebugger: true,
+    sections: [
+      { minutes: 3, type: "programming" },
+      { minutes: 2, type: "testing" },
+      { minutes: 1, type: "programming" },
+      { minutes: 1, type: "debugger" },
+    ],
+    timeAdvice:
+      "Korte cycli met duidelijke testmomenten. Vraag Ben naar testselectie.",
+    tdAdvice:
+      "Benadruk het koppelen van testresultaten aan gerichte debugacties.",
+  },
 };

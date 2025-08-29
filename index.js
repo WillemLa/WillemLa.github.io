@@ -462,7 +462,7 @@ document.addEventListener("DOMContentLoaded", function () {
       { s: 2, e: 1, secs: 3 * 60, tests: true, dbg: false }, // tests only (short)
       { s: 2, e: 2, secs: 28 * 60, tests: false, dbg: false }, // neither (long)
       // Student 3
-      { s: 3, e: 1, secs: 12 * 60, tests: true, dbg: true }, // both
+      { s: 3, e: 1, secs: 1 * 60, tests: true, dbg: true }, // both
       { s: 3, e: 2, secs: 9 * 60, tests: false, dbg: true }, // debugger only
       // Student 4
       { s: 4, e: 1, secs: 4 * 60, tests: false, dbg: false }, // neither (short)
@@ -566,6 +566,73 @@ function getMetrics(studentId, exerciseId) {
   }
 }
 
+// Helpers to use explicit time sections when available
+function minutesFromMetrics(metrics) {
+  try {
+    if (metrics && Array.isArray(metrics.sections) && metrics.sections.length) {
+      const totalMinutes = metrics.sections
+        .map((s) =>
+          typeof s.minutes === "number" ? Math.max(0, s.minutes) : 0
+        )
+        .reduce((a, b) => a + b, 0);
+      return Math.max(1, Math.round(totalMinutes));
+    }
+    const secs =
+      metrics && typeof metrics.elapsedSeconds === "number"
+        ? metrics.elapsedSeconds
+        : 0;
+    return Math.max(1, Math.round(secs / 60));
+  } catch {
+    return 1;
+  }
+}
+
+function expandSectionKinds(metrics, maxMinutes) {
+  try {
+    const kinds = [];
+    if (metrics && Array.isArray(metrics.sections) && metrics.sections.length) {
+      for (const seg of metrics.sections) {
+        const len = Math.max(
+          0,
+          Math.round(seg && typeof seg.minutes === "number" ? seg.minutes : 0)
+        );
+        const type = (seg && seg.type) || (seg && seg.kind) || "trial";
+        for (let i = 0; i < len; i++) kinds.push(type);
+      }
+      return kinds.slice(0, maxMinutes);
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+function sectionKindToColor(kind) {
+  // High-contrast, theme-aware palette (distinct hues)
+  switch (kind) {
+    case "programming":
+      return "#ffcc00"; // amber
+    case "testing":
+      return "#1976d2"; // strong blue
+    case "debugger":
+      return "#2e7d32"; // strong green
+    case "trial":
+    case "trial-and-error":
+      return "#c62828"; // strong red
+    default:
+      return "#6d6d6d"; // neutral gray fallback
+  }
+}
+
+// Labels for kinds used in legends and tooltips
+const KIND_LABEL = {
+  programming: "Programmeren",
+  testing: "Testen",
+  debugger: "Debuggen",
+  trial: "Trial-and-error",
+  "trial-and-error": "Trial-and-error",
+};
+
 function maybeRenderGraphs() {
   const table = document.getElementById("dashboard-table");
   const graphView = document.getElementById("graph-view");
@@ -641,6 +708,16 @@ function renderTimeGraph(container) {
   destroyCurrentChart();
   container.innerHTML = "";
   const canvas = document.createElement("canvas");
+  // Header to clarify exercise mapping
+  const header = document.createElement("div");
+  header.style.marginBottom = "6px";
+  header.style.fontSize = "0.95em";
+  header.style.color = "#333";
+  header.textContent =
+    timeGrouping === "byStudent"
+      ? "Per student: legend toont oefeningen (Oefening 1, Oefening 2)."
+      : "Per oefening: legend toont studenten.";
+  container.appendChild(header);
   container.appendChild(canvas);
 
   // Build data based on grouping
@@ -652,8 +729,7 @@ function renderTimeGraph(container) {
     datasets = exercises.map((ex, idx) => {
       const data = students.map((s) => {
         const m = getMetrics(s.id, ex.id);
-        const secs = m && m.elapsedSeconds ? m.elapsedSeconds : 0;
-        return Math.round(secs / 60);
+        return minutesFromMetrics(m);
       });
       return {
         label: ex.label,
@@ -667,8 +743,7 @@ function renderTimeGraph(container) {
     datasets = students.map((s, idx) => {
       const data = exercises.map((ex) => {
         const m = getMetrics(s.id, ex.id);
-        const secs = m && m.elapsedSeconds ? m.elapsedSeconds : 0;
-        return Math.round(secs / 60);
+        return minutesFromMetrics(m);
       });
       return {
         label: s.name,
@@ -718,8 +793,49 @@ function renderTimeGraph(container) {
           },
         },
       },
-      plugins: { legend: { position: "bottom" } },
-      onClick: (evt, elements) => {
+      plugins: {
+        legend: { position: "bottom" },
+        tooltip: {
+          callbacks: {
+            title: function (items) {
+              if (!items || !items.length) return "";
+              const it = items[0];
+              if (timeGrouping === "byStudent") {
+                const studentName = labels[it.dataIndex];
+                const exerciseLabel = it.dataset.label;
+                return `${exerciseLabel} — ${studentName}`;
+              } else {
+                const exerciseLabel = labels[it.dataIndex];
+                const studentName = it.dataset.label;
+                return `${studentName} — ${exerciseLabel}`;
+              }
+            },
+            label: function () {
+              return ""; // suppress per-point value; advice shown in afterBody
+            },
+            afterBody: function (items) {
+              if (!items || !items.length) return "";
+              const it = items[0];
+              let studentId, exerciseId;
+              if (timeGrouping === "byStudent") {
+                const studentIndex = it.dataIndex;
+                const exerciseIndex = it.datasetIndex;
+                studentId = students[studentIndex].id;
+                exerciseId = exercises[exerciseIndex].id;
+              } else {
+                const exerciseIndex = it.dataIndex;
+                const studentIndex = it.datasetIndex;
+                exerciseId = exercises[exerciseIndex].id;
+                studentId = students[studentIndex].id;
+              }
+              const m = getMetrics(studentId, exerciseId) || {};
+              const advice = (m && m.timeAdvice) || (m && m.tdAdvice) || "";
+              return advice ? [advice] : [];
+            },
+          },
+        },
+      },
+      /*onClick: (evt, elements) => {
         if (!elements || elements.length === 0) return;
         const el = elements[0];
         let studentId, exerciseId;
@@ -735,7 +851,7 @@ function renderTimeGraph(container) {
           studentId = students[studentIndex].id;
         }
         goToExercise(studentId, exerciseId);
-      },
+      },*/
     },
   });
 }
@@ -851,20 +967,54 @@ function renderTestDebugBars(container) {
   destroyCurrentChart();
   container.innerHTML = "";
   const canvas = document.createElement("canvas");
+  // Build legend for 4 categories
+  const legend = document.createElement("div");
+  legend.style.display = "flex";
+  legend.style.flexWrap = "wrap";
+  legend.style.gap = "12px";
+  legend.style.alignItems = "center";
+  legend.style.marginBottom = "6px";
+  const kindsForLegend = ["programming", "testing", "debugger", "trial"];
+  kindsForLegend.forEach((k) => {
+    const item = document.createElement("div");
+    item.style.display = "inline-flex";
+    item.style.alignItems = "center";
+    const sw = document.createElement("span");
+    sw.style.display = "inline-block";
+    sw.style.width = "12px";
+    sw.style.height = "12px";
+    sw.style.marginRight = "6px";
+    sw.style.borderRadius = "2px";
+    sw.style.background = sectionKindToColor(k);
+    const label = document.createElement("span");
+    label.style.fontSize = "0.9em";
+    label.textContent = KIND_LABEL[k] || k;
+    item.appendChild(sw);
+    item.appendChild(label);
+    legend.appendChild(item);
+  });
+  const note = document.createElement("div");
+  note.style.flexBasis = "100%";
+  note.style.fontSize = "0.9em";
+  note.style.color = "#333";
+  note.style.marginTop = "2px";
+  if (timeGrouping !== "byStudent") {
+    note.textContent = "Per oefening worden de studenten per rij gegroepeerd.";
+    legend.appendChild(note);
+  }
+  container.appendChild(legend);
   container.appendChild(canvas);
 
-  const SEGMENTS = 10; // max chronological segments per bar (varies per bar)
   const GREEN = "#4caf50"; // debugger/logs
   const RED = "#f44336"; // trial-and-error
 
-  function maxElapsedSeconds() {
-    let max = 0;
+  function maxMinutesAcross() {
+    let max = 1;
     for (const s of students) {
       for (const ex of exercises) {
         const m = getMetrics(s.id, ex.id);
-        const secs =
-          m && typeof m.elapsedSeconds === "number" ? m.elapsedSeconds : 0;
-        if (secs > max) max = secs;
+        const mins = minutesFromMetrics(m);
+        if (mins > max) max = mins;
       }
     }
     return max || 1;
@@ -906,32 +1056,19 @@ function renderTestDebugBars(container) {
   }
 
   let labels = [];
-  // For segmented stacks, we build one dataset per segment index.
-  // Each dataset holds unit heights (1 or 0) and colors per bar.
-  let segmentDatasets = Array.from({ length: SEGMENTS }, (_, segIdx) => ({
-    label: `Segment ${segIdx + 1}`,
-    data: [],
-    backgroundColor: [], // per-point color (green/red)
-    stack: "tdSegments",
-    borderRadius: 0,
-    borderSkipped: false,
-  }));
-
-  const maxSecs = maxElapsedSeconds();
+  // Datasets will be constructed dynamically based on max minutes
+  let segmentDatasets = [];
+  const maxMinutes = maxMinutesAcross();
 
   if (timeGrouping === "byStudent") {
     // X axis: students; for each exercise we still render separate bars per student (like time)
     labels = students.map((s) => s.name);
-    // Build per-exercise bars across students by stacking segments.
-    // We need to append data for each exercise as a separate logical bar in the same category.
-    // Chart.js creates grouped bars via datasets, so we create SEGMENTS datasets per exercise.
-    // To preserve separate bars per exercise, we will create a block of SEGMENTS datasets per exercise.
-
+    // Build per-exercise bars across students by stacking minute segments (from sections when present)
     const allExerciseSegmentDatasets = [];
     for (let exIdx = 0; exIdx < exercises.length; exIdx++) {
       const ex = exercises[exIdx];
-      const exSegSets = Array.from({ length: SEGMENTS }, (_, segIdx) => ({
-        label: `${ex.label} · Seg ${segIdx + 1}`,
+      const exSegSets = Array.from({ length: maxMinutes }, (_, segIdx) => ({
+        label: `${ex.label} · Min ${segIdx + 1}`,
         data: [],
         backgroundColor: [],
         stack: `td-${ex.id}`, // stack per exercise so each exercise forms its own stacked bar
@@ -941,13 +1078,17 @@ function renderTestDebugBars(container) {
       for (let sIdx = 0; sIdx < students.length; sIdx++) {
         const s = students[sIdx];
         const m = getMetrics(s.id, ex.id);
-        const secs =
-          m && typeof m.elapsedSeconds === "number" ? m.elapsedSeconds : 0;
-        const totalSegs = segmentsForTime(secs, maxSecs);
-        const pattern = buildPattern(m, s.id, ex.id, totalSegs);
-        for (let seg = 0; seg < SEGMENTS; seg++) {
-          const color = pattern[seg];
-          exSegSets[seg].data.push(color ? 1 : 0);
+        const minutes = minutesFromMetrics(m);
+        const kinds = expandSectionKinds(m, minutes);
+        const pattern =
+          kinds ||
+          Array.from({ length: minutes }, () =>
+            m && m.usedDebugger ? "debugger" : "trial"
+          );
+        for (let seg = 0; seg < maxMinutes; seg++) {
+          const kind = seg < pattern.length ? pattern[seg] : null;
+          const color = kind ? sectionKindToColor(kind) : null;
+          exSegSets[seg].data.push(kind ? 1 : 0);
           exSegSets[seg].backgroundColor.push(color || "rgba(0,0,0,0)");
         }
       }
@@ -960,8 +1101,8 @@ function renderTestDebugBars(container) {
     const allStudentSegmentDatasets = [];
     for (let sIdx = 0; sIdx < students.length; sIdx++) {
       const s = students[sIdx];
-      const sSegSets = Array.from({ length: SEGMENTS }, (_, segIdx) => ({
-        label: `${s.name} · Seg ${segIdx + 1}`,
+      const sSegSets = Array.from({ length: maxMinutes }, (_, segIdx) => ({
+        label: `${s.name} · Min ${segIdx + 1}`,
         data: [],
         backgroundColor: [],
         stack: `td-stu-${s.id}`, // stack per student so each student forms its own stacked bar
@@ -971,13 +1112,17 @@ function renderTestDebugBars(container) {
       for (let exIdx = 0; exIdx < exercises.length; exIdx++) {
         const ex = exercises[exIdx];
         const m = getMetrics(s.id, ex.id);
-        const secs =
-          m && typeof m.elapsedSeconds === "number" ? m.elapsedSeconds : 0;
-        const totalSegs = segmentsForTime(secs, maxSecs);
-        const pattern = buildPattern(m, s.id, ex.id, totalSegs);
-        for (let seg = 0; seg < SEGMENTS; seg++) {
-          const color = pattern[seg];
-          sSegSets[seg].data.push(color ? 1 : 0);
+        const minutes = minutesFromMetrics(m);
+        const kinds = expandSectionKinds(m, minutes);
+        const pattern =
+          kinds ||
+          Array.from({ length: minutes }, () =>
+            m && m.usedDebugger ? "debugger" : "trial"
+          );
+        for (let seg = 0; seg < maxMinutes; seg++) {
+          const kind = seg < pattern.length ? pattern[seg] : null;
+          const color = kind ? sectionKindToColor(kind) : null;
+          sSegSets[seg].data.push(kind ? 1 : 0);
           sSegSets[seg].backgroundColor.push(color || "rgba(0,0,0,0)");
         }
       }
@@ -987,6 +1132,10 @@ function renderTestDebugBars(container) {
   }
 
   const ctx = canvas.getContext("2d");
+  // Dynamic tick padding so student names sit lower than exercise labels in by-student vertical view
+  const xTickPadding =
+    timeGrouping === "byStudent" && barOrientation !== "horizontal" ? 24 : 6;
+
   currentChart = new Chart(ctx, {
     type: "bar",
     data: { labels, datasets: segmentDatasets },
@@ -994,20 +1143,15 @@ function renderTestDebugBars(container) {
       responsive: true,
       maintainAspectRatio: false,
       indexAxis: barOrientation === "horizontal" ? "y" : "x",
+      layout: { padding: { bottom: 15, top: 28 } },
       scales: {
         x: {
           stacked: true,
           title: {
-            display: true,
-            text:
-              timeGrouping === "byStudent"
-                ? barOrientation === "horizontal"
-                  ? "Segmenten"
-                  : "Studenten"
-                : barOrientation === "horizontal"
-                ? "Segmenten"
-                : "Oefeningen",
+            display: false,
+            text: "",
           },
+          ticks: { padding: xTickPadding },
         },
         y: {
           beginAtZero: true,
@@ -1020,7 +1164,7 @@ function renderTestDebugBars(container) {
                 ? timeGrouping === "byStudent"
                   ? "Studenten"
                   : "Oefeningen"
-                : "Chronologische segmenten",
+                : "Chronologische minuten",
           },
         },
       },
@@ -1028,28 +1172,64 @@ function renderTestDebugBars(container) {
         legend: { display: false },
         tooltip: {
           callbacks: {
-            label: function (context) {
-              if (!context || !context.parsed) return;
-              const val = context.parsed.y;
-              if (!val) return ""; // skip zero-height segment
-              // Determine color at this segment for this bar
-              const color = context.dataset.backgroundColor[context.dataIndex];
-              const kind = color === GREEN ? "Debugger" : "Trial-and-error";
-              // Map back to student/exercise for clarity
+            title: function (items) {
+              if (!items || !items.length) return "";
+              const it = items[0];
               if (timeGrouping === "byStudent") {
-                const studentName = labels[context.dataIndex];
-                const exerciseLabel = context.dataset.label.split(" · ")[0];
-                return `${exerciseLabel} — ${studentName}: ${kind}`;
+                const studentName = labels[it.dataIndex];
+                const exerciseLabel = it.dataset.label.split(" · ")[0];
+                return `${exerciseLabel} — ${studentName}`;
               } else {
-                const exerciseLabel = labels[context.dataIndex];
-                const studentName = context.dataset.label.split(" · ")[0];
-                return `${studentName} — ${exerciseLabel}: ${kind}`;
+                const exerciseLabel = labels[it.dataIndex];
+                const studentName = it.dataset.label.split(" · ")[0];
+                return `${studentName} — ${exerciseLabel}`;
               }
+            },
+            label: function (context) {
+              if (!context) return "";
+              const color = context.dataset.backgroundColor[context.dataIndex];
+              const kind = (() => {
+                const keys = ["programming", "testing", "debugger", "trial"];
+                for (const k of keys)
+                  if (sectionKindToColor(k) === color) return k;
+                return "";
+              })();
+              return kind ? KIND_LABEL[kind] || kind : "";
+            },
+            afterBody: function (items) {
+              if (!items || !items.length) return "";
+              const it = items[0];
+              let studentId, exerciseId;
+              if (timeGrouping === "byStudent") {
+                const studentIndex = it.dataIndex;
+                // Dataset label contains exercise
+                const exerciseLabel = it.dataset.label.split(" · ")[0];
+                const exerciseIndex = exercises.findIndex(
+                  (e) => e.label === exerciseLabel
+                );
+                if (studentIndex < 0 || exerciseIndex < 0) return "";
+                studentId = students[studentIndex].id;
+                exerciseId = exercises[exerciseIndex].id;
+              } else {
+                const exerciseIndex = it.dataIndex;
+                // Dataset label contains student
+                const studentLabel = it.dataset.label.split(" · ")[0];
+                const studentIndex = students.findIndex(
+                  (s) => s.name === studentLabel
+                );
+                if (studentIndex < 0 || exerciseIndex < 0) return "";
+                exerciseId = exercises[exerciseIndex].id;
+                studentId = students[studentIndex].id;
+              }
+              const m = getMetrics(studentId, exerciseId) || {};
+              const advice = (m && m.tdAdvice) || (m && m.timeAdvice) || "";
+              return advice ? [advice] : [];
             },
           },
         },
+        barSubLabels: {},
       },
-      onClick: (evt, elements) => {
+      /*onClick: (evt, elements) => {
         if (!elements || elements.length === 0) return;
         const el = elements[0];
         let studentId, exerciseId;
@@ -1075,9 +1255,54 @@ function renderTestDebugBars(container) {
           studentId = students[studentIndex].id;
         }
         goToExercise(studentId, exerciseId);
-      },
+      },*/
       categoryPercentage: 0.65,
       barPercentage: 0.55,
     },
+    plugins: [
+      {
+        id: "barSubLabels",
+        afterDatasetsDraw: (chart) => {
+          try {
+            if (timeGrouping !== "byStudent" || barOrientation === "horizontal")
+              return;
+            const ctx = chart.ctx;
+            const area = chart.chartArea;
+            ctx.save();
+            ctx.textAlign = "center";
+            ctx.textBaseline = "top";
+            ctx.fillStyle = "#333";
+            ctx.font =
+              Chart.defaults.font && Chart.defaults.font.size
+                ? `${Chart.defaults.font.size}px ${
+                    Chart.defaults.font.family || "sans-serif"
+                  }`
+                : "12px sans-serif";
+            // For each exercise, find the dataset representing minute 1 (Min 1)
+            for (let exIdx = 0; exIdx < exercises.length; exIdx++) {
+              const ex = exercises[exIdx];
+              const dsIndex = chart.data.datasets.findIndex(
+                (d) =>
+                  typeof d.label === "string" &&
+                  d.label.indexOf(`${ex.label} · Min 1`) === 0
+              );
+              if (dsIndex < 0) continue;
+              const meta = chart.getDatasetMeta(dsIndex);
+              if (!meta || !meta.data) continue;
+              for (let i = 0; i < meta.data.length; i++) {
+                const el = meta.data[i];
+                if (!el || typeof el.x !== "number") continue;
+                const x = el.x;
+                // Draw exercises slightly below chart area; student names are pushed further down via x.ticks.padding
+                const y = area.bottom + 8;
+                const txt = ex.label.toLowerCase(); // "oefening 1", "oefening 2"
+                ctx.fillText(txt, x, y);
+              }
+            }
+            ctx.restore();
+          } catch {}
+        },
+      },
+    ],
   });
 }

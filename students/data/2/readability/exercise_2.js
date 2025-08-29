@@ -34,8 +34,20 @@ void loop()
 {
     knipperLeds();
 }`,
-  advice: [
-    "Laat Ben weten dat hij consistent werkt en dat zijn code goed leesbaar is.",
-  ],
-  metrics: { elapsedSeconds: 0, wroteTests: false, usedDebugger: false },
+  advice: ["Bespreek hoe Ben regressietests kan creëren voor eerdere bugs."],
+  metrics: {
+    elapsedSeconds: 18 * 60,
+    wroteTests: true,
+    usedDebugger: false,
+    sections: [
+      { minutes: 6, type: "programming" },
+      { minutes: 6, type: "trial" },
+      { minutes: 3, type: "testing" },
+      { minutes: 3, type: "programming" },
+    ],
+    timeAdvice:
+      "Veel tijd ging naar uitproberen. Plan kortere, doelgerichte cycli met reflectie.",
+    tdAdvice:
+      "Beperk trial-and-error: noteer observaties en formuleer een hypothese voor elke stap.",
+  },
 };
