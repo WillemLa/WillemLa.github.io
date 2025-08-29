@@ -27,15 +27,12 @@ void setup()
 
 void loop()
 {
-// <tag:Loop>
     for ( int i = 0 ; i <= 2 ; i+=1) {
       item = item * 4;
       LEDS = item;
       schrijfNaarScherm(String(item));
       delay(300);
     }
-      // </tag:Loop>
-      // <tag:Function>
 
     item = 2;
     LEDS = item;
@@ -46,15 +43,12 @@ void loop()
       LEDS = item;
       schrijfNaarScherm(String(item));
       delay(300);
-            // </tag:Function>
-// <tag:Conditional>
 
     }
     item = 1;
     LEDS = item;
     schrijfNaarScherm(String(item));
     delay(300);
-            // </tag:Conditional>
 
 
 }`,

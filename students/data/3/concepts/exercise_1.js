@@ -21,8 +21,13 @@ void setup()
 }
 </span>
 
+// <tag:Loop>
+
 void loop()
 {
+// </tag:Loop>
+                // <tag:Function>
+
     item = item * 4;
     LEDS = item;
     dwenguinoLCD.clear();
@@ -71,11 +76,14 @@ void loop()
     dwenguinoLCD.setCursor(0,0);
     dwenguinoLCD.print(String(item));
     delay(300);
+// </tag:Function>
 
-}`,
-  advice: [
-    "Vraag Carla om de verschillen te benoemen met Afwisseling-varianten en welke concepten ontbreken of aanwezig zijn.",
-  ],
+// <tag:Loop>
+
+}
+// </tag:Loop>
+`,
+  advice: ["Vraag Carla wat ze kan doen om herhaling in de code te vermijden."],
   metrics: { elapsedSeconds: 8 * 60, wroteTests: false, usedDebugger: false },
   concepts: ["if"],
 };

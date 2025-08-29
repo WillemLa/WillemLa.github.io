@@ -191,10 +191,10 @@ const resultsByCriterion = {
     4: { 1: ["correct"], 2: ["oneletter"] },
   },
   concepts: {
-    1: { 1: ["loop"], 2: ["correct"] },
-    2: { 1: ["function"], 2: ["conditional"] },
+    1: { 1: ["correct"], 2: ["correct"] },
+    2: { 1: ["multipleIssues"], 2: ["correct"] },
     3: { 1: ["correct"], 2: ["correct"] },
-    4: { 1: ["correct"], 2: ["loop"] },
+    4: { 1: ["correct"], 2: ["multipleIssues"] },
   },
   testDebug: {},
   time: {},

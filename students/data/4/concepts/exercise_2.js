@@ -21,9 +21,11 @@ void setup()
   led = 1;
 }
 
-
+// <tag:Loop>
 void loop()
 {
+// <tag:Loop>
+// <tag:Function>
     schrijfNaarLCD(String(led));
     LEDS = led;
     delay(300);
@@ -56,10 +58,12 @@ void loop()
     LEDS = led;
     delay(300);
     led = 1;
-
-}`,
+    // </tag:Function>
+    // <tag:Loop>
+}
+        // </tag:Loop>`,
   advice: [
-    "Laat Daniel verbeterpunten benoemen in de MultipleLed-variant en aan welke concepten dat raakt.",
+    "Bespreek met Daniel het belang van herhaling vermijden en manier om dit te doen.",
   ],
   metrics: { elapsedSeconds: 9 * 60, wroteTests: false, usedDebugger: true },
   concepts: ["if", "while"],
