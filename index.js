@@ -245,7 +245,6 @@ function goToExercise(studentId, exerciseNum) {
 
 let selectedCriterion = "readability";
 let timeGrouping = "byStudent"; // or "byExercise"
-let barOrientation = "vertical"; // or "horizontal"
 
 // ---------------- URL/state sync helpers ----------------
 function parseQuery() {
@@ -254,7 +253,6 @@ function parseQuery() {
     return {
       criterion: params.get("criterion") || null,
       timeGrouping: params.get("timeGrouping") || null,
-      orientation: params.get("orientation") || null,
     };
   } catch {
     return {};
@@ -266,9 +264,8 @@ function updateUrl(push = true) {
     const params = new URLSearchParams(window.location.search);
     params.set("criterion", selectedCriterion);
     params.set("timeGrouping", timeGrouping);
-    params.set("orientation", barOrientation);
     const newUrl = `${window.location.pathname}?${params.toString()}`;
-    const state = { selectedCriterion, timeGrouping, barOrientation };
+    const state = { selectedCriterion, timeGrouping };
     if (push) {
       history.pushState(state, "", newUrl);
     } else {
@@ -282,7 +279,6 @@ function applyStateToUI(fromPopstate = false) {
   const select = document.getElementById("criterion-select");
   const label = document.getElementById("criterion-label");
   const timeGroupingEl = document.getElementById("time-grouping");
-  const barOrientationEl = document.getElementById("bar-orientation");
   if (select) select.value = selectedCriterion;
   const c = criteria.find((c) => c.id === selectedCriterion);
   if (c && label) label.textContent = c.label;
@@ -292,13 +288,6 @@ function applyStateToUI(fromPopstate = false) {
         ? "inline-block"
         : "none";
     timeGroupingEl.value = timeGrouping;
-  }
-  if (barOrientationEl) {
-    barOrientationEl.style.display =
-      selectedCriterion === "time" || selectedCriterion === "testDebug"
-        ? "inline-block"
-        : "none";
-    barOrientationEl.value = barOrientation;
   }
   loadDerivedCriterionResults();
   maybeRenderGraphs();
@@ -387,7 +376,6 @@ document.addEventListener("DOMContentLoaded", function () {
   const select = document.getElementById("criterion-select");
   const label = document.getElementById("criterion-label");
   const timeGroupingEl = document.getElementById("time-grouping");
-  const barOrientationEl = document.getElementById("bar-orientation");
   if (select && label) {
     select.addEventListener("change", function (e) {
       selectedCriterion = e.target.value;
@@ -409,13 +397,6 @@ document.addEventListener("DOMContentLoaded", function () {
       updateUrl();
     });
   }
-  if (barOrientationEl) {
-    barOrientationEl.addEventListener("change", (e) => {
-      barOrientation = e.target.value;
-      maybeRenderGraphs();
-      updateUrl();
-    });
-  }
   // initialize from URL (if present)
   const q = parseQuery();
   if (q.criterion && criteria.some((c) => c.id === q.criterion)) {
@@ -426,12 +407,6 @@ document.addEventListener("DOMContentLoaded", function () {
     (q.timeGrouping === "byStudent" || q.timeGrouping === "byExercise")
   ) {
     timeGrouping = q.timeGrouping;
-  }
-  if (
-    q.orientation &&
-    (q.orientation === "vertical" || q.orientation === "horizontal")
-  ) {
-    barOrientation = q.orientation;
   }
 
   // initial derive + render
@@ -487,13 +462,7 @@ document.addEventListener("DOMContentLoaded", function () {
         : "none";
     timeGroupingEl.value = timeGrouping;
   }
-  if (barOrientationEl) {
-    barOrientationEl.style.display =
-      selectedCriterion === "time" || selectedCriterion === "testDebug"
-        ? "inline-block"
-        : "none";
-    barOrientationEl.value = barOrientation;
-  }
+
   // sync URL without adding a new entry
   updateUrl(false);
 });
@@ -520,17 +489,7 @@ window.addEventListener("popstate", (event) => {
       timeGrouping = q.timeGrouping;
     }
   }
-  if (state && state.barOrientation) {
-    barOrientation = state.barOrientation;
-  } else {
-    const q = parseQuery();
-    if (
-      q.orientation &&
-      (q.orientation === "vertical" || q.orientation === "horizontal")
-    ) {
-      barOrientation = q.orientation;
-    }
-  }
+
   applyStateToUI(true);
 });
 
@@ -753,21 +712,23 @@ function renderTimeGraph(container) {
     options: {
       responsive: true,
       maintainAspectRatio: false,
-      indexAxis: barOrientation === "horizontal" ? "y" : "x",
-      layout: { padding: { bottom: 80, top: 28 } },
+      layout: { padding: { bottom: 10, top: 20, left: 20, right: 20 } },
+      categoryPercentage: 0.9,
+      barPercentage: 0.95,
+      categorySpacing: 0.1,
+      barSpacing: 0.05,
       scales: {
         x: {
           stacked: false,
           title: {
-            display: true,
-            text:
-              timeGrouping === "byStudent"
-                ? barOrientation === "horizontal"
-                  ? "Minuten"
-                  : "Studenten"
-                : barOrientation === "horizontal"
-                ? "Minuten"
-                : "Oefeningen",
+            display: false,
+            //text: timeGrouping === "byStudent" ? "Studenten" : "Oefeningen",
+          },
+          ticks: {
+            padding: timeGrouping === "byStudent" ? 32 : 12,
+          },
+          grid: {
+            display: false,
           },
         },
         y: {
@@ -775,17 +736,12 @@ function renderTimeGraph(container) {
           stacked: false,
           title: {
             display: true,
-            text:
-              barOrientation === "horizontal"
-                ? timeGrouping === "byStudent"
-                  ? "Studenten"
-                  : "Oefeningen"
-                : "Minuten",
+            text: "Aantal minuten",
           },
         },
       },
       plugins: {
-        legend: { position: "bottom" },
+        legend: { display: false },
         tooltip: {
           callbacks: {
             title: function (items) {
@@ -878,17 +834,12 @@ function renderTimeGraph(container) {
                   if (!el || typeof el.x !== "number") continue;
                   const x = el.x;
                   // Exercise labels close to bars (per-bar labels)
-                  const y = area.bottom + 8;
-                  const txt = ex.label.toLowerCase();
+                  const y = area.bottom + 10;
+                  const txt = ex.label;
                   ctx.fillText(txt, x, y);
-                  // Student names below exercise labels
-                  const student = students[i];
-                  if (student) {
-                    const y2 = area.bottom + 24;
-                    ctx.fillText(student.name, x, y2);
-                  }
                 }
               }
+              // Student names shown via axis ticks (group labels) - further away
             } else {
               // When grouped by exercise: show student names per bar (close to bars)
               for (let sIdx = 0; sIdx < students.length; sIdx++) {
@@ -907,14 +858,9 @@ function renderTimeGraph(container) {
                   const y = area.bottom + 8;
                   const txt = s.name;
                   ctx.fillText(txt, x, y);
-                  // Exercise names below student labels
-                  const exercise = exercises[i];
-                  if (exercise) {
-                    const y2 = area.bottom + 24;
-                    ctx.fillText(exercise.label.toLowerCase(), x, y2);
-                  }
                 }
               }
+              // Exercise names shown via axis ticks (group labels) - further away
             }
             ctx.restore();
           } catch {}
@@ -1199,9 +1145,6 @@ function renderTestDebugBars(container) {
   }
 
   const ctx = canvas.getContext("2d");
-  // Dynamic tick padding so student names sit lower than exercise labels in by-student vertical view
-  const xTickPadding =
-    timeGrouping === "byStudent" && barOrientation !== "horizontal" ? 24 : 6;
 
   currentChart = new Chart(ctx, {
     type: "bar",
@@ -1209,8 +1152,12 @@ function renderTestDebugBars(container) {
     options: {
       responsive: true,
       maintainAspectRatio: false,
-      indexAxis: barOrientation === "horizontal" ? "y" : "x",
-      layout: { padding: { bottom: 80, top: 28 } },
+      layout: { padding: { bottom: 40, top: 20, left: 20, right: 20 } },
+      elements: {
+        bar: {
+          borderWidth: 0,
+        },
+      },
       scales: {
         x: {
           stacked: true,
@@ -1221,6 +1168,9 @@ function renderTestDebugBars(container) {
           ticks: {
             padding: timeGrouping === "byStudent" ? 24 : 6,
           },
+          grid: {
+            display: false,
+          },
         },
         y: {
           beginAtZero: true,
@@ -1228,12 +1178,11 @@ function renderTestDebugBars(container) {
           ticks: { stepSize: 1 },
           title: {
             display: true,
-            text:
-              barOrientation === "horizontal"
-                ? timeGrouping === "byStudent"
-                  ? "Studenten"
-                  : "Oefeningen"
-                : "Chronologische minuten",
+            text: "Aantal minuten",
+          },
+          grid: {
+            display: true,
+            color: "rgba(0,0,0,0.1)",
           },
         },
       },
@@ -1325,16 +1274,16 @@ function renderTestDebugBars(container) {
         }
         goToExercise(studentId, exerciseId);
       },*/
-      categoryPercentage: 0.65,
-      barPercentage: 0.55,
+      categoryPercentage: 0.8,
+      barPercentage: 0.9,
+      categorySpacing: 0.2,
+      barSpacing: 0.1,
     },
     plugins: [
       {
         id: "barSubLabels",
         afterDatasetsDraw: (chart) => {
           try {
-            if (timeGrouping !== "byStudent" || barOrientation === "horizontal")
-              return;
             const ctx = chart.ctx;
             const area = chart.chartArea;
             ctx.save();
@@ -1347,26 +1296,51 @@ function renderTestDebugBars(container) {
                     Chart.defaults.font.family || "sans-serif"
                   }`
                 : "12px sans-serif";
-            // For each exercise, find the dataset representing minute 1 (Min 1)
-            for (let exIdx = 0; exIdx < exercises.length; exIdx++) {
-              const ex = exercises[exIdx];
-              const dsIndex = chart.data.datasets.findIndex(
-                (d) =>
-                  typeof d.label === "string" &&
-                  d.label.indexOf(`${ex.label} · Min 1`) === 0
-              );
-              if (dsIndex < 0) continue;
-              const meta = chart.getDatasetMeta(dsIndex);
-              if (!meta || !meta.data) continue;
-              for (let i = 0; i < meta.data.length; i++) {
-                const el = meta.data[i];
-                if (!el || typeof el.x !== "number") continue;
-                const x = el.x;
-                // Draw exercises slightly below chart area; student names are pushed further down via x.ticks.padding
-                const y = area.bottom + 8;
-                const txt = ex.label.toLowerCase(); // "oefening 1", "oefening 2"
-                ctx.fillText(txt, x, y);
+
+            if (timeGrouping === "byStudent") {
+              // When grouped by student: show exercise labels per bar (close to bars)
+              for (let exIdx = 0; exIdx < exercises.length; exIdx++) {
+                const ex = exercises[exIdx];
+                // Find the first dataset for this exercise (Min 1)
+                const dsIndex = chart.data.datasets.findIndex(
+                  (d) => d.label === ex.label
+                );
+                if (dsIndex < 0) continue;
+                const meta = chart.getDatasetMeta(dsIndex);
+                if (!meta || !meta.data) continue;
+                for (let i = 0; i < meta.data.length; i++) {
+                  const el = meta.data[i];
+                  if (!el || typeof el.x !== "number") continue;
+                  const x = el.x;
+                  // Exercise labels close to bars (per-bar labels)
+                  const y = area.bottom + 10;
+                  const txt = ex.label; // "oefening 1", "oefening 2"
+                  ctx.fillText(txt, x, y);
+                }
               }
+              // Student names also shown via axis ticks (group labels) - further away
+            } else {
+              // When grouped by exercise: show student names per bar (close to bars)
+              for (let sIdx = 0; sIdx < students.length; sIdx++) {
+                const s = students[sIdx];
+                // Find the first dataset for this student (Min 1)
+                const dsIndex = chart.data.datasets.findIndex(
+                  (d) => d.label === s.name
+                );
+                if (dsIndex < 0) continue;
+                const meta = chart.getDatasetMeta(dsIndex);
+                if (!meta || !meta.data) continue;
+                for (let i = 0; i < meta.data.length; i++) {
+                  const el = meta.data[i];
+                  if (!el || typeof el.x !== "number") continue;
+                  const x = el.x;
+                  // Student names close to bars (per-bar labels)
+                  const y = area.bottom + 8;
+                  const txt = s.name;
+                  ctx.fillText(txt, x, y);
+                }
+              }
+              // Exercise names also shown via axis ticks (group labels) - further away
             }
             ctx.restore();
           } catch {}
