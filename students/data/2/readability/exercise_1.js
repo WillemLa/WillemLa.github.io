@@ -54,9 +54,10 @@ void loop()
     usedDebugger: true,
     sections: [
       { minutes: 3, type: "programming" },
-      { minutes: 2, type: "testing" },
-      { minutes: 1, type: "programming" },
-      { minutes: 1, type: "debugger" },
+      { minutes: 2, type: "trial" },
+      { minutes: 2, type: "debugger" },
+      { minutes: 2, type: "programming" },
+      { minutes: 1, type: "testing" },
     ],
     timeAdvice:
       "Korte cycli met duidelijke testmomenten. Vraag Ben naar testselectie.",

@@ -56,7 +56,8 @@ void loop()
     usedDebugger: false,
     // Explicit time sections (minutes) used for graphs; sums must equal total minutes
     sections: [
-      { minutes: 4, type: "programming" },
+      { minutes: 3, type: "programming" },
+      { minutes: 1, type: "testing" },
       { minutes: 2, type: "debugger" },
       { minutes: 2, type: "programming" },
       { minutes: 1, type: "testing" },

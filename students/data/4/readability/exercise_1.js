@@ -52,10 +52,11 @@ void loop()
     wroteTests: true,
     usedDebugger: true,
     sections: [
-      { minutes: 5, type: "programming" },
-      { minutes: 2, type: "debugger" },
       { minutes: 3, type: "programming" },
-      { minutes: 2, type: "testing" },
+      { minutes: 4, type: "trial" },
+      { minutes: 2, type: "debugger" },
+      { minutes: 5, type: "trial" },
+      { minutes: 1, type: "testing" },
     ],
     timeAdvice:
       "Gestructureerde blokken. Vraag Daniël hoe hij beslist wanneer te testen of debuggen.",

@@ -40,10 +40,11 @@ void loop()
     wroteTests: true,
     usedDebugger: false,
     sections: [
-      { minutes: 6, type: "programming" },
-      { minutes: 6, type: "trial" },
-      { minutes: 3, type: "testing" },
+      { minutes: 4, type: "programming" },
+      { minutes: 2, type: "trial" },
+      { minutes: 2, type: "debugger" },
       { minutes: 3, type: "programming" },
+      { minutes: 1, type: "testing" },
     ],
     timeAdvice:
       "Veel tijd ging naar uitproberen. Plan kortere, doelgerichte cycli met reflectie.",

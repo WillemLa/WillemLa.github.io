@@ -7,7 +7,6 @@ window.exerciseData = {
 #include <LiquidCrystal.h>
 
 int item;
-<span class="highlight-func">
 void setup()
 {
   initDwenguino();
@@ -19,7 +18,6 @@ void setup()
   dwenguinoLCD.print(String(item));
   delay(300);
 }
-</span>
 
 // <tag:Loop>
 

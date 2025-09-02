@@ -570,14 +570,14 @@ function sectionKindToColor(kind) {
   // High-contrast, theme-aware palette (distinct hues)
   switch (kind) {
     case "programming":
-      return "#b3b3b3"; // amber
+      return "#dedede";
     case "testing":
-      return "#1976d2"; // strong blue
+      return "#27adcf"; // strong blue
     case "debugger":
-      return "#2e7d32"; // strong green
+      return "#24bd5c"; // strong green
     case "trial":
     case "trial-and-error":
-      return "#c62828"; // strong red
+      return "#cfb327"; // strong red
     default:
       return "#6d6d6d"; // neutral gray fallback
   }
@@ -877,6 +877,7 @@ function stateColor(state) {
       return "#7cb342"; // greenish
     case "tests":
       return "#42a5f5"; // blue
+    case "debug":
     case "debugger":
       return "#ffb300"; // amber
     default:

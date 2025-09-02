@@ -43,9 +43,10 @@ void loop()
     usedDebugger: true,
     sections: [
       { minutes: 6, type: "programming" },
+      { minutes: 1, type: "testing" },
       { minutes: 4, type: "debugger" },
-      { minutes: 3, type: "programming" },
-      { minutes: 1, type: "trial" },
+      { minutes: 2, type: "programming" },
+      { minutes: 2, type: "testing" },
     ],
     timeAdvice:
       "Flinke debugsessies tussen programmeerblokken. Focus op hypothesen vooraf.",
