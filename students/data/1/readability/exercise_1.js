@@ -54,6 +54,7 @@ void loop()
     elapsedSeconds: 9 * 60,
     wroteTests: true,
     usedDebugger: false,
+    finished: true,
     // Explicit time sections (minutes) used for graphs; sums must equal total minutes
     sections: [
       { minutes: 3, type: "programming" },

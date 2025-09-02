@@ -736,7 +736,7 @@ function renderTimeGraph(container) {
           stacked: false,
           title: {
             display: true,
-            text: "Aantal minuten",
+            text: "Aantal minuten (chronologisch)",
           },
         },
       },
@@ -861,6 +861,87 @@ function renderTimeGraph(container) {
                 }
               }
               // Exercise names shown via axis ticks (group labels) - further away
+            }
+            ctx.restore();
+          } catch {}
+        },
+      },
+      {
+        id: "completionMarks",
+        afterDatasetsDraw: (chart) => {
+          try {
+            const ctx = chart.ctx;
+            const area = chart.chartArea;
+            ctx.save();
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            const mark = "✓";
+            const checkColor = "#2e7d32"; // dark green
+            const haloColor = "#ffffff"; // white halo for contrast
+            // Inside the chart area to the right of the y-axis
+            const xInside = area.left + 14;
+            const radius = 9;
+            const fontPx = 14;
+            ctx.font = `${fontPx}px ${
+              Chart.defaults.font && Chart.defaults.font.family
+                ? Chart.defaults.font.family
+                : "sans-serif"
+            }`;
+
+            if (timeGrouping === "byStudent") {
+              // dataset per exercise; element index corresponds to student index
+              for (let exIdx = 0; exIdx < exercises.length; exIdx++) {
+                const ex = exercises[exIdx];
+                const dsIndex = chart.data.datasets.findIndex(
+                  (d) => d.label === ex.label
+                );
+                if (dsIndex < 0) continue;
+                const meta = chart.getDatasetMeta(dsIndex);
+                if (!meta || !meta.data) continue;
+                for (let i = 0; i < meta.data.length; i++) {
+                  const el = meta.data[i];
+                  if (!el || typeof el.y !== "number") continue;
+                  const student = students[i];
+                  const m = getMetrics(student.id, ex.id) || {};
+                  if (m && m.finished) {
+                    // white halo
+                    ctx.beginPath();
+                    ctx.arc(xInside, el.y, radius, 0, Math.PI * 2);
+                    ctx.fillStyle = haloColor;
+                    ctx.fill();
+                    // green check on top
+                    ctx.fillStyle = checkColor;
+                    ctx.fillText(mark, xInside, el.y + 1);
+                  }
+                }
+              }
+            } else {
+              // dataset per student; element index corresponds to exercise index
+              for (let sIdx = 0; sIdx < students.length; sIdx++) {
+                const s = students[sIdx];
+                const dsIndex = chart.data.datasets.findIndex(
+                  (d) => d.label === s.name
+                );
+                if (dsIndex < 0) continue;
+                const meta = chart.getDatasetMeta(dsIndex);
+                if (!meta || !meta.data) continue;
+                for (let i = 0; i < meta.data.length; i++) {
+                  const el = meta.data[i];
+                  if (!el || typeof el.y !== "number") continue;
+                  const ex = exercises[i];
+                  const m = getMetrics(s.id, ex.id) || {};
+                  if (m && m.finished) {
+                    // white halo
+                    ctx.beginPath();
+                    ctx.arc(xInside, el.y, radius, 0, Math.PI * 2);
+                    ctx.fillStyle = haloColor;
+                    ctx.fill();
+                    // green check on top
+                    ctx.fillStyle = checkColor;
+                    ctx.fillText(mark, xInside, el.y + 1);
+                  }
+                }
+              }
             }
             ctx.restore();
           } catch {}
@@ -1153,7 +1234,8 @@ function renderTestDebugBars(container) {
     options: {
       responsive: true,
       maintainAspectRatio: false,
-      layout: { padding: { bottom: 40, top: 20, left: 20, right: 20 } },
+      indexAxis: "y",
+      layout: { padding: { left: 10, right: 10 } },
       elements: {
         bar: {
           borderWidth: 0,
@@ -1161,29 +1243,30 @@ function renderTestDebugBars(container) {
       },
       scales: {
         x: {
+          beginAtZero: true,
+          stacked: true,
+          ticks: { stepSize: 1 },
+          title: {
+            display: true,
+            text: "Aantal minuten (chronologisch)",
+          },
+          grid: {
+            display: true,
+            color: "rgba(0,0,0,0.1)",
+          },
+        },
+        y: {
           stacked: true,
           title: {
             display: false,
             text: "",
           },
           ticks: {
-            padding: timeGrouping === "byStudent" ? 24 : 6,
+            color: "#000",
+            padding: timeGrouping === "byStudent" ? 20 : 12,
           },
           grid: {
             display: false,
-          },
-        },
-        y: {
-          beginAtZero: true,
-          stacked: true,
-          ticks: { stepSize: 1 },
-          title: {
-            display: true,
-            text: "Aantal minuten",
-          },
-          grid: {
-            display: true,
-            color: "rgba(0,0,0,0.1)",
           },
         },
       },
@@ -1288,9 +1371,9 @@ function renderTestDebugBars(container) {
             const ctx = chart.ctx;
             const area = chart.chartArea;
             ctx.save();
-            ctx.textAlign = "center";
-            ctx.textBaseline = "top";
-            ctx.fillStyle = "#333";
+            ctx.textAlign = "right";
+            ctx.textBaseline = "middle";
+            // color set per-label below
             ctx.font =
               Chart.defaults.font && Chart.defaults.font.size
                 ? `${Chart.defaults.font.size}px ${
@@ -1298,11 +1381,19 @@ function renderTestDebugBars(container) {
                   }`
                 : "12px sans-serif";
 
+            const yTickPadding =
+              (chart.options &&
+                chart.options.scales &&
+                chart.options.scales.y &&
+                chart.options.scales.y.ticks &&
+                chart.options.scales.y.ticks.padding) ||
+              10;
+            const leftXDefault = area.left - 25;
+
             if (timeGrouping === "byStudent") {
-              // When grouped by student: show exercise labels per bar (close to bars)
+              // For each exercise, use the first segment dataset to position labels per student row
               for (let exIdx = 0; exIdx < exercises.length; exIdx++) {
                 const ex = exercises[exIdx];
-                // Find the first dataset for this exercise (Min 1)
                 const dsIndex = chart.data.datasets.findIndex(
                   (d) => d.label === ex.label
                 );
@@ -1311,20 +1402,19 @@ function renderTestDebugBars(container) {
                 if (!meta || !meta.data) continue;
                 for (let i = 0; i < meta.data.length; i++) {
                   const el = meta.data[i];
-                  if (!el || typeof el.x !== "number") continue;
-                  const x = el.x;
-                  // Exercise labels close to bars (per-bar labels)
-                  const y = area.bottom + 10;
-                  const txt = ex.label; // "oefening 1", "oefening 2"
-                  ctx.fillText(txt, x, y);
+                  if (!el || typeof el.y !== "number") continue;
+                  const y = el.y;
+                  // Draw exercise label right-aligned a few px left of the axis to avoid overlap
+                  ctx.textAlign = "right";
+                  const exX = area.left - 4;
+                  ctx.fillStyle = "#777";
+                  ctx.fillText(ex.label, exX, y);
                 }
               }
-              // Student names also shown via axis ticks (group labels) - further away
             } else {
-              // When grouped by exercise: show student names per bar (close to bars)
+              // Grouped by exercise: label each bar with the student name at its row center
               for (let sIdx = 0; sIdx < students.length; sIdx++) {
                 const s = students[sIdx];
-                // Find the first dataset for this student (Min 1)
                 const dsIndex = chart.data.datasets.findIndex(
                   (d) => d.label === s.name
                 );
@@ -1333,15 +1423,13 @@ function renderTestDebugBars(container) {
                 if (!meta || !meta.data) continue;
                 for (let i = 0; i < meta.data.length; i++) {
                   const el = meta.data[i];
-                  if (!el || typeof el.x !== "number") continue;
-                  const x = el.x;
-                  // Student names close to bars (per-bar labels)
-                  const y = area.bottom + 8;
-                  const txt = s.name;
-                  ctx.fillText(txt, x, y);
+                  if (!el || typeof el.y !== "number") continue;
+                  const y = el.y;
+                  ctx.textAlign = "right";
+                  ctx.fillStyle = "#000";
+                  ctx.fillText(s.name, leftXDefault, y);
                 }
               }
-              // Exercise names also shown via axis ticks (group labels) - further away
             }
             ctx.restore();
           } catch {}

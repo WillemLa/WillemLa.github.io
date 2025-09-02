@@ -3,7 +3,7 @@ window.exerciseData = {
   code: `
 int lamp;
 
-void knipperLampjes() {
+void KNipperLampjes() {
   while (lamp > 1) {
     lamp = lamp / 2;
     schrijfNaarScherm(String("Ledje ") + String(lamp));
@@ -32,15 +32,16 @@ void setup()
 
 void loop()
 {
-    knipperLampjes();
+    KNipperLampjes();
 }`,
   advice: [
-    "Benadruk bij Alice dat haar consistente naamgeving en eenvoudige logica het lezen van code vergemakkelijken.",
+    "Benadruk bij Alice dat haar consistente naamgeving het lezen van code vergemakkelijken.",
   ],
   metrics: {
     elapsedSeconds: 14 * 60,
     wroteTests: false,
     usedDebugger: true,
+    finished: false,
     sections: [
       { minutes: 3, type: "programming" },
       { minutes: 1, type: "testing" },

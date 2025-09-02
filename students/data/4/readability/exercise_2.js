@@ -35,7 +35,7 @@ void loop()
     knipper();
 }`,
   advice: [
-    "Leg Daniel uit hoe hij na tests gericht kan debuggen om sneller vooruit te gaan.",
+    "Leg Daniel uit hoe descriptieve naamgeving de leesbaarheid van code verbetert.",
   ],
   metrics: {
     elapsedSeconds: 16 * 60,

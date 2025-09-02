@@ -1,9 +1,9 @@
 window.exerciseData = {
   student: "Ben Thompson",
   code: `
-int rechtsPeriode;
 
-int wacht;
+int x;
+int y;
 
 void schrijfNaarLCD(int tekst) {
   dwenguinoLCD.clear();
@@ -15,38 +15,38 @@ DCMotor dcMotor1(MOTOR_1_0, MOTOR_1_1);
 
 DCMotor dcMotor2(MOTOR_2_0, MOTOR_2_1);
 
-void rechtdoor(int wacht) {
+void rechtdoor(int x) {
   schrijfNaarScherm(String("vooruit"));
   dcMotor1.setSpeed(180);
   dcMotor2.setSpeed(180);
-  delay(wacht);
+  delay(x);
 }
 
-void rechts(int rechtsPeriode) {
+void rechts(int y) {
   schrijfNaarScherm(String("rechts"));
   dcMotor1.setSpeed(55);
-  delay(rechtsPeriode);
+  delay(y);
 }
 
 void setup()
 {
   initDwenguino();
 
-  wacht = 150;
-  rechtsPeriode = 500;
+  x = 150;
+  y = 500;
 }
 
 void loop()
 {
     loopDoor(x);
-    naarRechts(rechtsPeriode);
+    naarRechts(y);
 
 }
 
 
   `,
   advice: [
-    "Geef Ben complimenten voor zijn duidelijke namen en structuur. Vraag hem waarom dit belangrijk is.",
+    "Maak Ben duidelijk dat een descriptieve naamgeving belangrijk is voor leesbare code.",
   ],
   metrics: {
     elapsedSeconds: 7 * 60,
