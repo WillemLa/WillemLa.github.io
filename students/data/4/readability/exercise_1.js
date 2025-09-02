@@ -52,10 +52,9 @@ void loop()
     wroteTests: true,
     usedDebugger: true,
     sections: [
-      { minutes: 3, type: "programming" },
-      { minutes: 4, type: "trial" },
-      { minutes: 2, type: "debugger" },
-      { minutes: 5, type: "trial" },
+      { minutes: 6, type: "programming" },
+      { minutes: 1, type: "testing" },
+      { minutes: 1, type: "debugger" },
       { minutes: 1, type: "testing" },
     ],
     timeAdvice:

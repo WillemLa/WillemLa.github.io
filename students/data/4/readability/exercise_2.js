@@ -42,8 +42,8 @@ void loop()
     wroteTests: true,
     usedDebugger: false,
     sections: [
-      { minutes: 6, type: "programming" },
-      { minutes: 2, type: "trial" },
+      { minutes: 7, type: "programming" },
+      { minutes: 6, type: "trial" },
     ],
     timeAdvice:
       "Balans tussen bouwen en testen. Stimuleer het groeperen van kleine testmomenten.",
