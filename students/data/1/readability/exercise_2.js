@@ -44,9 +44,12 @@ void loop()
     sections: [
       { minutes: 6, type: "programming" },
       { minutes: 1, type: "testing" },
-      { minutes: 4, type: "debugger" },
+      { minutes: 2, type: "debugger" },
       { minutes: 2, type: "programming" },
-      { minutes: 2, type: "testing" },
+      { minutes: 1, type: "testing" },
+      { minutes: 3, type: "debugger" },
+      { minutes: 2, type: "programming" },
+      { minutes: 1, type: "testing" },
     ],
     timeAdvice:
       "Flinke debugsessies tussen programmeerblokken. Focus op hypothesen vooraf.",
