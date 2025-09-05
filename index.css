@@ -91,7 +91,7 @@ header {
 .dashboard-table {
   max-width: 100vw;
   max-height: 80vh;
-  margin-top: 5vh;
+  margin-top: 1vh;
   background: none;
   border-radius: var(--table-radius);
   box-shadow: var(--table-shadow);

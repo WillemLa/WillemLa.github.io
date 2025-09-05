@@ -274,6 +274,25 @@ function updateUrl(push = true) {
   } catch {}
 }
 
+function applyExplanationToDashboardView() {
+  const select = document.getElementById("criterion-select");
+  const selectedValue = select.value;
+  const explanation = document.getElementById("exercise-explanation");
+  console.log(selectedValue);
+  if (selectedValue === "concepts") {
+    explanation.textContent =
+      "Dit is een overzicht van de studentenprestaties op basis van codeconcepten zoals loops, functies en conditionals. Het helpt bij het identificeren van conceptuele fouten in hun code.";
+  }
+  if (selectedValue === "readability") {
+    explanation.textContent =
+      "Dit is een overzicht van de studentenprestaties op basis van codeleesbaarheid. Het helpt bij het identificeren van problemen zoals inconsistente naamgeving, niet-descriptieve namen en ontbrekend commentaar.";
+  }
+  if (selectedValue === "testDebug") {
+    explanation.textContent =
+      "Dit is een overzicht van de studentenprestaties op basis van hun gebruik van testen en debugging. Het helpt bij het identificeren van studenten die mogelijk geen tests schrijven of geen systematische debugging toepassen.";
+  }
+}
+
 function applyStateToUI(fromPopstate = false) {
   // Update label and selects based on current globals
   const select = document.getElementById("criterion-select");
@@ -300,7 +319,6 @@ function renderDashboardTable() {
   if (table) table.style.display = "table";
   const criterionAlerts = alertDefsByCriterion[selectedCriterion] || {};
   const criterionResults = resultsByCriterion[selectedCriterion] || {};
-  console.log(resultsByCriterion);
   // Header
   let thead = "<thead><tr><th>Naam</th>";
   for (const ex of exercises) {
@@ -329,11 +347,6 @@ function renderDashboardTable() {
       const alerts = alertKeys
         .map((key) => criterionAlerts[key])
         .filter(Boolean);
-      console.log(criterionAlerts);
-      console.log(alertKeys);
-      console.log(alerts);
-      console.log(selectedCriterion); //ok
-      console.log(criterionResults); //ok
 
       const hasIssue = alerts.some((a) => a.type === "issue");
       tbody += `<td class="exercise-cell${
@@ -381,6 +394,7 @@ document.addEventListener("DOMContentLoaded", function () {
       selectedCriterion = e.target.value;
       applyStateToUI();
       updateUrl();
+      applyExplanationToDashboardView();
     });
   }
   const dropdown = document.getElementById("criterionDropdown");
@@ -397,6 +411,10 @@ document.addEventListener("DOMContentLoaded", function () {
       updateUrl();
     });
   }
+
+  //do explanation
+  applyExplanationToDashboardView();
+
   // initialize from URL (if present)
   const q = parseQuery();
   if (q.criterion && criteria.some((c) => c.id === q.criterion)) {
@@ -1160,7 +1178,6 @@ function renderTestDebugBars(container) {
     const allExerciseSegmentDatasets = [];
     for (let exIdx = 0; exIdx < exercises.length; exIdx++) {
       const ex = exercises[exIdx];
-      console.log(ex);
       const exSegSets = Array.from({ length: maxMinutes }, (_, segIdx) => ({
         label: `${ex.label}`,
         data: [],
@@ -1388,7 +1405,7 @@ function renderTestDebugBars(container) {
                 chart.options.scales.y.ticks &&
                 chart.options.scales.y.ticks.padding) ||
               10;
-            const leftXDefault = area.left - 25;
+            const leftXDefault = area.left - 15;
 
             if (timeGrouping === "byStudent") {
               // For each exercise, use the first segment dataset to position labels per student row
@@ -1426,7 +1443,7 @@ function renderTestDebugBars(container) {
                   if (!el || typeof el.y !== "number") continue;
                   const y = el.y;
                   ctx.textAlign = "right";
-                  ctx.fillStyle = "#000";
+                  ctx.fillStyle = "#777";
                   ctx.fillText(s.name, leftXDefault, y);
                 }
               }
