@@ -2,6 +2,8 @@ const codeInput = document.getElementById("codeInput");
 const highlightedCode = document.getElementById("highlightedCode");
 const adviceBlock = document.getElementById("adviceBlock");
 const toggleAdvice = document.getElementById("toggleAdvice");
+// Track current version stage globally: 0 (no highlights), 1 (highlights), 2 (highlights + advice)
+window.currentVersionStage = 0;
 
 // Parse student and exercise from query params or URL
 function getStudentAndExercise() {
@@ -68,6 +70,15 @@ function updateAdvice() {
 
 function syncHighlighting() {
   const code = codeInput.value;
+  // In version 1 (stage 0), render raw code without any highlights
+  if (window.currentVersionStage === 0 && criterion !== "tutorial") {
+    const codeWithoutTags = code
+      .split("\n")
+      .filter((line) => !/\/\/\s*<\/?tag:[a-zA-Z]+>/i.test(line))
+      .join("\n");
+    highlightedCode.textContent = codeWithoutTags;
+    return;
+  }
   highlightedCode.innerHTML = highlightCode(code, currentExerciseType);
 }
 
@@ -99,7 +110,7 @@ function highlightCode(code, type) {
 
   //Concept code
   // Step 2: Apply regex-based highlights
-  if (criterion == "readability") {
+  if (criterion == "readability" || criterion == "tutorial") {
     highlighted = applyRegexHighlights(highlighted);
   }
   return highlighted;
@@ -320,20 +331,112 @@ document.addEventListener("DOMContentLoaded", function () {
               data.checkboxes.toggleAdvice;
         }
 
-        // Show relevant control groups based on selected criterion
+        // Show relevant control groups based on selected criterion (extend with 'reasability' like readability)
         const ctrReadability = document.getElementById("controls-readability");
         const ctrConcepts = document.getElementById("controls-concepts");
         const ctrGraphs = document.getElementById("controls-graphs");
         console.log(criterion);
         const selected = criterion || "readability";
-        if (ctrReadability)
-          ctrReadability.style.display =
-            selected === "readability" ? "flex" : "none";
-        if (ctrConcepts)
-          ctrConcepts.style.display = selected === "concepts" ? "flex" : "none";
+        // Let staged logic control visibility; ensure both hidden here
+        if (ctrReadability) ctrReadability.style.display = "none";
+        if (ctrConcepts) ctrConcepts.style.display = "none";
         if (ctrGraphs)
           ctrGraphs.style.display =
-            selected === "testDebug" || selected === "time" ? "flex" : "none";
+            selected === "testDebug" || selected === "time" ? "none" : "none";
+
+        // --- Version buttons staged visibility for both modes ---
+        const version1Btn = document.getElementById("version1Btn");
+        const version2Btn = document.getElementById("version2Btn");
+        const version3Btn = document.getElementById("version3Btn");
+        const toggleAdviceInputRead = document.getElementById("toggleAdvice");
+        const adviceLabelRead = toggleAdviceInputRead
+          ? toggleAdviceInputRead.parentElement
+          : null;
+        const toggleAdviceInputConcepts = document.getElementById(
+          "toggleAdviceConcepts"
+        );
+        const adviceLabelConcepts = toggleAdviceInputConcepts
+          ? toggleAdviceInputConcepts.parentElement
+          : null;
+
+        // Initial: hide both highlight groups and advice UI
+        if (ctrReadability) ctrReadability.style.display = "none";
+        if (ctrConcepts) ctrConcepts.style.display = "none";
+        if (adviceLabelRead) adviceLabelRead.style.display = "none";
+        if (adviceLabelConcepts) adviceLabelConcepts.style.display = "none";
+        if (adviceBlock) adviceBlock.style.display = "none";
+
+        function setStage(stage) {
+          window.currentVersionStage = stage;
+          // Hide everything first
+          if (ctrReadability) ctrReadability.style.display = "none";
+          if (ctrConcepts) ctrConcepts.style.display = "none";
+          if (ctrGraphs) ctrGraphs.style.display = "none";
+          if (adviceLabelRead) adviceLabelRead.style.display = "none";
+          if (adviceLabelConcepts) adviceLabelConcepts.style.display = "none";
+          if (adviceBlock) adviceBlock.style.display = "none";
+
+          if (stage >= 1 || selected === "tutorial") {
+            if (selected === "readability" || selected === "tutorial") {
+              if (ctrReadability) ctrReadability.style.display = "flex";
+            } else if (selected === "concepts") {
+              if (ctrConcepts) ctrConcepts.style.display = "flex";
+            } else if (selected === "testDebug" || selected === "time") {
+              if (ctrGraphs) ctrGraphs.style.display = "flex";
+              const graphContainer = document.getElementById("graph-container");
+              if (graphContainer) {
+                graphContainer.innerHTML =
+                  "<div style='padding:0.8em;color:#7c5e00'>Grafieken komen hier (Testen & Debuggen / Tijdsbesteding)</div>";
+              }
+            }
+          }
+          if (stage >= 2 || selected === "tutorial") {
+            if (selected === "readability" || selected === "tutorial") {
+              if (adviceLabelRead) adviceLabelRead.style.display = "";
+              if (toggleAdviceInputRead) {
+                adviceBlock.style.display = toggleAdviceInputRead.checked
+                  ? "block"
+                  : "none";
+              }
+            } else if (selected === "concepts") {
+              if (adviceLabelConcepts) adviceLabelConcepts.style.display = "";
+              if (toggleAdviceInputConcepts) {
+                adviceBlock.style.display = toggleAdviceInputConcepts.checked
+                  ? "block"
+                  : "none";
+              }
+            }
+          }
+          // If hiding graphs, clear content
+          if (
+            !(selected === "testDebug" || selected === "time") ||
+            stage === 0
+          ) {
+            const graphContainer = document.getElementById("graph-container");
+            if (
+              graphContainer &&
+              ctrGraphs &&
+              ctrGraphs.style.display === "none"
+            ) {
+              graphContainer.innerHTML = "";
+            }
+          }
+          // Re-render highlights based on new stage
+          if (typeof syncHighlighting === "function") syncHighlighting();
+        }
+
+        if (version1Btn) version1Btn.onclick = () => setStage(0);
+        if (version2Btn) version2Btn.onclick = () => setStage(1);
+        if (version3Btn) version3Btn.onclick = () => setStage(2);
+
+        // In tutorial mode, hide the version buttons and show everything immediately
+        const versionButtons = document.querySelector(".version-buttons");
+        if (selected === "tutorial") {
+          if (versionButtons) versionButtons.style.display = "none";
+          setStage(2);
+        } else {
+          if (versionButtons) versionButtons.style.display = "flex";
+        }
 
         // --- Concepts persistence ---
         function conceptsKey(studentId, exerciseNum) {
@@ -401,7 +504,10 @@ document.addEventListener("DOMContentLoaded", function () {
       // Ensure syncHighlighting is called on every checkbox toggle
       document.querySelectorAll('input[type="checkbox"]').forEach((cb) => {
         cb.addEventListener("change", (e) => {
-          if (e.target.id === "toggleAdvice") {
+          if (
+            e.target.id === "toggleAdvice" ||
+            e.target.id === "toggleAdviceConcepts"
+          ) {
             adviceBlock.style.display = e.target.checked ? "block" : "none";
           }
           syncHighlighting();

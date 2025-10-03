@@ -18,7 +18,12 @@
     </header>
     <main>
       <h2 id="exercise-title"></h2>
-      <div class="controls" id="controls-readability">
+      <div class="version-buttons">
+        <button id="version1Btn" class="version-btn">Versie 1</button>
+        <button id="version2Btn" class="version-btn">Versie 2</button>
+        <button id="version3Btn" class="version-btn">Versie 3</button>
+      </div>
+      <div class="controls" id="controls-readability" style="display: none">
         <label
           ><input type="checkbox" id="highlightFunctionCase" checked />
           Inconsistente functienamen</label
@@ -31,12 +36,12 @@
           ><input type="checkbox" id="highlightOneLetter" checked />
           Niet-descriptieve naamgeving</label
         >
-        <label
+        <label class="advice" style="display: none"
           ><input type="checkbox" id="toggleAdvice" checked /> Advies</label
         >
       </div>
       <!-- Only the relevant checkboxes for code concepts -->
-      <div class="controls" id="controls-concepts">
+      <div class="controls" id="controls-concepts" style="display: none">
         <label>
           <input type="checkbox" id="highlightLoops" checked />
           Loops
@@ -49,8 +54,11 @@
           <input type="checkbox" id="highlightConditionals" checked />
           Conditionals
         </label>
+        <label class="advice" style="display: none"
+          ><input type="checkbox" id="toggleAdviceConcepts" checked />
+          Advies</label
+        >
       </div>
-
       <div class="controls" id="controls-graphs">
         <div
           id="graph-container"
@@ -73,7 +81,7 @@
             spellcheck="false"
           ></textarea>
         </div>
-        <div class="advice-block" id="adviceBlock">
+        <div class="advice-block" id="adviceBlock" style="display: none">
           <h3>Advies voor de leerkracht</h3>
           <ul id="advice-list"></ul>
         </div>

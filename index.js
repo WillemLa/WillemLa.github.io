@@ -15,6 +15,7 @@ const exercises = [
 // Criteria and alert definitions per criterion
 const criteria = [
   { id: "readability", label: "Leesbaarheid" },
+  { id: "tutorial", label: "Tutorial" },
   { id: "concepts", label: "Codeconcepten" },
   { id: "testDebug", label: "Testen & Debuggen" },
   { id: "time", label: "Tijdsbesteding" },
@@ -59,6 +60,7 @@ const alertDefsByCriterion = {
       title: "Geen Opmerkingen",
     },
   },
+  tutorial: {}, // will be populated from readability below
   concepts: {
     multipleIssues: {
       type: "issue",
@@ -142,6 +144,9 @@ const alertDefsByCriterion = {
   },
 };
 
+// Make tutorial share the same alert definitions as readability
+alertDefsByCriterion.tutorial = { ...alertDefsByCriterion.readability };
+
 // Map: results[studentId][exerciseId] = array of alert keys (empty = correct)
 const results = {
   1: {
@@ -190,6 +195,7 @@ const resultsByCriterion = {
     3: { 1: ["multipleIssues"], 2: ["multipleIssues"] },
     4: { 1: ["correct"], 2: ["oneletter"] },
   },
+  tutorial: {}, // will be populated from readability below
   concepts: {
     1: { 1: ["correct"], 2: ["correct"] },
     2: { 1: ["correct"], 2: ["correct"] },
@@ -199,6 +205,11 @@ const resultsByCriterion = {
   testDebug: {},
   time: {},
 };
+
+// Mirror readability results into tutorial by default
+resultsByCriterion.tutorial = JSON.parse(
+  JSON.stringify(resultsByCriterion.readability)
+);
 
 function metricsKey(studentId, exerciseId) {
   return `exerciseMetrics:${studentId}:${exerciseId}`;
@@ -279,17 +290,25 @@ function applyExplanationToDashboardView() {
   const selectedValue = select.value;
   const explanation = document.getElementById("exercise-explanation");
   console.log(selectedValue);
-  if (selectedValue === "concepts") {
-    explanation.textContent =
-      "Dit is een overzicht van de studentenprestaties op basis van codeconcepten zoals loops, functies en conditionals. Het helpt bij het identificeren van conceptuele fouten in hun code.";
-  }
-  if (selectedValue === "readability") {
-    explanation.textContent =
-      "Dit is een overzicht van de studentenprestaties op basis van codeleesbaarheid. Het helpt bij het identificeren van problemen zoals inconsistente naamgeving, niet-descriptieve namen en ontbrekend commentaar.";
-  }
-  if (selectedValue === "testDebug") {
-    explanation.textContent =
-      "Dit is een overzicht van de studentenprestaties op basis van hun gebruik van testen en debugging. Het helpt bij het identificeren van studenten die mogelijk geen tests schrijven of geen systematische debugging toepassen.";
+  switch (selectedValue) {
+    case "concepts":
+      explanation.textContent =
+        "Dit is een overzicht van de studentenprestaties op basis van codeconcepten zoals loops, functies en conditionals. Het helpt bij het identificeren van conceptuele fouten in hun code.";
+      break;
+    case "readability":
+      explanation.textContent =
+        "Dit is een overzicht van de studentenprestaties op basis van codeleesbaarheid. Het helpt bij het identificeren van problemen zoals inconsistente naamgeving, niet-descriptieve namen en ontbrekend commentaar.";
+      break;
+    case "tutorial":
+      break;
+    case "testDebug":
+      explanation.textContent =
+        "Dit is een overzicht van de studentenprestaties op basis van hun gebruik van testen en debugging. Het helpt bij het identificeren van studenten die mogelijk geen tests schrijven of geen systematische debugging toepassen.";
+      break;
+    default:
+      explanation.textContent =
+        "Dit is een overzicht van studentenprestaties in de tutorial. Deze kan gebruikt worden om het dashboard te leren kennen.";
+      break;
   }
 }
 
@@ -301,6 +320,11 @@ function applyStateToUI(fromPopstate = false) {
   if (select) select.value = selectedCriterion;
   const c = criteria.find((c) => c.id === selectedCriterion);
   if (c && label) label.textContent = c.label;
+  // Hide criterion select in tutorial mode
+  if (select) {
+    select.style.display =
+      selectedCriterion === "tutorial" ? "none" : "inline-block";
+  }
   if (timeGroupingEl) {
     timeGroupingEl.style.display =
       selectedCriterion === "time" || selectedCriterion === "testDebug"
@@ -334,6 +358,7 @@ function renderDashboardTable() {
       let alertKeys = [];
       if (
         selectedCriterion === "readability" ||
+        selectedCriterion === "tutorial" ||
         selectedCriterion === "concepts"
       ) {
         alertKeys =
@@ -412,9 +437,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  //do explanation
-  applyExplanationToDashboardView();
-
   // initialize from URL (if present)
   const q = parseQuery();
   if (q.criterion && criteria.some((c) => c.id === q.criterion)) {
@@ -426,6 +448,11 @@ document.addEventListener("DOMContentLoaded", function () {
   ) {
     timeGrouping = q.timeGrouping;
   }
+
+  // sync UI with URL-derived state (sets dropdown, label, hides tutorial select, renders view)
+  applyStateToUI();
+  // update explanation after state is applied
+  applyExplanationToDashboardView();
 
   // initial derive + render
   loadDerivedCriterionResults();
