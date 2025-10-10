@@ -52,7 +52,9 @@ void loop()
     }
 }
 // </tag:Highlight 1>`,
-  advice: ["Bespreek hoe Ben regressietests kan creëren voor eerdere bugs."],
+  advice: [
+    "Beperk trial-and-error: noteer observaties en formuleer een hypothese voor elke stap.",
+  ],
   metrics: {
     elapsedSeconds: 18 * 60,
     wroteTests: true,

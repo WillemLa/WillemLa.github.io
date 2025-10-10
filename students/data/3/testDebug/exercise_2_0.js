@@ -51,7 +51,7 @@ void loop()
     }
 }`,
   advice: [
-    "Vraag Carla om de verschillende naamgevingsconventies in haar code te wijzen en descriptievere namen te gebruiken. Bespreek samen waarom consistentie belangrijk is.",
+    "Vervang trial-and-error door doelgerichte observaties en kleine experimenten.",
   ],
   metrics: {
     elapsedSeconds: 4 * 60,

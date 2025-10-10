@@ -40,7 +40,7 @@ void loop()
     }
 }`,
   advice: [
-    "Hier komt er advies dat u kunt gebruiken om Carla te helpen met haar code.",
+    "Beperk trial-and-error: formuleer hypothesen, zet breakpoints, test tussendoor.",
   ],
   metrics: {
     elapsedSeconds: 15 * 60,

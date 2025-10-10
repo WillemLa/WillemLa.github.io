@@ -55,7 +55,7 @@ void loop()
     }
 }`,
   advice: [
-    "Hier komt er advies dat u kunt gebruiken om Ben te helpen met zijn code.",
+    "Benadruk het koppelen van testresultaten aan gerichte debugacties.",
   ],
   metrics: {
     elapsedSeconds: 7 * 60,

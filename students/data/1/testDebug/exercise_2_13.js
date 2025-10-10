@@ -50,7 +50,7 @@ void loop()
     }
 }`,
   advice: [
-    "Benadruk bij Alice dat haar consistente naamgeving het lezen van code vergemakkelijken.",
+    "Stuur op systematische debugstappen en laat korte program/test-cycli zien.",
   ],
   metrics: {
     elapsedSeconds: 14 * 60,

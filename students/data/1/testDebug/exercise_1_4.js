@@ -58,7 +58,7 @@ void loop()
 }
     `,
   advice: [
-    "Hier komt er advies dat u kunt gebruiken om Alice te helpen met haar code.",
+    "Moedig korte cycli aan: stukje programmeren, gericht debuggen, korte test.",
   ],
   //This tracks time per exercise
   metrics: {

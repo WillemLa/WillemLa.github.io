@@ -43,7 +43,7 @@ void loop()
 }
 `,
   advice: [
-    "Hier komt er advies dat u kunt gebruiken om Daniël te helpen met zijn code.",
+    "Mooi afwisselend patroon: programmeren, debuggen, testen. Benadruk systematiek.",
   ],
   metrics: {
     elapsedSeconds: 12 * 60,

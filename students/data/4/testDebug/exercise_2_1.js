@@ -55,7 +55,7 @@ void loop()
     }
 }`,
   advice: [
-    "Leg Daniel uit hoe descriptieve naamgeving de leesbaarheid van code verbetert.",
+    "Introduceer kort debuggen bij falende tests om trial-and-error te beperken.",
   ],
   metrics: {
     elapsedSeconds: 16 * 60,
