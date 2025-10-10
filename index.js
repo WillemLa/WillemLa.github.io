@@ -249,21 +249,29 @@ function loadDerivedCriterionResults() {
   //resultsByCriterion.concepts = concepts; TODO to get it from the files themselves
 }
 
-function goToExercise(studentId, exerciseNum) {
-  // pass selected criterion to exercise page
-  window.location.href = `students/exercise.html?student=${studentId}&exercise=${exerciseNum}&criterion=${selectedCriterion}`;
+function goToExercise(studentId, exerciseId, timeSegment = null) {
+  console.log("xx");
+  const ver = typeof exerciseVersion === "number" ? exerciseVersion : 1;
+  let url = `students/exercise.html?student=${studentId}&exercise=${exerciseId}&criterion=${selectedCriterion}&version=${ver}`;
+  if (timeSegment !== null) {
+    url += `&segment=${timeSegment}`;
+  }
+  window.location.href = url;
 }
 
 let selectedCriterion = "readability";
 let timeGrouping = "byStudent"; // or "byExercise"
+let exerciseVersion = 1; // 1, 2, or 3 to dictate individual overview version
 
 // ---------------- URL/state sync helpers ----------------
 function parseQuery() {
   try {
     const params = new URLSearchParams(window.location.search);
+    const segment = params.get("segment");
     return {
       criterion: params.get("criterion") || null,
       timeGrouping: params.get("timeGrouping") || null,
+      version: params.get("version") || null,
     };
   } catch {
     return {};
@@ -275,8 +283,17 @@ function updateUrl(push = true) {
     const params = new URLSearchParams(window.location.search);
     params.set("criterion", selectedCriterion);
     params.set("timeGrouping", timeGrouping);
+    if (
+      typeof exerciseVersion === "number" &&
+      exerciseVersion >= 1 &&
+      exerciseVersion <= 3
+    ) {
+      params.set("version", String(exerciseVersion));
+    } else {
+      params.delete("version");
+    }
     const newUrl = `${window.location.pathname}?${params.toString()}`;
-    const state = { selectedCriterion, timeGrouping };
+    const state = { selectedCriterion, timeGrouping, exerciseVersion };
     if (push) {
       history.pushState(state, "", newUrl);
     } else {
@@ -289,7 +306,6 @@ function applyExplanationToDashboardView() {
   const select = document.getElementById("criterion-select");
   const selectedValue = select.value;
   const explanation = document.getElementById("exercise-explanation");
-  console.log(selectedValue);
   switch (selectedValue) {
     case "concepts":
       explanation.textContent =
@@ -320,11 +336,8 @@ function applyStateToUI(fromPopstate = false) {
   if (select) select.value = selectedCriterion;
   const c = criteria.find((c) => c.id === selectedCriterion);
   if (c && label) label.textContent = c.label;
-  // Hide criterion select in tutorial mode
-  if (select) {
-    select.style.display =
-      selectedCriterion === "tutorial" ? "none" : "inline-block";
-  }
+  // Always hide criterion select on overall overview
+  if (select) select.style.display = "none";
   if (timeGroupingEl) {
     timeGroupingEl.style.display =
       selectedCriterion === "time" || selectedCriterion === "testDebug"
@@ -448,6 +461,10 @@ document.addEventListener("DOMContentLoaded", function () {
   ) {
     timeGrouping = q.timeGrouping;
   }
+  if (q.version) {
+    const v = parseInt(q.version, 10);
+    if (!Number.isNaN(v) && v >= 1 && v <= 3) exerciseVersion = v;
+  }
 
   // sync UI with URL-derived state (sets dropdown, label, hides tutorial select, renders view)
   applyStateToUI();
@@ -456,6 +473,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // initial derive + render
   loadDerivedCriterionResults();
+  console.log("xx");
   // Preload per-exercise files to seed metrics from the new structure
   preloadPerExerciseMetrics().finally(() => {
     // After preload attempt completes, render with any seeded metrics
@@ -473,32 +491,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     return false;
   })();
-  if (!anyTimeData) {
-    const seed = [
-      // Student 1
-      { s: 1, e: 1, secs: 18 * 60, tests: true, dbg: true }, // both
-      { s: 1, e: 2, secs: 6 * 60, tests: false, dbg: true }, // debugger only
-      // Student 2
-      { s: 2, e: 1, secs: 3 * 60, tests: true, dbg: false }, // tests only (short)
-      { s: 2, e: 2, secs: 28 * 60, tests: false, dbg: false }, // neither (long)
-      // Student 3
-      { s: 3, e: 1, secs: 1 * 60, tests: true, dbg: true }, // both
-      { s: 3, e: 2, secs: 9 * 60, tests: false, dbg: true }, // debugger only
-      // Student 4
-      { s: 4, e: 1, secs: 4 * 60, tests: false, dbg: false }, // neither (short)
-      { s: 4, e: 2, secs: 22 * 60, tests: true, dbg: false }, // tests only
-    ];
-    seed.forEach((x) => {
-      const existing = getMetrics(x.s, x.e) || {};
-      const merged = {
-        ...existing,
-        elapsedSeconds: x.secs,
-        wroteTests: x.tests,
-        usedDebugger: x.dbg,
-      };
-      localStorage.setItem(metricsKey(x.s, x.e), JSON.stringify(merged));
-    });
-  }
+
   maybeRenderGraphs();
   if (timeGroupingEl) {
     timeGroupingEl.style.display =
@@ -534,6 +527,15 @@ window.addEventListener("popstate", (event) => {
       timeGrouping = q.timeGrouping;
     }
   }
+  if (state && typeof state.exerciseVersion === "number") {
+    exerciseVersion = state.exerciseVersion;
+  } else {
+    const q = parseQuery();
+    if (q.version) {
+      const v = parseInt(q.version, 10);
+      if (!Number.isNaN(v) && v >= 1 && v <= 3) exerciseVersion = v;
+    }
+  }
 
   applyStateToUI(true);
 });
@@ -551,6 +553,7 @@ function destroyCurrentChart() {
 function getMetrics(studentId, exerciseId) {
   try {
     // Prefer seeded data from new per-exercise files if present
+
     const cached =
       window.__exerciseDataCache &&
       window.__exerciseDataCache[studentId] &&
@@ -562,6 +565,10 @@ function getMetrics(studentId, exerciseId) {
         window[`exerciseData_${studentId}`][exerciseId] &&
         window[`exerciseData_${studentId}`][exerciseId].metrics) ||
       null;
+    console.log(window.__exerciseDataCache);
+    console.log(studentId);
+    console.log(exerciseId);
+
     if (seeded) return seeded;
     const raw = localStorage.getItem(metricsKey(studentId, exerciseId));
     return raw ? JSON.parse(raw) : null;
@@ -594,6 +601,7 @@ function minutesFromMetrics(metrics) {
 function expandSectionKinds(metrics, maxMinutes) {
   try {
     const kinds = [];
+    //console.log(metrics);
     if (metrics && Array.isArray(metrics.sections) && metrics.sections.length) {
       for (const seg of metrics.sections) {
         const len = Math.max(
@@ -612,22 +620,27 @@ function expandSectionKinds(metrics, maxMinutes) {
 }
 
 function sectionKindToColor(kind) {
-  // High-contrast, theme-aware palette (distinct hues)
-  switch (kind) {
-    case "programming":
-      return "#dedede";
-    case "testing":
-      return "#27adcf"; // strong blue
-    case "debugger":
-      return "#24bd5c"; // strong green
-    case "trial":
-    case "trial-and-error":
-      return "#cfb327"; // strong red
-    default:
-      return "#6d6d6d"; // neutral gray fallback
+  const q = parseQuery();
+  const v = parseInt(q.version, 10);
+
+  if (!Number.isNaN(v) && v > 1) {
+    switch (kind) {
+      case "programming":
+        return "#dedede";
+      case "testing":
+        return "#27adcf"; // strong blue
+      case "debugger":
+        return "#24bd5c"; // strong green
+      case "trial":
+      case "trial-and-error":
+        return "#cfb327"; // strong red
+      default:
+        return "#6d6d6d"; // neutral gray fallback
+    }
+  } else {
+    return "#6d6d6d"; // neutral gray fallback
   }
 }
-
 // Labels for kinds used in legends and tooltips
 const KIND_LABEL = {
   programming: "Programmeren",
@@ -672,23 +685,50 @@ function maybeRenderGraphs() {
 window.__exerciseDataCache = window.__exerciseDataCache || {};
 
 function preloadPerExerciseMetrics() {
+  console.log("xx");
   try {
     const criterion = "readability"; // metrics currently seeded from readability files
     const promises = [];
+    var maxMins = maxMinutesAcross();
     for (const s of students) {
       for (const ex of exercises) {
-        const path = `students/data/${s.id}/${criterion}/exercise_${ex.id}.js`;
+        for (let segment = 0; segment < maxMins; segment++) {
+          promises.push(
+            new Promise((resolve) => {
+              const script = document.createElement("script");
+              script.src = `students/data/${s.id}/testDebug/exercise_${ex.id}_${segment}.js`;
+              script.onload = function () {
+                if (window.exerciseData) {
+                  window.__exerciseDataCache[s.id] =
+                    window.__exerciseDataCache[s.id] || {};
+                  window.__exerciseDataCache[s.id][`${ex.id}_${segment}`] =
+                    window.exerciseData;
+                }
+                console.log(window.__exerciseDataCache);
+                try {
+                  delete window.exerciseData;
+                } catch {}
+                resolve();
+              };
+              script.onerror = function () {
+                resolve();
+              };
+              document.body.appendChild(script);
+            })
+          );
+        }
         promises.push(
           new Promise((resolve) => {
             const script = document.createElement("script");
-            script.src = path;
+            script.src = `students/data/${s.id}/testDebug/exercise_${ex.id}.js`;
             script.onload = function () {
               if (window.exerciseData) {
                 window.__exerciseDataCache[s.id] =
                   window.__exerciseDataCache[s.id] || {};
-                window.__exerciseDataCache[s.id][ex.id] = window.exerciseData;
+                window.__exerciseDataCache[s.id][`${ex.id}`] =
+                  window.exerciseData;
               }
-              // cleanup global to avoid leaking between loads
+              console.log(window.__exerciseDataCache);
               try {
                 delete window.exerciseData;
               } catch {}
@@ -704,6 +744,7 @@ function preloadPerExerciseMetrics() {
     }
     return Promise.all(promises);
   } catch (e) {
+    console.log(e);
     return Promise.resolve();
   }
 }
@@ -1020,6 +1061,19 @@ function computeTDState(metrics) {
   return "neither";
 }
 
+function maxMinutesAcross() {
+  let max = 1;
+  for (const s of students) {
+    for (const ex of exercises) {
+      const m = getMetrics(s.id, ex.id);
+      const mins = minutesFromMetrics(m);
+      if (mins > max) max = mins;
+    }
+  }
+  return max || 1;
+}
+
+/*
 function renderTestDebugHeatmap(container) {
   destroyCurrentChart();
   container.innerHTML = "";
@@ -1042,7 +1096,14 @@ function renderTestDebugHeatmap(container) {
           : state === "debugger"
           ? 1
           : 0;
-      data.push({ x: ei, y: si, v, studentId: s.id, exerciseId: ex.id, state });
+      data.push({
+        x: ei,
+        y: si,
+        v,
+        studentId: s.id,
+        exerciseId: ex.id,
+        state,
+      });
     }
   }
 
@@ -1103,7 +1164,7 @@ function renderTestDebugHeatmap(container) {
     },
   });
 }
-
+*/
 function renderTestDebugBars(container) {
   destroyCurrentChart();
   container.innerHTML = "";
@@ -1140,23 +1201,16 @@ function renderTestDebugBars(container) {
   note.style.color = "#333";
   note.style.marginTop = "2px";
 
-  container.appendChild(legend);
+  const q = parseQuery();
+  const v = parseInt(q.version, 10);
+
+  if (!Number.isNaN(v) && v > 1) {
+    container.appendChild(legend);
+  }
   container.appendChild(canvas);
 
   const GREEN = "#4caf50"; // debugger/logs
   const RED = "#f44336"; // trial-and-error
-
-  function maxMinutesAcross() {
-    let max = 1;
-    for (const s of students) {
-      for (const ex of exercises) {
-        const m = getMetrics(s.id, ex.id);
-        const mins = minutesFromMetrics(m);
-        if (mins > max) max = mins;
-      }
-    }
-    return max || 1;
-  }
 
   function segmentsForTime(seconds, maxSecs) {
     if (!seconds || seconds <= 0) return 2; // show minimal presence
@@ -1203,6 +1257,7 @@ function renderTestDebugBars(container) {
     labels = students.map((s) => s.name);
     // Build per-exercise bars across students by stacking minute segments (from sections when present)
     const allExerciseSegmentDatasets = [];
+    console.log(exercises);
     for (let exIdx = 0; exIdx < exercises.length; exIdx++) {
       const ex = exercises[exIdx];
       const exSegSets = Array.from({ length: maxMinutes }, (_, segIdx) => ({
@@ -1218,10 +1273,12 @@ function renderTestDebugBars(container) {
         const m = getMetrics(s.id, ex.id);
         const minutes = minutesFromMetrics(m);
         const kinds = expandSectionKinds(m, minutes);
+        console.log(m);
+        console.log(kinds);
         const pattern =
           kinds ||
           Array.from({ length: minutes }, () =>
-            m && m.usedDebugger ? "debugger" : "trial"
+            m && m.usedDebugger ? "debuggersssss" : "trial"
           );
         for (let seg = 0; seg < maxMinutes; seg++) {
           const kind = seg < pattern.length ? pattern[seg] : null;
@@ -1233,6 +1290,8 @@ function renderTestDebugBars(container) {
       //set exercise labels for each bar
       allExerciseSegmentDatasets.push(...exSegSets);
     }
+    //console.log(allExerciseSegmentDatasets);
+
     segmentDatasets = allExerciseSegmentDatasets;
   } else {
     // byExercise: X axis exercises; create separate stacked bars per student
@@ -1375,33 +1434,23 @@ function renderTestDebugBars(container) {
         },
         barSubLabels: {},
       },
-      /*onClick: (evt, elements) => {
+      onClick: (evt, elements) => {
         if (!elements || elements.length === 0) return;
         const el = elements[0];
         let studentId, exerciseId;
         if (timeGrouping === "byStudent") {
           const studentIndex = el.index; // x-category
-          // Dataset label contains exercise
-          const exerciseLabel = el.dataset.label.split(" · ")[0];
-          const exerciseIndex = exercises.findIndex(
-            (e) => e.label === exerciseLabel
+          const datasetIndex = el.datasetIndex;
+          var max_minutes = maxMinutesAcross();
+          const exerciseNumber = Math.floor(datasetIndex / max_minutes) + 1;
+          const exerciseTimeSegment = Math.floor(datasetIndex % max_minutes);
+          goToExercise(
+            students[studentIndex].id,
+            exerciseNumber,
+            exerciseTimeSegment
           );
-          if (studentIndex < 0 || exerciseIndex < 0) return;
-          studentId = students[studentIndex].id;
-          exerciseId = exercises[exerciseIndex].id;
-        } else {
-          const exerciseIndex = el.index; // x-category
-          // Dataset label contains student
-          const studentLabel = el.dataset.label.split(" · ")[0];
-          const studentIndex = students.findIndex(
-            (s) => s.name === studentLabel
-          );
-          if (studentIndex < 0 || exerciseIndex < 0) return;
-          exerciseId = exercises[exerciseIndex].id;
-          studentId = students[studentIndex].id;
         }
-        goToExercise(studentId, exerciseId);
-      },*/
+      },
       categoryPercentage: 0.8,
       barPercentage: 0.9,
       categorySpacing: 0.2,

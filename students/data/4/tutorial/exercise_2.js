@@ -1,41 +1,61 @@
 window.exerciseData = {
   student: "Daniel Wu",
-  code: `
-int led;
+  code: `int Doel;
+int HuidigGetal;
+int LedGetal;
 
-void knipper() {
-  while (led > 1) {
-    led = led / 2;
-    schrijf(String(led));
-    delay(300);
-  }
-  while (led < 128) {
-    led = led * 2;
-    schrijf(String(led));
-    delay(300);
-  }
-}
-
-// Deze functie beschrijven...
-void schrijf(int x) {
-  dwenguinoLCD.clear();
-  dwenguinoLCD.setCursor(0,0);
-  dwenguinoLCD.print(x);
-}
-
+// <tag:Highlight 3>
 void setup()
 {
   initDwenguino();
-  led = 1;
+  Doel = (random(0, 255));
+  HuidigGetal = 0;
+  LedGetal = 1;
+  dwenguinoLCD.setCursor(0,0);
+  dwenguinoLCD.print(String("Doel: ") + String(Doel));
+  LEDS = LedGetal;
 }
+// </tag:Highlight 3>
 
-
+// <tag:Highlight 1>
 void loop()
+// </tag:Highlight 1>
 {
-    knipper();
+    if (digitalRead(SW_W) == PRESSED) {
+      if (LedGetal <= 64) {
+        LedGetal = LedGetal * 2;
+        LEDS = LedGetal;
+      }
+    }
+    // </tag:Highlight 2>
+    if (digitalRead(SW_E) == PRESSED) {
+      if (LedGetal >= 2) {
+        LedGetal = LedGetal / 2;
+        LEDS = LedGetal;
+      }
+    }
+    // </tag:Highlight 2>
+    if (digitalRead(SW_C) == PRESSED) {
+      HuidigGetal = HuidigGetal + LedGetal;
+      if (Doel == HuidigGetal) {
+        dwenguinoLCD.clear();
+        dwenguinoLCD.setCursor(0,1);
+        dwenguinoLCD.print(String("Proficiat!"));
+        dwenguinoLCD.clear();
+        Doel = (random(0, 255));
+        HuidigGetal = 0;
+        LedGetal = 1;
+        dwenguinoLCD.setCursor(0,0);
+        dwenguinoLCD.print(String("Doel: ") + String(Doel));
+        LEDS = LedGetal;
+      } else {
+        dwenguinoLCD.setCursor(0,1);
+        dwenguinoLCD.print(String("Huidig: ") + String(HuidigGetal));
+      }
+    }
 }`,
   advice: [
-    "Leg Daniel uit hoe descriptieve naamgeving de leesbaarheid van code verbetert.",
+    "Hier komt er advies dat u kunt gebruiken om Daniël te helpen met zijn code.",
   ],
   metrics: {
     elapsedSeconds: 16 * 60,

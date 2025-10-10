@@ -1,12 +1,13 @@
 window.exerciseData = {
-  student: "Alice Morgan",
-  code: `
-int LedGetal;
+  student: "Daniel Wu",
+  code: `int Doel;
 int HuidigGetal;
-int Doel;
+int LedGetal;
 
-void ZetKlaar() {
-  dwenguinoLCD.clear();
+// <tag:Highlight 3>
+void setup()
+{
+  initDwenguino();
   Doel = (random(0, 255));
   HuidigGetal = 0;
   LedGetal = 1;
@@ -14,14 +15,11 @@ void ZetKlaar() {
   dwenguinoLCD.print(String("Doel: ") + String(Doel));
   LEDS = LedGetal;
 }
+// </tag:Highlight 3>
 
-void setup()
-{
-  initDwenguino();
-  ZetKlaar();
-}
-
+// <tag:Highlight 1>
 void loop()
+// </tag:Highlight 1>
 {
     if (digitalRead(SW_W) == PRESSED) {
       if (LedGetal <= 64) {
@@ -29,20 +27,27 @@ void loop()
         LEDS = LedGetal;
       }
     }
+    // </tag:Highlight 2>
     if (digitalRead(SW_E) == PRESSED) {
       if (LedGetal >= 2) {
         LedGetal = LedGetal / 2;
         LEDS = LedGetal;
       }
     }
+    // </tag:Highlight 2>
     if (digitalRead(SW_C) == PRESSED) {
       HuidigGetal = HuidigGetal + LedGetal;
       if (Doel == HuidigGetal) {
         dwenguinoLCD.clear();
         dwenguinoLCD.setCursor(0,1);
         dwenguinoLCD.print(String("Proficiat!"));
-        delay(150);
-        ZetKlaar();
+        dwenguinoLCD.clear();
+        Doel = (random(0, 255));
+        HuidigGetal = 0;
+        LedGetal = 1;
+        dwenguinoLCD.setCursor(0,0);
+        dwenguinoLCD.print(String("Doel: ") + String(Doel));
+        LEDS = LedGetal;
       } else {
         dwenguinoLCD.setCursor(0,1);
         dwenguinoLCD.print(String("Huidig: ") + String(HuidigGetal));
@@ -50,26 +55,19 @@ void loop()
     }
 }`,
   advice: [
-    "Benadruk bij Alice dat haar consistente naamgeving het lezen van code vergemakkelijken.",
+    "Leg Daniel uit hoe descriptieve naamgeving de leesbaarheid van code verbetert.",
   ],
   metrics: {
-    elapsedSeconds: 14 * 60,
-    wroteTests: false,
-    usedDebugger: true,
-    finished: false,
+    elapsedSeconds: 16 * 60,
+    wroteTests: true,
+    usedDebugger: false,
     sections: [
-      { minutes: 3, type: "programming" },
-      { minutes: 1, type: "testing" },
-      { minutes: 2, type: "debugger" },
       { minutes: 2, type: "programming" },
-      { minutes: 1, type: "testing" },
-      { minutes: 3, type: "debugger" },
-      { minutes: 2, type: "programming" },
-      { minutes: 1, type: "testing" },
+      { minutes: 6, type: "trial" },
     ],
     timeAdvice:
-      "Flinke debugsessies tussen programmeerblokken. Focus op hypothesen vooraf.",
+      "Balans tussen bouwen en testen. Stimuleer het groeperen van kleine testmomenten.",
     tdAdvice:
-      "Stuur op systematische debugstappen en laat korte program/test-cycli zien.",
+      "Introduceer kort debuggen bij falende tests om trial-and-error te beperken.",
   },
 };

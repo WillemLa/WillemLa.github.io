@@ -40,6 +40,25 @@
           ><input type="checkbox" id="toggleAdvice" checked /> Advies</label
         >
       </div>
+      <!-- Dedicated controls for tutorial (separate names) -->
+      <div class="controls" id="controls-tutorial" style="display: none">
+        <label>
+          <input type="checkbox" id="highlightTutorial1" checked />
+          Highlight 1
+        </label>
+        <label>
+          <input type="checkbox" id="highlightTutorial2" checked />
+          Highlight 2
+        </label>
+        <label>
+          <input type="checkbox" id="highlightTutorial3" checked />
+          Highlight 3
+        </label>
+        <label class="advice" style="display: none"
+          ><input type="checkbox" id="toggleAdviceTutorial" checked />
+          Advies</label
+        >
+      </div>
       <!-- Only the relevant checkboxes for code concepts -->
       <div class="controls" id="controls-concepts" style="display: none">
         <label>
@@ -64,10 +83,9 @@
           id="graph-container"
           style="
             width: 100%;
-            height: 220px;
-            border: 1.5px solid var(--advice-border);
-            border-radius: 0.4em;
+            height: 100px;
             background: var(--advice-bg);
+            margin-bottom: 10px;
           "
         ></div>
       </div>
@@ -87,6 +105,9 @@
         </div>
       </div>
     </main>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-matrix@2.0.1/dist/chartjs-chart-matrix.umd.min.js"></script>
+
     <script src="script.js"></script>
   </body>
 </html>

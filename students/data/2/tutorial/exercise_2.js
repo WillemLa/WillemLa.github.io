@@ -1,40 +1,60 @@
 window.exerciseData = {
   student: "Ben Thompson",
-  code: `
-int ledLamp;
-
-void knipperLeds() {
-  while (ledLamp > 1) {
-    ledLamp = ledLamp / 2;
-    schrijfNaarScherm(String("Waarde led: ") + String(ledLamp));
-    delay(300);
-  }
-  while (ledLamp < 128) {
-    ledLamp = ledLamp * 2;
-    schrijfNaarScherm(String("Waarde led: ") + String(ledLamp));
-    delay(300);
-  }
-}
-
-void schrijfNaarScherm(int tekst) {
-  dwenguinoLCD.clear();
-  dwenguinoLCD.setCursor(0,0);
-  dwenguinoLCD.print(tekst);
-}
+  code: `int Doel;
+int HuidigGetal;
+// <tag:Highlight 3>
+int LedGetal;
+// </tag:Highlight 3>
 
 void setup()
 {
   initDwenguino();
-
-  ledLamp = 1;
+  Doel = (random(0, 255));
+  HuidigGetal = 0;
+  LedGetal = 1;
+  dwenguinoLCD.setCursor(0,0);
+  dwenguinoLCD.print(String("Doel: ") + String(Doel));
+  LEDS = LedGetal;
 }
 
-
+// <tag:Highlight 1>
 void loop()
 {
-    knipperLeds();
-}`,
-  advice: ["Bespreek hoe Ben regressietests kan creëren voor eerdere bugs."],
+    if (digitalRead(SW_W) == PRESSED) {
+      if (LedGetal <= 64) {
+        LedGetal = LedGetal * 2;
+        LEDS = LedGetal;
+      }
+    }
+    if (digitalRead(SW_E) == PRESSED) {
+      if (LedGetal >= 2) {
+        LedGetal = LedGetal / 2;
+        LEDS = LedGetal;
+      }
+    }
+    if (digitalRead(SW_C) == PRESSED) {
+      HuidigGetal = HuidigGetal + LedGetal;
+      if (Doel == HuidigGetal) {
+        dwenguinoLCD.clear();
+        dwenguinoLCD.setCursor(0,1);
+        dwenguinoLCD.print(String("Proficiat!"));
+        dwenguinoLCD.clear();
+        Doel = (random(0, 255));
+        HuidigGetal = 0;
+        LedGetal = 1;
+        dwenguinoLCD.setCursor(0,0);
+        dwenguinoLCD.print(String("Doel: ") + String(Doel));
+        LEDS = LedGetal;
+      } else {
+        dwenguinoLCD.setCursor(0,1);
+        dwenguinoLCD.print(String("Huidig: ") + String(HuidigGetal));
+      }
+    }
+}
+// </tag:Highlight 1>`,
+  advice: [
+    "Hier komt er advies dat u kunt gebruiken om Ben te helpen met zijn code.",
+  ],
   metrics: {
     elapsedSeconds: 18 * 60,
     wroteTests: true,

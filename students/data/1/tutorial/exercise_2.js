@@ -1,41 +1,56 @@
 window.exerciseData = {
   student: "Alice Morgan",
   code: `
-int lamp;
+int LedGetal;
+int HuidigGetal;
+int Doel;
 
-void KNipperLampjes() {
-  while (lamp > 1) {
-    lamp = lamp / 2;
-    schrijfNaarScherm(String("Ledje ") + String(lamp));
-    delay(300);
-  }
-  while (lamp < 128) {
-    lamp = lamp * 2;
-    schrijfNaarScherm(String("Ledje ") + String(lamp));
-    delay(300);
-  }
-}
-
-void schrijfNaarScherm(int tekst) {
+void ZetKlaar() {
   dwenguinoLCD.clear();
+  Doel = (random(0, 255));
+  HuidigGetal = 0;
+  LedGetal = 1;
   dwenguinoLCD.setCursor(0,0);
-  dwenguinoLCD.print(tekst);
+  dwenguinoLCD.print(String("Doel: ") + String(Doel));
+  LEDS = LedGetal;
 }
-
+  
 void setup()
 {
   initDwenguino();
-
-  lamp = 1;
+  ZetKlaar();
 }
-
 
 void loop()
 {
-    KNipperLampjes();
+    if (digitalRead(SW_W) == PRESSED) {
+      if (LedGetal <= 64) {
+        LedGetal = LedGetal * 2;
+        LEDS = LedGetal;
+      }
+    }
+    if (digitalRead(SW_E) == PRESSED) {
+      if (LedGetal >= 2) {
+        LedGetal = LedGetal / 2;
+        LEDS = LedGetal;
+      }
+    }
+    if (digitalRead(SW_C) == PRESSED) {
+      HuidigGetal = HuidigGetal + LedGetal;
+      if (Doel == HuidigGetal) {
+        dwenguinoLCD.clear();
+        dwenguinoLCD.setCursor(0,1);
+        dwenguinoLCD.print(String("Proficiat!"));
+        delay(150);
+        ZetKlaar();
+      } else {
+        dwenguinoLCD.setCursor(0,1);
+        dwenguinoLCD.print(String("Huidig: ") + String(HuidigGetal));
+      }
+    }
 }`,
   advice: [
-    "Benadruk bij Alice dat haar consistente naamgeving het lezen van code vergemakkelijken.",
+    "Hier komt er advies dat u kunt gebruiken om Alice te helpen met haar code.",
   ],
   metrics: {
     elapsedSeconds: 14 * 60,

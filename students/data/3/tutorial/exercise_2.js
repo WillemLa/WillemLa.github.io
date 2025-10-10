@@ -1,40 +1,57 @@
 window.exerciseData = {
   student: "Carla Diaz",
-  code: `int x;
+  code: `int LedGetal;
+int HuidigGetal;
+int Doel;
 
-void KNIPPERLeds() {
-  while (x > 1) {
-    x = x / 2;
-    LEDS = x;
-    schrijfNaarScherm(String("Waarde led: ") + String(x));
-    delay(300);
-  }
-  while (x < 128) {
-    x = x * 2;
-    schrijfNaarScherm(String("Waarde led: ") + String(x));
-    delay(300);
-  }
-}
-
-void schrijfNaarScherm(int y) {
+void ZetKlaar() {
   dwenguinoLCD.clear();
+  Doel = (random(0, 255));
+  HuidigGetal = 0;
+  LedGetal = 1;
   dwenguinoLCD.setCursor(0,0);
-  dwenguinoLCD.print(y);
+  dwenguinoLCD.print(String("Doel: ") + String(Doel));
+  LEDS = LedGetal;
 }
-
+  
+// <tag:Highlight 1>
 void setup()
 {
   initDwenguino();
-
-  x = 1;
+  ZetKlaar();
 }
+// </tag:Highlight 1>
 
 void loop()
 {
-    knipperLeds();
+    if (digitalRead(SW_W) == PRESSED) {
+      if (LedGetal <= 64) {
+        LedGetal = LedGetal * 2;
+        LEDS = LedGetal;
+      }
+    }
+    if (digitalRead(SW_E) == PRESSED) {
+      if (LedGetal >= 2) {
+        LedGetal = LedGetal / 2;
+        LEDS = LedGetal;
+      }
+    }
+    if (digitalRead(SW_C) == PRESSED) {
+      HuidigGetal = HuidigGetal + LedGetal;
+      if (Doel == HuidigGetal) {
+        dwenguinoLCD.clear();
+        dwenguinoLCD.setCursor(0,1);
+        dwenguinoLCD.print(String("Proficiat!"));
+        delay(150);
+        ZetKlaar();
+      } else {
+        dwenguinoLCD.setCursor(0,1);
+        dwenguinoLCD.print(String("Huidig: ") + String(HuidigGetal));
+      }
+    }
 }`,
   advice: [
-    "Vraag Carla om de verschillende naamgevingsconventies in haar code te wijzen en descriptievere namen te gebruiken. Bespreek samen waarom consistentie belangrijk is.",
+    "Hier komt er advies dat u kunt gebruiken om Carla te helpen met haar code.",
   ],
   metrics: {
     elapsedSeconds: 4 * 60,

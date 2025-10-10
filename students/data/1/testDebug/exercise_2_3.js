@@ -14,7 +14,7 @@ void ZetKlaar() {
   dwenguinoLCD.print(String("Doel: ") + String(Doel));
   LEDS = LedGetal;
 }
-
+  
 void setup()
 {
   initDwenguino();

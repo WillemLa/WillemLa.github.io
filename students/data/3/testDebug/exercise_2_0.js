@@ -1,7 +1,6 @@
 window.exerciseData = {
-  student: "Alice Morgan",
-  code: `
-int LedGetal;
+  student: "Carla Diaz",
+  code: `int LedGetal;
 int HuidigGetal;
 int Doel;
 
@@ -14,12 +13,14 @@ void ZetKlaar() {
   dwenguinoLCD.print(String("Doel: ") + String(Doel));
   LEDS = LedGetal;
 }
-
+  
+// <tag:Highlight 1>
 void setup()
 {
   initDwenguino();
   ZetKlaar();
 }
+// </tag:Highlight 1>
 
 void loop()
 {
@@ -50,26 +51,19 @@ void loop()
     }
 }`,
   advice: [
-    "Benadruk bij Alice dat haar consistente naamgeving het lezen van code vergemakkelijken.",
+    "Vraag Carla om de verschillende naamgevingsconventies in haar code te wijzen en descriptievere namen te gebruiken. Bespreek samen waarom consistentie belangrijk is.",
   ],
   metrics: {
-    elapsedSeconds: 14 * 60,
+    elapsedSeconds: 4 * 60,
     wroteTests: false,
-    usedDebugger: true,
-    finished: false,
+    usedDebugger: false,
     sections: [
-      { minutes: 3, type: "programming" },
-      { minutes: 1, type: "testing" },
-      { minutes: 2, type: "debugger" },
-      { minutes: 2, type: "programming" },
-      { minutes: 1, type: "testing" },
-      { minutes: 3, type: "debugger" },
-      { minutes: 2, type: "programming" },
-      { minutes: 1, type: "testing" },
+      { minutes: 1, type: "programming" },
+      { minutes: 4, type: "trial" },
     ],
     timeAdvice:
-      "Flinke debugsessies tussen programmeerblokken. Focus op hypothesen vooraf.",
+      "Hou de sessies kort en gefocust; plan mini-tests na elke bouwstap.",
     tdAdvice:
-      "Stuur op systematische debugstappen en laat korte program/test-cycli zien.",
+      "Vervang trial-and-error door doelgerichte observaties en kleine experimenten.",
   },
 };
