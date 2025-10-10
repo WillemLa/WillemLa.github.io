@@ -118,7 +118,8 @@ p {
 }
 #toggleAdvice:checked::after,
 #toggleAdviceConcepts:checked::after,
-#toggleAdviceTutorial:checked::after {
+#toggleAdviceTutorial:checked::after,
+#toggleAdviceTestDebug:checked::after {
   border-color: var(--primary-yellow);
 }
 #highlightTutorial1:checked::after {

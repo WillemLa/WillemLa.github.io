@@ -55,29 +55,15 @@ function isCamelCase(name) {
   ); // not PascalCase
 }
 
-let currentExerciseType = "concepts"; // or "readability"
-
 function showExercise(type) {
-  currentExerciseType = type;
   // Only show the relevant checkboxes
   document.getElementById("conceptCheckboxes").style.display =
     type === "concepts" ? "" : "none";
   document.getElementById("readabilityCheckboxes").style.display =
     type === "readability" ? "" : "none";
   // Show the correct advice
-  updateAdvice();
   // Update highlights
   syncHighlighting();
-}
-
-function updateAdvice() {
-  if (currentExerciseType === "concepts") {
-    adviceBlock.innerText =
-      "Tip: Use the checkboxes above to highlight code concepts such as loops, functions, and conditionals.";
-  } else {
-    adviceBlock.innerText =
-      "Tip: Use the checkboxes above to highlight readability issues such as non-camelCase or one-letter variables.";
-  }
 }
 
 function syncHighlighting() {
@@ -91,7 +77,8 @@ function syncHighlighting() {
     highlightedCode.textContent = codeWithoutTags;
     return;
   }
-  highlightedCode.innerHTML = highlightCode(code, currentExerciseType);
+
+  highlightedCode.innerHTML = highlightCode(code, criterion);
 }
 
 function highlightCode(code, type) {
@@ -337,6 +324,26 @@ document.addEventListener("DOMContentLoaded", function () {
         ).textContent = `Oefening ${exerciseNum}${
           segment ? ` (minuut ${segment}-${Number(segment) + 1})` : ""
         }`;
+
+        const explanation = document.getElementById("exercise-description");
+        console.log(criterion);
+        switch (criterion) {
+          case "concepts":
+            explanation.textContent =
+              "Dit toont de studentenprestaties op het gebied van codeerconcepten.";
+            break;
+          case "readability":
+            explanation.textContent =
+              "Dit toont de studentenprestaties op het gebied van leesbaarheid.";
+            break;
+          case "testDebug":
+            explanation.textContent =
+              "Dit toont de studentenprestaties op het gebied van testen en debuggen. Klik op de tijdlijn om naar verschillende momenten in de code te navigeren.";
+            break;
+          default:
+            explanation.textContent = "";
+        }
+
         // If a sourceUrl is provided, fetch code from there; otherwise use inline code
         const applyCode = (codeText) => {
           document.getElementById("codeInput").value =
@@ -413,6 +420,13 @@ document.addEventListener("DOMContentLoaded", function () {
         if (ctrTutorial) ctrTutorial.style.display = "none";
         if (adviceBlock) adviceBlock.style.display = "none";
 
+        const toggleAdviceInputTestDebug = document.getElementById(
+          "toggleAdviceTestDebug"
+        );
+        const adviceLabelTestDebug = toggleAdviceInputTestDebug
+          ? toggleAdviceInputTestDebug.parentElement
+          : null;
+
         function setStage(stage) {
           window.currentVersionStage = stage;
           try {
@@ -475,6 +489,14 @@ document.addEventListener("DOMContentLoaded", function () {
                   ? "block"
                   : "none";
               }
+            }
+          }
+          if (stage >= 2 && selected === "testDebug") {
+            if (adviceLabelTestDebug) adviceLabelTestDebug.style.display = "";
+            if (toggleAdviceInputTestDebug) {
+              adviceBlock.style.display = toggleAdviceInputTestDebug.checked
+                ? "block"
+                : "none";
             }
           }
           // If hiding graphs, clear content
@@ -583,7 +605,8 @@ document.addEventListener("DOMContentLoaded", function () {
         cb.addEventListener("change", (e) => {
           if (
             e.target.id === "toggleAdvice" ||
-            e.target.id === "toggleAdviceConcepts"
+            e.target.id === "toggleAdviceConcepts" ||
+            e.target.id === "toggleAdviceTestDebug"
           ) {
             adviceBlock.style.display = e.target.checked ? "block" : "none";
           }
