@@ -326,7 +326,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }`;
 
         const explanation = document.getElementById("exercise-description");
-        console.log(criterion);
         switch (criterion) {
           case "concepts":
             explanation.textContent =
@@ -708,7 +707,6 @@ function minutesFromMetrics(metrics) {
 function getMetrics(studentId, exerciseId) {
   try {
     // Prefer seeded data from new per-exercise files if present
-
     const cached =
       window.__exerciseDataCache &&
       window.__exerciseDataCache[studentId] &&
@@ -721,8 +719,10 @@ function getMetrics(studentId, exerciseId) {
         window[`exerciseData_${studentId}`][exerciseId].metrics) ||
       null;
 
-    if (seeded) return seeded;
+    //if (seeded) return seeded;
     const raw = localStorage.getItem(metricsKey(studentId, exerciseId));
+    console.log(raw);
+    console.log("xx");
     return raw ? JSON.parse(raw) : null;
   } catch {
     return null;
@@ -802,6 +802,7 @@ function renderTestDebugBars(container) {
   let segmentDatasets = [];
   const m = window.exerciseData.metrics;
   const minutes = minutesFromMetrics(m);
+  console.log(window);
 
   // X axis: students; for each exercise we still render separate bars per student (like time)
   //labels = students.map((s) => s.name);
@@ -916,9 +917,8 @@ function renderTestDebugBars(container) {
         const el = elements[0];
         const datasetIndex = el.datasetIndex;
         var max_minutes = minutes;
-        const exerciseNumber = Math.floor(datasetIndex / max_minutes) + 1;
         const exerciseTimeSegment = Math.floor(datasetIndex % max_minutes);
-        goToExercise(studentId, exerciseNumber, exerciseTimeSegment);
+        goToExercise(studentId, exerciseNum, exerciseTimeSegment);
       },
       categoryPercentage: 0.9,
       barPercentage: 0.9,

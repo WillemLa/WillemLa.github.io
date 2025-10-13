@@ -1,31 +1,31 @@
 window.exerciseData = {
   student: "Ben Thompson",
-  code: `
+  code: `DCMotor dcMotor1(MOTOR_1_0, MOTOR_1_1);
+DCMotor dcMotor2(MOTOR_2_0, MOTOR_2_1);
+
 void Links() {
   dcMotor1.setSpeed(100);
-  delay(250);
+  delay(195);
   Stop();
 }
 
-DCMotor dcMotor2(MOTOR_2_0, MOTOR_2_1);
-
 void Rechts() {
   dcMotor2.setSpeed(100);
-  delay(250);
+  delay(195);
   Stop();
 }
 
 void Vooruit() {
   dcMotor1.setSpeed(100);
   dcMotor2.setSpeed(100);
-  delay(250);
+  delay(195);
   Stop();
 }
 
 void Achteruit() {
   dcMotor1.setSpeed((-100));
   dcMotor2.setSpeed((-100));
-  delay(250);
+  delay(195);
   Stop();
 }
 

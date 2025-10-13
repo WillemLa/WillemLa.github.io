@@ -59,6 +59,12 @@ const alertDefsByCriterion = {
       text: "Correct",
       title: "Geen Opmerkingen",
     },
+    base: {
+      type: "base",
+      icon: "🔍",
+      text: "",
+      title: "",
+    },
   },
   tutorial: {}, // will be populated from readability below
   concepts: {
@@ -91,6 +97,12 @@ const alertDefsByCriterion = {
       icon: "✅",
       text: "Correct",
       title: "Geen fouten",
+    },
+    base: {
+      type: "base",
+      icon: "🔍",
+      text: "",
+      title: "",
     },
   },
   // Combined: testing + debugging
@@ -188,7 +200,7 @@ const results = {
 };
 
 // Criterion-aware results container
-const resultsByCriterion = {
+var resultsByCriterion = {
   readability: {
     1: { 1: ["correct"], 2: ["naming"] },
     2: { 1: ["oneletter"], 2: ["correct"] },
@@ -205,6 +217,28 @@ const resultsByCriterion = {
   testDebug: {},
   time: {},
 };
+
+const q = parseQuery();
+console.log(Number(q.version));
+if (Number(q.version) == 1) {
+  resultsByCriterion = {
+    readability: {
+      1: { 1: ["base"], 2: ["base"] },
+      2: { 1: ["base"], 2: ["base"] },
+      3: { 1: ["base"], 2: ["base"] },
+      4: { 1: ["base"], 2: ["base"] },
+    },
+    tutorial: {}, // will be populated from readability below
+    concepts: {
+      1: { 1: ["base"], 2: ["base"] },
+      2: { 1: ["base"], 2: ["base"] },
+      3: { 1: ["base"], 2: ["base"] },
+      4: { 1: ["base"], 2: ["base"] },
+    },
+    testDebug: {},
+    time: {},
+  };
+}
 
 // Mirror readability results into tutorial by default
 resultsByCriterion.tutorial = JSON.parse(
@@ -250,7 +284,6 @@ function loadDerivedCriterionResults() {
 }
 
 function goToExercise(studentId, exerciseId, timeSegment = null) {
-  console.log("xx");
   const ver = typeof exerciseVersion === "number" ? exerciseVersion : 1;
   let url = `students/exercise.html?student=${studentId}&exercise=${exerciseId}&criterion=${selectedCriterion}&version=${ver}`;
   if (timeSegment !== null) {
@@ -473,7 +506,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // initial derive + render
   loadDerivedCriterionResults();
-  console.log("xx");
   // Preload per-exercise files to seed metrics from the new structure
   preloadPerExerciseMetrics().finally(() => {
     // After preload attempt completes, render with any seeded metrics
@@ -565,12 +597,11 @@ function getMetrics(studentId, exerciseId) {
         window[`exerciseData_${studentId}`][exerciseId] &&
         window[`exerciseData_${studentId}`][exerciseId].metrics) ||
       null;
-    console.log(window.__exerciseDataCache);
-    console.log(studentId);
-    console.log(exerciseId);
+    console.log(window);
 
     if (seeded) return seeded;
     const raw = localStorage.getItem(metricsKey(studentId, exerciseId));
+
     return raw ? JSON.parse(raw) : null;
   } catch {
     return null;
@@ -601,7 +632,6 @@ function minutesFromMetrics(metrics) {
 function expandSectionKinds(metrics, maxMinutes) {
   try {
     const kinds = [];
-    //console.log(metrics);
     if (metrics && Array.isArray(metrics.sections) && metrics.sections.length) {
       for (const seg of metrics.sections) {
         const len = Math.max(
@@ -685,7 +715,6 @@ function maybeRenderGraphs() {
 window.__exerciseDataCache = window.__exerciseDataCache || {};
 
 function preloadPerExerciseMetrics() {
-  console.log("xx");
   try {
     const criterion = "readability"; // metrics currently seeded from readability files
     const promises = [];
@@ -701,10 +730,7 @@ function preloadPerExerciseMetrics() {
                 if (window.exerciseData) {
                   window.__exerciseDataCache[s.id] =
                     window.__exerciseDataCache[s.id] || {};
-                  window.__exerciseDataCache[s.id][`${ex.id}_${segment}`] =
-                    window.exerciseData;
                 }
-                console.log(window.__exerciseDataCache);
                 try {
                   delete window.exerciseData;
                 } catch {}
@@ -728,7 +754,6 @@ function preloadPerExerciseMetrics() {
                 window.__exerciseDataCache[s.id][`${ex.id}`] =
                   window.exerciseData;
               }
-              console.log(window.__exerciseDataCache);
               try {
                 delete window.exerciseData;
               } catch {}
@@ -744,7 +769,6 @@ function preloadPerExerciseMetrics() {
     }
     return Promise.all(promises);
   } catch (e) {
-    console.log(e);
     return Promise.resolve();
   }
 }
@@ -1257,7 +1281,6 @@ function renderTestDebugBars(container) {
     labels = students.map((s) => s.name);
     // Build per-exercise bars across students by stacking minute segments (from sections when present)
     const allExerciseSegmentDatasets = [];
-    console.log(exercises);
     for (let exIdx = 0; exIdx < exercises.length; exIdx++) {
       const ex = exercises[exIdx];
       const exSegSets = Array.from({ length: maxMinutes }, (_, segIdx) => ({
@@ -1273,8 +1296,6 @@ function renderTestDebugBars(container) {
         const m = getMetrics(s.id, ex.id);
         const minutes = minutesFromMetrics(m);
         const kinds = expandSectionKinds(m, minutes);
-        console.log(m);
-        console.log(kinds);
         const pattern =
           kinds ||
           Array.from({ length: minutes }, () =>
@@ -1290,7 +1311,6 @@ function renderTestDebugBars(container) {
       //set exercise labels for each bar
       allExerciseSegmentDatasets.push(...exSegSets);
     }
-    //console.log(allExerciseSegmentDatasets);
 
     segmentDatasets = allExerciseSegmentDatasets;
   } else {

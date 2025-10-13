@@ -1,62 +1,39 @@
 window.exerciseData = {
   student: "Alice Morgan",
-  code: `
-void links() {
-  dcMotor1.setSpeed(100);
-  delay(250);
-  stop();
-}
-
+  code: `DCMotor dcMotor1(MOTOR_1_0, MOTOR_1_1);
 DCMotor dcMotor2(MOTOR_2_0, MOTOR_2_1);
-
-void rechts() {
-  dcMotor2.setSpeed(100);
-  delay(250);
-  stop();
-}
 
 void vooruit() {
   dcMotor1.setSpeed(100);
   dcMotor2.setSpeed(100);
   delay(250);
-  stop();
 }
 
 void achteruit() {
   dcMotor1.setSpeed((-100));
   dcMotor2.setSpeed((-100));
   delay(250);
-  stop();
 }
 
-// <tag:Highlight 2>
-void stop() {
-  dcMotor1.setSpeed(0);
-  dcMotor2.setSpeed(0);
+void links() {
+  dcMotor1.setSpeed(100);
+  delay(250);
 }
-// </tag:Highlight 2>
 
-void setup()
-{
-  initDwenguino();
+void rechts() {
+  dcMotor2.setSpeed(100);
+  delay(250);
 }
 
 void loop()
 {
-    if (digitalRead(SW_N) == PRESSED) {
-      vooruit();
-    }
-    if (digitalRead(SW_E) == PRESSED) {
-      rechts();
-    }
-    if (digitalRead(SW_S) == PRESSED) {
-      achteruit();
-    }
-    if (digitalRead(SW_W) == PRESSED) {
-      links();
-    }
 }
-    `,
+
+  void setup()
+  {
+    initDwenguino();
+    rechts();
+  }`,
   advice: [
     "Moedig korte cycli aan: stukje programmeren, gericht debuggen, korte test.",
   ],

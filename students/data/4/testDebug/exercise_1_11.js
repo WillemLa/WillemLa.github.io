@@ -1,6 +1,8 @@
 window.exerciseData = {
   student: "Ben Thompson",
-  code: `
+  code: `DCMotor dcMotor1(MOTOR_1_0, MOTOR_1_1);
+DCMotor dcMotor2(MOTOR_2_0, MOTOR_2_1);
+
 void Links() {
   dcMotor1.setSpeed(100);
   delay(250);

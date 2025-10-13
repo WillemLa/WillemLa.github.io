@@ -1,7 +1,6 @@
 window.exerciseData = {
   student: "Alice Morgan",
-  code: `
-int LedGetal;
+  code: `int LedGetal;
 int HuidigGetal;
 int Doel;
 
@@ -59,12 +58,10 @@ void loop()
     finished: false,
     sections: [
       { minutes: 3, type: "programming" },
-      { minutes: 1, type: "testing" },
-      { minutes: 2, type: "debugger" },
-      { minutes: 2, type: "programming" },
-      { minutes: 1, type: "testing" },
-      { minutes: 3, type: "debugger" },
-      { minutes: 2, type: "programming" },
+      { minutes: 2, type: "testing" },
+      { minutes: 1, type: "debugger" },
+      { minutes: 3, type: "programming" },
+      { minutes: 1, type: "programming" },
       { minutes: 1, type: "testing" },
     ],
     timeAdvice:

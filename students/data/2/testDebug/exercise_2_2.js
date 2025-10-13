@@ -1,11 +1,10 @@
 window.exerciseData = {
-  student: "Ben Thompson",
+  student: "Daniel Wu",
   code: `int Doel;
 int HuidigGetal;
-// <tag:Highlight 3>
 int LedGetal;
-// </tag:Highlight 3>
 
+// <tag:Highlight 3>
 void setup()
 {
   initDwenguino();
@@ -16,9 +15,11 @@ void setup()
   dwenguinoLCD.print(String("Doel: ") + String(Doel));
   LEDS = LedGetal;
 }
+// </tag:Highlight 3>
 
 // <tag:Highlight 1>
 void loop()
+// </tag:Highlight 1>
 {
     if (digitalRead(SW_W) == PRESSED) {
       if (LedGetal <= 64) {
@@ -26,12 +27,14 @@ void loop()
         LEDS = LedGetal;
       }
     }
+    // </tag:Highlight 2>
     if (digitalRead(SW_E) == PRESSED) {
       if (LedGetal >= 2) {
         LedGetal = LedGetal / 2;
         LEDS = LedGetal;
       }
     }
+    // </tag:Highlight 2>
     if (digitalRead(SW_C) == PRESSED) {
       HuidigGetal = HuidigGetal + LedGetal;
       if (Doel == HuidigGetal) {
@@ -50,27 +53,21 @@ void loop()
         dwenguinoLCD.print(String("Huidig: ") + String(HuidigGetal));
       }
     }
-}
-// </tag:Highlight 1>`,
+}`,
   advice: [
-    "Beperk trial-and-error: noteer observaties en formuleer een hypothese voor elke stap.",
+    "Introduceer kort debuggen bij falende tests om trial-and-error te beperken.",
   ],
   metrics: {
-    elapsedSeconds: 18 * 60,
+    elapsedSeconds: 16 * 60,
     wroteTests: true,
     usedDebugger: false,
     sections: [
-      { minutes: 4, type: "programming" },
-      { minutes: 1, type: "testing" },
-      { minutes: 3, type: "debugger" },
-      { minutes: 2, type: "programming" },
-      { minutes: 1, type: "testing" },
-      { minutes: 3, type: "trial" },
-      { minutes: 1, type: "testing" },
+      { minutes: 7, type: "programming" },
+      { minutes: 6, type: "trial" },
     ],
     timeAdvice:
-      "Veel tijd ging naar uitproberen. Plan kortere, doelgerichte cycli met reflectie.",
+      "Balans tussen bouwen en testen. Stimuleer het groeperen van kleine testmomenten.",
     tdAdvice:
-      "Beperk trial-and-error: noteer observaties en formuleer een hypothese voor elke stap.",
+      "Introduceer kort debuggen bij falende tests om trial-and-error te beperken.",
   },
 };

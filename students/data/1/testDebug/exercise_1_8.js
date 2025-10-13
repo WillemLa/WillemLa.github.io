@@ -1,13 +1,13 @@
 window.exerciseData = {
   student: "Alice Morgan",
-  code: `
+  code: `DCMotor dcMotor1(MOTOR_1_0, MOTOR_1_1);
+DCMotor dcMotor2(MOTOR_2_0, MOTOR_2_1);  
+
 void links() {
   dcMotor1.setSpeed(100);
   delay(250);
   stop();
 }
-
-DCMotor dcMotor2(MOTOR_2_0, MOTOR_2_1);
 
 void rechts() {
   dcMotor2.setSpeed(100);

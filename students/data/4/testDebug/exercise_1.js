@@ -1,19 +1,35 @@
 window.exerciseData = {
-  student: "Daniel Wu",
+  student: "Ben Thompson",
   code: `
-DCMotor dcMotor1(MOTOR_1_0, MOTOR_1_1);
-DCMotor dcMotor2(MOTOR_2_0, MOTOR_2_1);
-
-void BestuurMotors(int motor1, int motor2) {
-  dcMotor1.setSpeed(motor1);
-  dcMotor2.setSpeed(motor2);
+void Links() {
+  dcMotor1.setSpeed(100);
   delay(250);
   Stop();
 }
-// <tag:Highlight 2>
-void Stop() {
-// </tag:Highlight 2>
 
+DCMotor dcMotor2(MOTOR_2_0, MOTOR_2_1);
+
+void Rechts() {
+  dcMotor2.setSpeed(100);
+  delay(250);
+  Stop();
+}
+
+void Vooruit() {
+  dcMotor1.setSpeed(100);
+  dcMotor2.setSpeed(100);
+  delay(250);
+  Stop();
+}
+
+void Achteruit() {
+  dcMotor1.setSpeed((-100));
+  dcMotor2.setSpeed((-100));
+  delay(250);
+  Stop();
+}
+
+void Stop() {
   dcMotor1.setSpeed(0);
   dcMotor2.setSpeed(0);
 }
@@ -26,38 +42,37 @@ void setup()
 void loop()
 {
     if (digitalRead(SW_N) == PRESSED) {
-      BestuurMotors(100, 100);
-
+      Vooruit();
     }
     if (digitalRead(SW_E) == PRESSED) {
-      BestuurMotors(0, 100);
-
+      Rechts();
     }
     if (digitalRead(SW_S) == PRESSED) {
-      BestuurMotors(-100, -100);
+      Achteruit();
     }
-
     if (digitalRead(SW_W) == PRESSED) {
-      BestuurMotors(100, 0);
+      Links();
     }
-}
-`,
+}`,
   advice: [
-    "Mooi afwisselend patroon: programmeren, debuggen, testen. Benadruk systematiek.",
+    "Benadruk het koppelen van testresultaten aan gerichte debugacties.",
   ],
   metrics: {
-    elapsedSeconds: 12 * 60,
+    elapsedSeconds: 7 * 60,
     wroteTests: true,
     usedDebugger: true,
     sections: [
-      { minutes: 6, type: "programming" },
+      { minutes: 3, type: "programming" },
       { minutes: 1, type: "testing" },
-      { minutes: 1, type: "debugger" },
+      { minutes: 2, type: "debugger" },
+      { minutes: 2, type: "programming" },
+      { minutes: 1, type: "testing" },
+      { minutes: 2, type: "trial" },
       { minutes: 1, type: "testing" },
     ],
     timeAdvice:
-      "Gestructureerde blokken. Vraag Daniël hoe hij beslist wanneer te testen of debuggen.",
+      "Korte cycli met duidelijke testmomenten. Vraag Ben naar testselectie.",
     tdAdvice:
-      "Mooi afwisselend patroon: programmeren, debuggen, testen. Benadruk systematiek.",
+      "Benadruk het koppelen van testresultaten aan gerichte debugacties.",
   },
 };

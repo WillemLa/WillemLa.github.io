@@ -1,11 +1,12 @@
 window.exerciseData = {
   student: "Alice Morgan",
-  code: `
-int LedGetal;
+  code: `int LedGetal;
 int HuidigGetal;
 int Doel;
 
-void ZetKlaar() {
+void setup()
+{
+  initDwenguino();
   dwenguinoLCD.clear();
   Doel = (random(0, 255));
   HuidigGetal = 0;
@@ -13,12 +14,6 @@ void ZetKlaar() {
   dwenguinoLCD.setCursor(0,0);
   dwenguinoLCD.print(String("Doel: ") + String(Doel));
   LEDS = LedGetal;
-}
-  
-void setup()
-{
-  initDwenguino();
-  ZetKlaar();
 }
 
 void loop()
@@ -42,7 +37,13 @@ void loop()
         dwenguinoLCD.setCursor(0,1);
         dwenguinoLCD.print(String("Proficiat!"));
         delay(150);
-        ZetKlaar();
+        dwenguinoLCD.clear();
+        Doel = (random(0, 255));
+        HuidigGetal = 0;
+        LedGetal = 1;
+        dwenguinoLCD.setCursor(0,0);
+        dwenguinoLCD.print(String("Doel: ") + String(Doel));
+        LEDS = LedGetal;
       } else {
         dwenguinoLCD.setCursor(0,1);
         dwenguinoLCD.print(String("Huidig: ") + String(HuidigGetal));
@@ -59,12 +60,10 @@ void loop()
     finished: false,
     sections: [
       { minutes: 3, type: "programming" },
-      { minutes: 1, type: "testing" },
-      { minutes: 2, type: "debugger" },
-      { minutes: 2, type: "programming" },
-      { minutes: 1, type: "testing" },
-      { minutes: 3, type: "debugger" },
-      { minutes: 2, type: "programming" },
+      { minutes: 2, type: "testing" },
+      { minutes: 1, type: "debugger" },
+      { minutes: 3, type: "programming" },
+      { minutes: 1, type: "programming" },
       { minutes: 1, type: "testing" },
     ],
     timeAdvice:
