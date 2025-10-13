@@ -134,13 +134,17 @@ function applyTagHighlighting(code, tagClassMap) {
   let taggedLines = [];
 
   for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+
+    // Fully skip tag lines (start or end)
+    if (/^\s*\/\/\s*<\/?tag:[^>]+>/i.test(line)) {
+      continue;
+    }
+
     // Detect start of tag region
-    const startTagMatch = lines[i].match(/\/\/\s*<tag:([a-zA-Z0-9 ]+)>/i);
+    const startTagMatch = line.match(/^\s*\/\/\s*<tag:([a-zA-Z0-9 ]+)>/i);
     if (startTagMatch) {
-      let tag = startTagMatch[1].toLowerCase().trim();
-      // Normalize tutorial tags like "highlight 1" -> "highlight1"
-      tag = tag.replace(/\s+/g, "");
-      // Legacy support: map concepts names to highlight buckets in tutorial
+      let tag = startTagMatch[1].toLowerCase().trim().replace(/\s+/g, "");
       if (criterion === "tutorial") {
         if (tag === "loop") tag = "highlight1";
         if (tag === "function") tag = "highlight2";
@@ -149,28 +153,26 @@ function applyTagHighlighting(code, tagClassMap) {
       if (tagClassMap[tag] !== undefined) {
         activeTag = tag;
       }
-      continue; // Skip tag marker line
+      continue;
     }
+
     // Detect end of tag region
-    const endTagMatch = lines[i].match(/\/\/\s*<\/tag:([a-zA-Z0-9 ]+)>/i);
+    const endTagMatch = line.match(/^\s*\/\/\s*<\/tag:([a-zA-Z0-9 ]+)>/i);
     if (endTagMatch) {
       activeTag = null;
-      continue; // Skip tag marker line
+      continue;
     }
-    // Highlight if inside a tag region and highlight is enabled
-    if (
-      activeTag &&
-      tagClassMap[activeTag] &&
-      tagClassMap[activeTag] !== "" &&
-      lines[i].trim() !== ""
-    ) {
+
+    // Apply highlighting
+    if (activeTag && tagClassMap[activeTag]) {
       taggedLines.push(
-        `<span class="${tagClassMap[activeTag]}">${escapeHtml(lines[i])}</span>`
+        `<span class="${tagClassMap[activeTag]}">${escapeHtml(line)}</span>`
       );
     } else {
-      taggedLines.push(escapeHtml(lines[i]));
+      taggedLines.push(escapeHtml(line));
     }
   }
+
   return taggedLines.join("\n");
 }
 
@@ -203,6 +205,7 @@ function applyRegexHighlights(highlighted) {
       let alreadyWrapped = {};
       while ((paramMatch = paramRegex.exec(params)) !== null) {
         const paramName = paramMatch[1];
+        console.log(paramName);
         let replacement = paramName;
         const isOneLetter = paramName.length === 1;
         // Only wrap once, with one-letter taking precedence
