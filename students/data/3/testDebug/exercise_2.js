@@ -14,13 +14,11 @@ void ZetKlaar() {
   LEDS = LedGetal;
 }
   
-// <tag:Highlight 1>
 void setup()
 {
   initDwenguino();
   ZetKlaar();
 }
-// </tag:Highlight 1>
 
 void loop()
 {

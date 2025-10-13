@@ -10,9 +10,7 @@ void BestuurMotors(int motor1, int motor2) {
   delay(250);
   Stop();
 }
-// <tag:Highlight 2>
 void Stop() {
-// </tag:Highlight 2>
 
   dcMotor1.setSpeed(0);
   dcMotor2.setSpeed(0);

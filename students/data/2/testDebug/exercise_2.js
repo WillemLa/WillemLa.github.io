@@ -4,7 +4,6 @@ window.exerciseData = {
 int HuidigGetal;
 int LedGetal;
 
-// <tag:Highlight 3>
 void setup()
 {
   initDwenguino();
@@ -15,11 +14,8 @@ void setup()
   dwenguinoLCD.print(String("Doel: ") + String(Doel));
   LEDS = LedGetal;
 }
-// </tag:Highlight 3>
 
-// <tag:Highlight 1>
 void loop()
-// </tag:Highlight 1>
 {
     if (digitalRead(SW_W) == PRESSED) {
       if (LedGetal <= 64) {
@@ -27,14 +23,12 @@ void loop()
         LEDS = LedGetal;
       }
     }
-    // </tag:Highlight 2>
     if (digitalRead(SW_E) == PRESSED) {
       if (LedGetal >= 2) {
         LedGetal = LedGetal / 2;
         LEDS = LedGetal;
       }
     }
-    // </tag:Highlight 2>
     if (digitalRead(SW_C) == PRESSED) {
       HuidigGetal = HuidigGetal + LedGetal;
       if (Doel == HuidigGetal) {

@@ -29,13 +29,10 @@ void rechts() {
     stop();
 }
 
-// <tag:Highlight 2>
 void stop() {
   dcMotor1.setSpeed(0);
   dcMotor2.setSpeed(0);
 }
-// </tag:Highlight 2>
-
 
 void loop()
 {

@@ -2,9 +2,7 @@ window.exerciseData = {
   student: "Ben Thompson",
   code: `int Doel;
 int HuidigGetal;
-// <tag:Highlight 3>
 int LedGetal;
-// </tag:Highlight 3>
 
 void setup()
 {
@@ -17,7 +15,6 @@ void setup()
   LEDS = LedGetal;
 }
 
-// <tag:Highlight 1>
 void loop()
 {
     if (digitalRead(SW_W) == PRESSED) {
@@ -50,8 +47,7 @@ void loop()
         dwenguinoLCD.print(String("Huidig: ") + String(HuidigGetal));
       }
     }
-}
-// </tag:Highlight 1>`,
+}`,
   advice: [
     "Beperk trial-and-error: noteer observaties en formuleer een hypothese voor elke stap.",
   ],
