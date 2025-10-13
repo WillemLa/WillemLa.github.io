@@ -325,24 +325,6 @@ document.addEventListener("DOMContentLoaded", function () {
           segment ? ` (minuut ${segment}-${Number(segment) + 1})` : ""
         }`;
 
-        const explanation = document.getElementById("exercise-description");
-        switch (criterion) {
-          case "concepts":
-            explanation.textContent =
-              "Dit toont de studentenprestaties op het gebied van codeerconcepten.";
-            break;
-          case "readability":
-            explanation.textContent =
-              "Dit toont de studentenprestaties op het gebied van leesbaarheid.";
-            break;
-          case "testDebug":
-            explanation.textContent =
-              "Dit toont de studentenprestaties op het gebied van testen en debuggen. Klik op de tijdlijn om naar verschillende momenten in de code te navigeren.";
-            break;
-          default:
-            explanation.textContent = "";
-        }
-
         // If a sourceUrl is provided, fetch code from there; otherwise use inline code
         const applyCode = (codeText) => {
           document.getElementById("codeInput").value =

@@ -339,26 +339,6 @@ function applyExplanationToDashboardView() {
   const select = document.getElementById("criterion-select");
   const selectedValue = select.value;
   const explanation = document.getElementById("exercise-explanation");
-  switch (selectedValue) {
-    case "concepts":
-      explanation.textContent =
-        "Dit is een overzicht van de studentenprestaties op basis van codeconcepten zoals loops, functies en conditionals. Het helpt bij het identificeren van conceptuele fouten in hun code.";
-      break;
-    case "readability":
-      explanation.textContent =
-        "Dit is een overzicht van de studentenprestaties op basis van codeleesbaarheid. Het helpt bij het identificeren van problemen zoals inconsistente naamgeving, niet-descriptieve namen en ontbrekend commentaar.";
-      break;
-    case "tutorial":
-      break;
-    case "testDebug":
-      explanation.textContent =
-        "Dit is een overzicht van de studentenprestaties op basis van hun gebruik van testen en debugging. Het helpt bij het identificeren van studenten die mogelijk geen tests schrijven of geen systematische debugging toepassen.";
-      break;
-    default:
-      explanation.textContent =
-        "Dit is een overzicht van studentenprestaties in de tutorial. Deze kan gebruikt worden om het dashboard te leren kennen.";
-      break;
-  }
 }
 
 function applyStateToUI(fromPopstate = false) {
