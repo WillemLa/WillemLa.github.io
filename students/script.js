@@ -283,17 +283,10 @@ document.addEventListener("DOMContentLoaded", function () {
   const backBtn = document.querySelector(".back-arrow");
   if (backBtn) {
     backBtn.onclick = function () {
-      try {
-        // Prefer browser history when available
-        if (window.history.length > 1) {
-          window.history.back();
-          return;
-        }
-      } catch {}
       const crit = criterion || "readability";
       window.location.href = `../index.html?criterion=${encodeURIComponent(
         crit
-      )}`;
+      )}&timeGrouping=byStudent&version=${encodeURIComponent(version)}`;
     };
   }
 
