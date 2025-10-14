@@ -891,9 +891,58 @@ function renderTestDebugBars(container) {
         if (!elements || elements.length === 0) return;
         const el = elements[0];
         const datasetIndex = el.datasetIndex;
-        var max_minutes = minutes;
-        const exerciseTimeSegment = Math.floor(datasetIndex % max_minutes);
-        goToExercise(studentId, exerciseNum, exerciseTimeSegment);
+        const exerciseTimeSegment = Math.floor(datasetIndex % minutes);
+
+        console.log("1");
+
+        // Update URL without navigation
+        const params = new URLSearchParams(window.location.search);
+        params.set("segment", exerciseTimeSegment);
+        window.history.replaceState(
+          {},
+          "",
+          `${window.location.pathname}?${params.toString()}`
+        );
+        console.log("1");
+
+        // Load new segment data from cache or global object
+        const crit = criterion ?? "testDebug";
+        const segmentSuffix =
+          exerciseTimeSegment !== null ? `_${exerciseTimeSegment}` : "";
+        const dataPath = `data/${studentId}/${crit}/exercise_${exerciseNum}${segmentSuffix}.js`;
+
+        // Dynamically load the new data script
+        const script = document.createElement("script");
+        script.src = dataPath;
+        script.onload = () => {
+          const data = window.exerciseData;
+          if (!data) return;
+
+          // Update title and header
+          document.title = `Oefening ${exerciseNum} (minuut ${
+            Number(exerciseTimeSegment) + 1
+          })`;
+          document.getElementById(
+            "exercise-title"
+          ).textContent = `Oefening ${exerciseNum} (minuut ${
+            Number(exerciseTimeSegment) + 1
+          })`;
+          document.getElementById("exercise-header").textContent = data.student;
+
+          // Update code
+          document.getElementById("codeInput").value = data.code ?? "";
+          syncHighlighting();
+
+          // Update advice
+          const adviceList = document.getElementById("advice-list");
+          adviceList.innerHTML = "";
+          data.advice.forEach((item) => {
+            const li = document.createElement("li");
+            li.innerHTML = item;
+            adviceList.appendChild(li);
+          });
+        };
+        document.body.appendChild(script);
       },
       categoryPercentage: 0.9,
       barPercentage: 0.9,
