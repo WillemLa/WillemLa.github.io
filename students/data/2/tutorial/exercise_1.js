@@ -15,12 +15,15 @@ void Rechts() {
   Stop();
 }
 
+// <tag:Highlight 1>
 void Vooruit() {
   dcMotor1.setSpeed(100);
   dcMotor2.setSpeed(100);
   delay(250);
   Stop();
 }
+// </tag:Highlight 1>
+
 
 void Achteruit() {
   dcMotor1.setSpeed((-100));
@@ -41,6 +44,8 @@ void setup()
 
 void loop()
 {
+// <tag:Highlight 1>
+
     if (digitalRead(SW_N) == PRESSED) {
       Vooruit();
     }
@@ -53,6 +58,7 @@ void loop()
     if (digitalRead(SW_W) == PRESSED) {
       Links();
     }
+  // </tag:Highlight 1>
 }`,
   advice: [
     "Hier komt er advies dat u kunt gebruiken om Ben te helpen met zijn code.",

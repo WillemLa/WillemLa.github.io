@@ -27,7 +27,7 @@ void loop()
         LEDS = LedGetal;
       }
     }
-    // </tag:Highlight 2>
+    // <tag:Highlight 2>
     if (digitalRead(SW_E) == PRESSED) {
       if (LedGetal >= 2) {
         LedGetal = LedGetal / 2;

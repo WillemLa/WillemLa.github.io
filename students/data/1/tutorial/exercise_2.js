@@ -23,6 +23,8 @@ void setup()
 
 void loop()
 {
+// <tag:Highlight 3>
+
     if (digitalRead(SW_W) == PRESSED) {
       if (LedGetal <= 64) {
         LedGetal = LedGetal * 2;
@@ -48,6 +50,8 @@ void loop()
         dwenguinoLCD.print(String("Huidig: ") + String(HuidigGetal));
       }
     }
+      // </tag:Highlight 3>
+
 }`,
   advice: [
     "Hier komt er advies dat u kunt gebruiken om Alice te helpen met haar code.",

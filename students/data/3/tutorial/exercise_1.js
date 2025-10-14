@@ -4,12 +4,15 @@ window.exerciseData = {
 DCMotor dcMotor1(MOTOR_1_0, MOTOR_1_1);
 DCMotor dcMotor2(MOTOR_2_0, MOTOR_2_1);
 
+// <tag:Highlight 3>
 void bestuurMotors(int motor1, int motor2) {
   dcMotor1.setSpeed(motor1);
   dcMotor2.setSpeed(motor2);
   delay(250);
   stop();
 }
+//</tag:Highlight 3>
+
 
 void stop() {
   dcMotor1.setSpeed(0);

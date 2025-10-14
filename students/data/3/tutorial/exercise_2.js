@@ -4,6 +4,7 @@ window.exerciseData = {
 int HuidigGetal;
 int Doel;
 
+// <tag:Highlight 2>
 void ZetKlaar() {
   dwenguinoLCD.clear();
   Doel = (random(0, 255));
@@ -13,7 +14,8 @@ void ZetKlaar() {
   dwenguinoLCD.print(String("Doel: ") + String(Doel));
   LEDS = LedGetal;
 }
-  
+  // </tag:Highlight 2>
+
 // <tag:Highlight 1>
 void setup()
 {
