@@ -1,5 +1,5 @@
 window.exerciseData = {
-  student: "Daniel Wu",
+  student: "Ben Thompson",
   code: `
 DCMotor dcMotor1(MOTOR_1_0, MOTOR_1_1);
 DCMotor dcMotor2(MOTOR_2_0, MOTOR_2_1);

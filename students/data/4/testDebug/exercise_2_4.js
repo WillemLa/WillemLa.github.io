@@ -1,5 +1,5 @@
 window.exerciseData = {
-  student: "Ben Thompson",
+  student: "Daniel Wu",
   code: `int Doel;
 int HuidigGetal;
 int LedGetal;

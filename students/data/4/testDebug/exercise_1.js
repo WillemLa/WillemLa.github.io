@@ -1,5 +1,5 @@
 window.exerciseData = {
-  student: "Ben Thompson",
+  student: "Daniel Wu",
   code: `
 void Links() {
   dcMotor1.setSpeed(100);
