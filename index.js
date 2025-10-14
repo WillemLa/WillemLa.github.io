@@ -1428,7 +1428,7 @@ function renderTestDebugBars(container) {
               }
               const m = getMetrics(studentId, exerciseId) || {};
               const advice = (m && m.tdAdvice) || (m && m.timeAdvice) || "";
-              return advice ? [advice] : [];
+              return advice && exerciseVersion == 3 ? [advice] : [];
             },
           },
         },
