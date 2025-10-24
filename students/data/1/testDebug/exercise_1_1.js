@@ -1,50 +1,40 @@
 window.exerciseData = {
   student: "Alice Morgan",
-  code: `DCMotor dcMotor1(MOTOR_1_0, MOTOR_1_1);
+  code: `
+DCMotor dcMotor1(MOTOR_1_0, MOTOR_1_1);
 DCMotor dcMotor2(MOTOR_2_0, MOTOR_2_1);
-  
-void vooruit() {
-  dcMotor1.setSpeed(80);
-  dcMotor2.setSpeed(80);
-  delay(100);
-}
-
-void achteruit() {
-  dcMotor1.setSpeed((-80));
-  dcMotor2.setSpeed((-80));
-  delay(100);
-}
-
-void loop()
-{
-}
 
 void setup()
 {
   initDwenguino();
-  vooruit();
-}`,
+}
+
+void loop()
+{
+    if (digitalRead(SW_N) == PRESSED) {
+      
+    }
+    if (digitalRead(SW_E) == PRESSED) {
+    
+    }
+}
+`,
   advice: [
-    "Moedig korte cycli aan: stukje programmeren, gericht debuggen, korte test.",
+    "Mooi afwisselend patroon: programmeren, debuggen, testen. Benadruk systematiek.",
   ],
-  //This tracks time per exercise
   metrics: {
-    elapsedSeconds: 9 * 60,
+    elapsedSeconds: 12 * 60,
     wroteTests: true,
-    usedDebugger: false,
-    finished: true,
-    // Explicit time sections (minutes) used for graphs; sums must equal total minutes
+    usedDebugger: true,
     sections: [
-      { minutes: 3, type: "programming" },
+      { minutes: 7, type: "programming" },
       { minutes: 1, type: "testing" },
-      { minutes: 2, type: "debugger" },
-      { minutes: 2, type: "programming" },
+      { minutes: 1, type: "debugger" },
       { minutes: 1, type: "testing" },
     ],
-    // Advice shown on hover in time/test-debug graphs
     timeAdvice:
-      "Alice wisselt bouwen met debuggen/testen af. Vraag naar haar besliscriteria.",
+      "Gestructureerde blokken. Vraag Daniël hoe hij beslist wanneer te testen of debuggen.",
     tdAdvice:
-      "Moedig korte cycli aan: stukje programmeren, gericht debuggen, korte test.",
+      "Mooi afwisselend patroon: programmeren, debuggen, testen. Benadruk systematiek.",
   },
 };

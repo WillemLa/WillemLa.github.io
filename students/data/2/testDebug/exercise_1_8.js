@@ -1,17 +1,35 @@
 window.exerciseData = {
   student: "Ben Thompson",
-  code: `
-DCMotor dcMotor1(MOTOR_1_0, MOTOR_1_1);
-DCMotor dcMotor2(MOTOR_2_0, MOTOR_2_1);
+  code: `DCMotor dcMotor1(MOTOR_1_0, MOTOR_1_1);
+DCMotor dcMotor2(MOTOR_2_0, MOTOR_2_1);  
 
-void BestuurMotors(int motor1, int motor2) {
-  dcMotor1.setSpeed(motor1);
-  dcMotor2.setSpeed(motor2);
+void links() {
+  dcMotor1.setSpeed(100);
   delay(250);
-  Stop();
+  stop();
 }
 
-void Stop() {
+void rechts() {
+  dcMotor2.setSpeed(100);
+  delay(250);
+  stop();
+}
+
+void vooruit() {
+  dcMotor1.setSpeed(100);
+  dcMotor2.setSpeed(100);
+  delay(250);
+  stop();
+}
+
+void achteruit() {
+  dcMotor1.setSpeed((-100));
+  dcMotor2.setSpeed((-100));
+  delay(250);
+  stop();
+}
+
+void stop() {
   dcMotor1.setSpeed(0);
   dcMotor2.setSpeed(0);
 }
@@ -24,38 +42,40 @@ void setup()
 void loop()
 {
     if (digitalRead(SW_N) == PRESSED) {
-      BestuurMotors(75, 75);
-
+      vooruit();
     }
     if (digitalRead(SW_E) == PRESSED) {
-      BestuurMotors(0, 80);
-
+      rechts();
     }
     if (digitalRead(SW_S) == PRESSED) {
-      BestuurMotors(-75, -75);
+      achteruit();
     }
-
     if (digitalRead(SW_W) == PRESSED) {
-      BestuurMotors(80, 0);
+      links();
     }
 }
-`,
+    `,
   advice: [
-    "Mooi afwisselend patroon: programmeren, debuggen, testen. Benadruk systematiek.",
+    "Moedig korte cycli aan: stukje programmeren, gericht debuggen, korte test.",
   ],
+  //This tracks time per exercise
   metrics: {
-    elapsedSeconds: 12 * 60,
+    elapsedSeconds: 9 * 60,
     wroteTests: true,
-    usedDebugger: true,
+    usedDebugger: false,
+    finished: true,
+    // Explicit time sections (minutes) used for graphs; sums must equal total minutes
     sections: [
-      { minutes: 7, type: "programming" },
+      { minutes: 3, type: "programming" },
       { minutes: 1, type: "testing" },
-      { minutes: 1, type: "debugger" },
+      { minutes: 2, type: "debugger" },
+      { minutes: 2, type: "programming" },
       { minutes: 1, type: "testing" },
     ],
+    // Advice shown on hover in time/test-debug graphs
     timeAdvice:
-      "Gestructureerde blokken. Vraag Daniël hoe hij beslist wanneer te testen of debuggen.",
+      "Alice wisselt bouwen met debuggen/testen af. Vraag naar haar besliscriteria.",
     tdAdvice:
-      "Mooi afwisselend patroon: programmeren, debuggen, testen. Benadruk systematiek.",
+      "Moedig korte cycli aan: stukje programmeren, gericht debuggen, korte test.",
   },
 };

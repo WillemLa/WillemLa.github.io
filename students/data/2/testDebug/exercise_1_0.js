@@ -1,30 +1,37 @@
 window.exerciseData = {
   student: "Ben Thompson",
-  code: `void setup()
-{
-  initDwenguino();
-}
+  code: `DCMotor dcMotor1(MOTOR_1_0, MOTOR_1_1);
+DCMotor dcMotor2(MOTOR_2_0, MOTOR_2_1);
 
 void loop()
 {
 }
-`,
+
+void setup()
+{
+  initDwenguino();
+}`,
   advice: [
-    "Mooi afwisselend patroon: programmeren, debuggen, testen. Benadruk systematiek.",
+    "Moedig korte cycli aan: stukje programmeren, gericht debuggen, korte test.",
   ],
+  //This tracks time per exercise
   metrics: {
-    elapsedSeconds: 12 * 60,
+    elapsedSeconds: 9 * 60,
     wroteTests: true,
-    usedDebugger: true,
+    usedDebugger: false,
+    finished: true,
+    // Explicit time sections (minutes) used for graphs; sums must equal total minutes
     sections: [
-      { minutes: 6, type: "programming" },
+      { minutes: 3, type: "programming" },
       { minutes: 1, type: "testing" },
-      { minutes: 1, type: "debugger" },
+      { minutes: 2, type: "debugger" },
+      { minutes: 2, type: "programming" },
       { minutes: 1, type: "testing" },
     ],
+    // Advice shown on hover in time/test-debug graphs
     timeAdvice:
-      "Gestructureerde blokken. Vraag Daniël hoe hij beslist wanneer te testen of debuggen.",
+      "Alice wisselt bouwen met debuggen/testen af. Vraag naar haar besliscriteria.",
     tdAdvice:
-      "Mooi afwisselend patroon: programmeren, debuggen, testen. Benadruk systematiek.",
+      "Moedig korte cycli aan: stukje programmeren, gericht debuggen, korte test.",
   },
 };
