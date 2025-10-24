@@ -1,5 +1,7 @@
 window.exerciseData = {
   student: "Alice Morgan",
+  context:
+    "Laat een wagentje met twee wielen vooruit/achteruit rijden met de NOORD/ZUID knoppen, en links/rechts draaien met de ZUID/WEST knoppen.",
   code: `
 void links() {
   dcMotor1.setSpeed(100);

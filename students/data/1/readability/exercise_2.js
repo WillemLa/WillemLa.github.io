@@ -1,53 +1,40 @@
 window.exerciseData = {
   student: "Alice Morgan",
-  code: `
-int LedGetal;
-int HuidigGetal;
-int Doel;
+  context:
+    "Laat om de beurt de leds van de ene naar de andere kant knipperen (bv. links naar rechts). Wissel van richting zodra je aan een uiteinde zit.",
+  code: `int led;
 
-void ZetKlaar() {
+void knipperLeds() {
+  while (led > 1) {
+    led = led / 2;
+    schrijfNaarLCD(String("Waarde led: ") + String(led));
+    delay(300);
+  }
+  while (led < 128) {
+    led = led * 2;
+    schrijfNaarLCD(String("Waarde led: ") + String(led));
+    delay(300);
+  }
+}
+
+void schrijfNaarLCD(int tekst) {
   dwenguinoLCD.clear();
-  Doel = (random(0, 255));
-  HuidigGetal = 0;
-  LedGetal = 1;
   dwenguinoLCD.setCursor(0,0);
-  dwenguinoLCD.print(String("Doel: ") + String(Doel));
-  LEDS = LedGetal;
+  dwenguinoLCD.print(tekst);
 }
 
 void setup()
 {
   initDwenguino();
-  ZetKlaar();
+
+  led = 1;
 }
+
 
 void loop()
 {
-    if (digitalRead(SW_W) == PRESSED) {
-      if (LedGetal <= 64) {
-        LedGetal = LedGetal * 2;
-        LEDS = LedGetal;
-      }
-    }
-    if (digitalRead(SW_E) == PRESSED) {
-      if (LedGetal >= 2) {
-        LedGetal = LedGetal / 2;
-        LEDS = LedGetal;
-      }
-    }
-    if (digitalRead(SW_C) == PRESSED) {
-      HuidigGetal = HuidigGetal + LedGetal;
-      if (Doel == HuidigGetal) {
-        dwenguinoLCD.clear();
-        dwenguinoLCD.setCursor(0,1);
-        dwenguinoLCD.print(String("Proficiat!"));
-        delay(150);
-        ZetKlaar();
-      } else {
-        dwenguinoLCD.setCursor(0,1);
-        dwenguinoLCD.print(String("Huidig: ") + String(HuidigGetal));
-      }
-    }
+    knipperLeds();
+
 }`,
   advice: [
     "Benadruk bij Alice dat haar consistente naamgeving het lezen van code vergemakkelijken.",

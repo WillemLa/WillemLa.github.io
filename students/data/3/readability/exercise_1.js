@@ -5,7 +5,6 @@ int TijdNaarRechts;
 
 int x;
 
-// Deze functie beschrijven...
 void schrijfNaarScherm(int tekst) {
   dwenguinoLCD.clear();
   dwenguinoLCD.setCursor(0,0);
@@ -16,7 +15,6 @@ DCMotor dcMotor1(MOTOR_1_0, MOTOR_1_1);
 
 DCMotor dcMotor2(MOTOR_2_0, MOTOR_2_1);
 
-// Deze functie beschrijven...
 void LoopDoor(int x) {
   schrijfNaarScherm(String("Recht vooruit!!"));
   dcMotor1.setSpeed(200);
@@ -24,7 +22,6 @@ void LoopDoor(int x) {
   delay(x);
 }
 
-// Deze functie beschrijven...
 void naarRechts(int TijdNaarRechts) {
   schrijfNaarScherm(String("Rechts!!"));
   dcMotor1.setSpeed(50);

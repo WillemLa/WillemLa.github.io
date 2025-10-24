@@ -1,5 +1,6 @@
 window.exerciseData = {
   student: "Alice Morgan",
+  context: "Laat een wagentje met twee wielen in een vierkant rijden",
   code: `
 
 int periodeRechts;
@@ -16,7 +17,6 @@ DCMotor dcMotor1(MOTOR_1_0, MOTOR_1_1);
 
 DCMotor dcMotor2(MOTOR_2_0, MOTOR_2_1);
 
-// Deze functie beschrijven...
 void loopDoor(int wachtPeriode) {
   schrijfNaarScherm(String("Vooruit!"));
   dcMotor1.setSpeed(180);
@@ -24,7 +24,6 @@ void loopDoor(int wachtPeriode) {
   delay(wachtPeriode);
 }
 
-// Deze functie beschrijven...
 void naarRechts(int periodeRechts) {
   schrijfNaarScherm(String("Rechts!"));
   dcMotor1.setSpeed(55);

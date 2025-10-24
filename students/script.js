@@ -5,6 +5,43 @@ const toggleAdvice = document.getElementById("toggleAdvice");
 // Track current version stage globally: 0 (no highlights), 1 (highlights), 2 (highlights + advice)
 window.currentVersionStage = 0;
 
+function getExcerciseDescription(criterion, exerciseNum) {
+  var condition = exerciseNum == 1;
+  switch (criterion) {
+    case "tutorial":
+      if (condition) {
+        return "Hier komt een beschrijving van de oefening. ";
+      } else {
+        return "Hier komt een beschrijving van de oefening. ";
+      }
+      break;
+    case "concepts":
+      if (condition) {
+        return "Laat eerst de LEDs op positie 0, 2, 4, 6 en vervolgens de LEDs op positie 1, 3, 5, 7 branden. Zorg dat dit proces zich blijft herhalen.";
+      } else {
+        return "Laat om de beurt de leds van rechts naar links knipperen. Zodra de meest linkse LED knippert herbegin je helemaal rechts";
+      }
+      break;
+    case "readability":
+      if (condition) {
+        return "Laat een wagentje met twee wielen in een vierkant rijden";
+      } else {
+        return "Laat om de beurt de leds van de ene naar de andere kant knipperen (bv. links naar rechts). Wissel van richting zodra je aan een uiteinde zit.";
+      }
+      break;
+    case "testDebug":
+      if (condition) {
+        return "Laat een wagentje met twee wielen vooruit/achteruit rijden met de NOORD/ZUID knoppen, en links/rechts draaien met de ZUID/WEST knoppen.";
+      } else {
+        return "Maak het volgende spel: kies machten van 2 (1, 2, 4, ..., 128) waarvan de som een doelgetal tussen 0 en 255 vormt. Duid gekozen machten aan met de LEDs";
+      }
+      break;
+    default:
+      return "";
+      break;
+  }
+}
+
 function getStudentAndExercise() {
   const params = new URLSearchParams(window.location.search);
   let studentId = params.get("student");
@@ -309,14 +346,22 @@ document.addEventListener("DOMContentLoaded", function () {
       }
       if (data) {
         document.title = `Oefening ${exerciseNum}${
-          segment ? ` (minuut ${segment}-${Number(segment) + 1})` : ""
+          segment ? ` (minuut ${Number(segment) + 1})` : ""
         } - ${data.student}`;
+
         document.getElementById("exercise-header").textContent = data.student;
         document.getElementById(
           "exercise-title"
         ).textContent = `Oefening ${exerciseNum}${
-          segment ? ` (minuut ${segment}-${Number(segment) + 1})` : ""
+          segment ? ` (minuut ${Number(segment) + 1})` : ""
         }`;
+
+        document.getElementById(
+          "exercise-description"
+        ).textContent = `Opdracht: ${getExcerciseDescription(
+          criterion,
+          exerciseNum
+        )}`;
 
         // If a sourceUrl is provided, fetch code from there; otherwise use inline code
         const applyCode = (codeText) => {

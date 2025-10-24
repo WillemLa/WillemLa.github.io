@@ -1,5 +1,7 @@
 window.exerciseData = {
   student: "Alice Morgan",
+  context:
+    "Maak het volgende spel: kies machten van 2 (1, 2, 4, ..., 128) waarvan de som een doelgetal tussen 0 en 255 vormt.",
   code: `
 int LedGetal;
 int HuidigGetal;

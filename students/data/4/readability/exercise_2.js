@@ -16,7 +16,6 @@ void knipper() {
   }
 }
 
-// Deze functie beschrijven...
 void schrijf(int x) {
   dwenguinoLCD.clear();
   dwenguinoLCD.setCursor(0,0);

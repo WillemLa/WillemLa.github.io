@@ -1,5 +1,8 @@
 window.exerciseData = {
   student: "Ben Thompson",
+  context:
+    "Laat om de beurt de leds van rechts naar links knipperen. Zodra de meest linkse LED knippert herbegin je helemaal rechts",
+
   code: `#include <Wire.h>
 
 #include <Dwenguino.h>

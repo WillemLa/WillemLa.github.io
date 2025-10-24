@@ -1,5 +1,8 @@
 window.exerciseData = {
   student: "Ben Thompson",
+  context:
+    "Laat eerst de LEDs op positie 0, 2, 4, 6 en vervolgens de LEDs op positie 1, 3, 5, 7 branden. Zorg dat dit proces zich blijft herhalen.",
+
   code: `#include <Wire.h>
 
 #include <Dwenguino.h>
