@@ -4,17 +4,6 @@ window.exerciseData = {
 DCMotor dcMotor1(MOTOR_1_0, MOTOR_1_1);
 DCMotor dcMotor2(MOTOR_2_0, MOTOR_2_1);
 
-void bestuurMotors(int motor1, int motor2) {
-  dcMotor1.setSpeed(motor1);
-  dcMotor2.setSpeed(motor2);
-  delay(250);
-  stop();
-}
-
-void stop() {
-  dcMotor1.setSpeed(0);
-  dcMotor2.setSpeed(0);
-}
 
 void setup()
 {
@@ -23,21 +12,9 @@ void setup()
 
 void loop()
 {
-    if (digitalRead(SW_N) == PRESSED) {
-      bestuurMotors(100, 100);
-
-    }
-    if (digitalRead(SW_E) == PRESSED) {
-      bestuurMotors(0, 100);
-
-    }
-    if (digitalRead(SW_S) == PRESSED) {
-      bestuurMotors(-100, -100);
-    }
-
-    if (digitalRead(SW_W) == PRESSED) {
-      bestuurMotors(100, 0);
-    }
+  dcMotor1.setSpeed(10);
+  dcMotor2.setSpeed(10);
+  delay(50);
 }`,
   advice: [
     "Beperk trial-and-error: formuleer hypothesen, zet breakpoints, test tussendoor.",

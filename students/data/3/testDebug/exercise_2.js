@@ -56,8 +56,8 @@ void loop()
     wroteTests: false,
     usedDebugger: false,
     sections: [
-      { minutes: 1, type: "programming" },
-      { minutes: 4, type: "trial" },
+      { minutes: 3, type: "programming" },
+      { minutes: 3, type: "trial" },
     ],
     timeAdvice:
       "Hou de sessies kort en gefocust; plan mini-tests na elke bouwstap.",

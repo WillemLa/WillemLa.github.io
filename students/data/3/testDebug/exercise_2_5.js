@@ -16,14 +16,14 @@ void setup()
 void loop()
 {
     if (digitalRead(SW_W) == PRESSED) {
-      if (LedGetal < 63) {
+      if (LedGetal <= 64) {
         LedGetal = LedGetal * 2;
         LEDS = LedGetal;
         dwenguinoLCD.print(String(LedGetal));
       }
     }
     if (digitalRead(SW_E) == PRESSED) {
-      if (LedGetal > 1) {
+      if (LedGetal >= 2) {
         LedGetal = LedGetal / 2;
         LEDS = LedGetal;
         dwenguinoLCD.print(String(LedGetal));
