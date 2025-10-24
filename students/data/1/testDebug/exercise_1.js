@@ -48,7 +48,7 @@ void loop()
     wroteTests: true,
     usedDebugger: true,
     sections: [
-      { minutes: 6, type: "programming" },
+      { minutes: 7, type: "programming" },
       { minutes: 1, type: "testing" },
       { minutes: 1, type: "debugger" },
       { minutes: 1, type: "testing" },
