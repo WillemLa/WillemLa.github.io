@@ -4,7 +4,6 @@ window.exerciseData = {
 int HuidigGetal;
 int LedGetal;
 
-
 void setup()
 {
   initDwenguino();
@@ -12,7 +11,7 @@ void setup()
   HuidigGetal = 0;
   LedGetal = 1;
   dwenguinoLCD.setCursor(0,0);
-  dwenguinoLCD.print(String("Doel: ") + String(Doel));
+  dwenguinoLCD.print(String(Doel));
   LEDS = LedGetal;
 }
 
@@ -28,24 +27,6 @@ void loop()
       if (LedGetal >= 2) {
         LedGetal = LedGetal / 2;
         LEDS = LedGetal;
-      }
-    }
-    if (digitalRead(SW_C) == PRESSED) {
-      HuidigGetal = HuidigGetal + LedGetal;
-      if (Doel == HuidigGetal) {
-        dwenguinoLCD.clear();
-        dwenguinoLCD.setCursor(0,1);
-        dwenguinoLCD.print(String("Proficiat!"));
-        dwenguinoLCD.clear();
-        Doel = (random(0, 255));
-        HuidigGetal = 0;
-        LedGetal = 1;
-        dwenguinoLCD.setCursor(0,0);
-        dwenguinoLCD.print(String("Doel: ") + String(Doel));
-        LEDS = LedGetal;
-      } else {
-        dwenguinoLCD.setCursor(0,1);
-        dwenguinoLCD.print(String("Huidig: ") + String(HuidigGetal));
       }
     }
 }`,
