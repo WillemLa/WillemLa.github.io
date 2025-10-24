@@ -8,10 +8,6 @@ void BestuurMotors(int motor1, int motor2) {
   dcMotor1.setSpeed(motor1);
   dcMotor2.setSpeed(motor2);
   delay(250);
-  Stop();
-}
-
-void Stop() {
   dcMotor1.setSpeed(0);
   dcMotor2.setSpeed(0);
 }
@@ -24,19 +20,33 @@ void setup()
 void loop()
 {
     if (digitalRead(SW_N) == PRESSED) {
-      BestuurMotors(100, 100);
-
+        dcMotor1.setSpeed(100);
+        dcMotor2.setSpeed(100);
+        delay(250);
+        dcMotor1.setSpeed(0);
+        dcMotor2.setSpeed(0);
     }
     if (digitalRead(SW_E) == PRESSED) {
-      BestuurMotors(0, 100);
-
+        dcMotor1.setSpeed(0);
+        dcMotor2.setSpeed(100);
+        delay(250);
+        dcMotor1.setSpeed(0);
+        dcMotor2.setSpeed(0);
     }
     if (digitalRead(SW_S) == PRESSED) {
-      BestuurMotors(-100, -100);
+        dcMotor1.setSpeed(-100);
+        dcMotor2.setSpeed(-100);
+        delay(250);
+        dcMotor1.setSpeed(0);
+        dcMotor2.setSpeed(0);
     }
 
     if (digitalRead(SW_W) == PRESSED) {
-      BestuurMotors(100, 0);
+        dcMotor1.setSpeed(100);
+        dcMotor2.setSpeed(0);
+        delay(250);
+        dcMotor1.setSpeed(0);
+        dcMotor2.setSpeed(0);
     }
 }
 `,
@@ -48,7 +58,7 @@ void loop()
     wroteTests: true,
     usedDebugger: true,
     sections: [
-      { minutes: 6, type: "programming" },
+      { minutes: 7, type: "programming" },
       { minutes: 1, type: "testing" },
       { minutes: 1, type: "debugger" },
       { minutes: 1, type: "testing" },

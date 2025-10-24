@@ -24,19 +24,19 @@ void setup()
 void loop()
 {
     if (digitalRead(SW_N) == PRESSED) {
-      BestuurMotors(100, 100);
+      BestuurMotors(75, 75);
 
     }
     if (digitalRead(SW_E) == PRESSED) {
-      BestuurMotors(0, 100);
+      BestuurMotors(0, 80);
 
     }
     if (digitalRead(SW_S) == PRESSED) {
-      BestuurMotors(-100, -100);
+      BestuurMotors(-75, -75);
     }
 
     if (digitalRead(SW_W) == PRESSED) {
-      BestuurMotors(100, 0);
+      BestuurMotors(80, 0);
     }
 }
 `,
@@ -48,7 +48,7 @@ void loop()
     wroteTests: true,
     usedDebugger: true,
     sections: [
-      { minutes: 6, type: "programming" },
+      { minutes: 7, type: "programming" },
       { minutes: 1, type: "testing" },
       { minutes: 1, type: "debugger" },
       { minutes: 1, type: "testing" },
