@@ -18,7 +18,7 @@ void setup()
 void loop()
 {
     if (digitalRead(SW_W) == PRESSED) {
-      if (LedGetal <= 64) {
+      if (LedGetal <= 127) {
         LedGetal = LedGetal * 2;
         LEDS = LedGetal;
       }
