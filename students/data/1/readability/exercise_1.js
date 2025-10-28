@@ -1,9 +1,7 @@
 window.exerciseData = {
   student: "Alice Morgan",
   context: "Laat een wagentje met twee wielen in een vierkant rijden",
-  code: `
-
-int periodeRechts;
+  code: `int periodeRechts;
 
 int wachtPeriode;
 

@@ -24,8 +24,8 @@ void loop()
     wroteTests: false,
     usedDebugger: true,
     sections: [
-      { minutes: 2, type: "programming" },
-      { minutes: 5, type: "trial" },
+      { minutes: 4, type: "programming" },
+      { minutes: 3, type: "trial" },
     ],
     timeAdvice:
       "Lang traject. Help Carla haar werk in kleinere deelstappen te plannen.",

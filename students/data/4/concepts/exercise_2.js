@@ -26,46 +26,53 @@ void setup()
 // <tag:Loop>
 void loop()
 {
-// <tag:Loop>
+// </tag:Loop>
+    // <tag:Loop>
+    if(led = 1)
+    {
+    // </tag:Loop>
 // <tag:Function>
-    schrijfNaarLCD(String(led));
-    LEDS = led;
-    delay(300);
-    led = led * 2;
-    schrijfNaarLCD(String(led));
-    LEDS = led;
-    delay(300);
-    led = led * 2;
-    schrijfNaarLCD(String(led));
-    LEDS = led;
-    delay(300);
-    led = led * 2;
-    schrijfNaarLCD(String(led));
-    LEDS = led;
-    delay(300);
-    led = led * 2;
-    schrijfNaarLCD(String(led));
-    LEDS = led;
-    delay(300);
-    led = led * 2;
-    schrijfNaarLCD(String(led));
-    LEDS = led;
-    delay(300);
-    led = led * 2;
-    schrijfNaarLCD(String(led));
-    LEDS = led;
-    delay(300);
-    led = led * 2;
-    schrijfNaarLCD(String(led));
-    LEDS = led;
-    delay(300);
-    led = 1;
+        schrijfNaarLCD(String(led));
+        LEDS = led;
+        delay(300);
+        led = led * 2;
+        schrijfNaarLCD(String(led));
+        LEDS = led;
+        delay(300);
+        led = led * 2;
+        schrijfNaarLCD(String(led));
+        LEDS = led;
+        delay(300);
+        led = led * 2;
+        schrijfNaarLCD(String(led));
+        LEDS = led;
+        delay(300);
+        led = led * 2;
+        schrijfNaarLCD(String(led));
+        LEDS = led;
+        delay(300);
+        led = led * 2;
+        schrijfNaarLCD(String(led));
+        LEDS = led;
+        delay(300);
+        led = led * 2;
+        schrijfNaarLCD(String(led));
+        LEDS = led;
+        delay(300);
+        led = led * 2;
+        schrijfNaarLCD(String(led));
+        LEDS = led;
+        delay(300);
+        led = 1;
     // </tag:Function>
+    // <tag:Loop>
+    }
+// </tag:Loop>
     // <tag:Loop>
 }
         // </tag:Loop>`,
   advice: [
-    "Bespreek met Daniel het belang van herhaling vermijden en manier om dit te doen.",
+    "Bespreek met Daniel het belang van herhaling vermijden en manier om dit te doen. Leg ook uit dat in een 'if-statement', een enkele '=' een toewijzing is en '==' een vergelijking.",
   ],
   metrics: { elapsedSeconds: 9 * 60, wroteTests: false, usedDebugger: true },
   concepts: ["if", "while"],
