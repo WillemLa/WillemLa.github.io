@@ -625,6 +625,7 @@ document.addEventListener("DOMContentLoaded", function () {
           if (
             e.target.id === "toggleAdvice" ||
             e.target.id === "toggleAdviceConcepts" ||
+            e.target.id === "toggleAdviceTutorial" ||
             e.target.id === "toggleAdviceTestDebug"
           ) {
             adviceBlock.style.display = e.target.checked ? "block" : "none";
