@@ -210,9 +210,9 @@ var resultsByCriterion = {
   tutorial: {}, // will be populated from readability below
   concepts: {
     1: { 1: ["correct"], 2: ["correct"] },
-    2: { 1: ["correct"], 2: ["correct"] },
-    3: { 1: ["multipleIssues"], 2: ["correct"] },
-    4: { 1: ["correct"], 2: ["multipleIssues"] },
+    2: { 1: ["function"], 2: ["correct"] },
+    3: { 1: ["multipleIssues"], 2: ["conditional"] },
+    4: { 1: ["correct"], 2: ["loop"] },
   },
   testDebug: {},
   time: {},
