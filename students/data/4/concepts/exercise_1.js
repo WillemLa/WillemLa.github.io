@@ -71,7 +71,7 @@ void loop()
     }
 }`,
   advice: [
-    "Bespreek met Daniel waar functies en lussen worden toegepast in Afwisseling.",
+    "Bespreek met Daniel welke concepten hij heeft gebruikt in zijn code en hoe deze bijdragen aan de functionaliteit.",
   ],
   metrics: { elapsedSeconds: 7 * 60, wroteTests: false, usedDebugger: false },
   concepts: ["for", "function"],

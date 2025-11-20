@@ -27,9 +27,8 @@ void loop()
     }
     if (digitalRead(SW_E) == PRESSED) {
 // <tag:Conditional>
-      if (LedGetal = 2) {
+       if (LedGetal = 2) {
 // </tag:Conditional>
-
         LedGetal = LedGetal / 2;
         LEDS = LedGetal;
         dwenguinoLCD.print(String(LedGetal));
@@ -37,7 +36,7 @@ void loop()
     }
 }`,
   advice: [
-    "Laat Carla uitleggen welke iteraties en voorwaarden de LED-patronen bepalen.",
+    "Leg Carla uit dat in een 'if-statement', een enkele '=' een toewijzing is en '==' een vergelijking.",
   ],
   metrics: { elapsedSeconds: 10 * 60, wroteTests: true, usedDebugger: true },
   concepts: ["for", "while", "function", "if"],

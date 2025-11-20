@@ -51,7 +51,7 @@ void loop()
 }
 `,
   advice: [
-    "Laat Alice de gebruikte concepten (lussen, functies) aanwijzen in Afwisseling.",
+    "Bespreek de gebruikte concepten met Alice en vraag hoe ze deze heeft toegepast in haar code.",
   ],
   metrics: { elapsedSeconds: 12 * 60, wroteTests: false, usedDebugger: true },
   concepts: ["for", "while", "function"],

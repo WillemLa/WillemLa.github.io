@@ -54,7 +54,7 @@ void loop()
     }
 }`,
   advice: [
-    "Bespreek met Alice hoe meerdere LEDs aangestuurd worden en welke concepten dat toont.",
+    "Bespreek met Alice welke concepten ze voor welke functionaliteit gebruikt heeft.",
   ],
   metrics: { elapsedSeconds: 10 * 60, wroteTests: true, usedDebugger: false },
   concepts: ["function", "if", "while"],

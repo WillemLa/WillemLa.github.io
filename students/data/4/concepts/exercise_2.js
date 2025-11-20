@@ -37,7 +37,7 @@ void loop()
         dwenguinoLCD.clear();
         dwenguinoLCD.setCursor(0,1);
         dwenguinoLCD.print(String("Proficiat!"));
-// </tag:Loop>
+// <tag:Loop>
         LEDS = 0b11111111;
         delay(250);
         LEDS = 0b00000000;
@@ -65,7 +65,7 @@ void loop()
     }
 }`,
   advice: [
-    "Bespreek met Daniel het belang van herhaling vermijden en manier om dit te doen. Leg ook uit dat in een 'if-statement', een enkele '=' een toewijzing is en '==' een vergelijking.",
+    "Bespreek met Daniel het belang van herhaling vermijden en de manier om dit te doen. ",
   ],
   metrics: { elapsedSeconds: 9 * 60, wroteTests: false, usedDebugger: true },
   concepts: ["if", "while"],

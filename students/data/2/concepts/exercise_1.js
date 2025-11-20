@@ -79,7 +79,7 @@ void loop()
     }
 }`,
   advice: [
-    "Vraag Ben welke variaties en lus-constructies hij ziet in Afwisseling.",
+    "Vraag Ben hoe hij herhaling kan vermijden in de functies die de motor aansturen.",
   ],
   metrics: { elapsedSeconds: 9 * 60, wroteTests: false, usedDebugger: true },
   concepts: ["for", "while", "if"],

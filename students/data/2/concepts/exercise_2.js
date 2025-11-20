@@ -34,7 +34,7 @@ void loop()
     }
 }`,
   advice: [
-    "Bespreek met Ben hoe de LED-sequenties zijn opgebouwd en welke controle-structuren gebruikt worden.",
+    "Bespreek met Ben welke concepten nog verder nodig zijn om de oefening af te werken.",
   ],
   metrics: { elapsedSeconds: 11 * 60, wroteTests: true, usedDebugger: false },
   concepts: ["function", "for", "if"],
