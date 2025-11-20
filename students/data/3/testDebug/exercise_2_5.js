@@ -23,7 +23,7 @@ void loop()
       }
     }
     if (digitalRead(SW_E) == PRESSED) {
-      if (LedGetal >= 2) {
+      if (LedGetal = 2) {
         LedGetal = LedGetal / 2;
         LEDS = LedGetal;
         dwenguinoLCD.print(String(LedGetal));

@@ -25,8 +25,8 @@ void loop()
       dcMotor2.setSpeed(0);
     }
     if (digitalRead(SW_S) == PRESSED) {
-      dcMotor1.setSpeed(0);
-      dcMotor2.setSpeed(-50);
+      dcMotor1.setSpeed(10);
+      dcMotor2.setSpeed(50);
       delay(250);
       dcMotor1.setSpeed(0);
       dcMotor2.setSpeed(0);
@@ -38,6 +38,21 @@ void loop()
       delay(250);
       dcMotor1.setSpeed(0);
       dcMotor2.setSpeed(0);
+    }
+
+    if (digitalRead(SW_C) == PRESSED) {
+      LEDS = 0b11111111;
+      delay(250);
+      LEDS = 0b00000000;
+      delay(250);
+      LEDS = 0b11111111;
+      delay(250);
+      LEDS = 0b00000000;
+      delay(250);
+      LEDS = 0b11111111;
+      delay(250);
+      LEDS = 0b00000000;
+      delay(250);
     }
 }`,
   advice: [

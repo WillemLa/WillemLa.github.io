@@ -25,6 +25,10 @@ void loop()
     if (digitalRead(SW_W) == PRESSED) {
       
     }
+
+    if (digitalRead(SW_C) == PRESSED) {
+      
+    }
 }`,
   advice: [
     "Beperk trial-and-error: formuleer hypothesen, zet breakpoints, test tussendoor.",

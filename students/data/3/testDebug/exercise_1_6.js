@@ -39,6 +39,21 @@ void loop()
       dcMotor1.setSpeed(0);
       dcMotor2.setSpeed(0);
     }
+
+    if (digitalRead(SW_C) == PRESSED) {
+      LEDS = 0b11111111;
+      delay(250);
+      LEDS = 0b00000000;
+      delay(250);
+      LEDS = 0b11111111;
+      delay(250);
+      LEDS = 0b00000000;
+      delay(250);
+      LEDS = 0b11111111;
+      delay(250);
+      LEDS = 0b00000000;
+      delay(250);
+    }
 }`,
   advice: [
     "Beperk trial-and-error: formuleer hypothesen, zet breakpoints, test tussendoor.",
