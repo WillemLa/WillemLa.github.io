@@ -25,7 +25,7 @@ void setup()
       { minutes: 3, type: "programming" },
       { minutes: 1, type: "testing" },
       { minutes: 2, type: "debugger" },
-      { minutes: 2, type: "programming" },
+      { minutes: 3, type: "programming" },
       { minutes: 1, type: "testing" },
     ],
     // Advice shown on hover in time/test-debug graphs
