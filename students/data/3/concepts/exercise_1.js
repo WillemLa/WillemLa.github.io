@@ -14,36 +14,45 @@ void setup()
 void loop()
 {
     if (digitalRead(SW_N) == PRESSED) {
+// <tag:Function>
       dcMotor1.setSpeed(50);
       dcMotor2.setSpeed(50);
       delay(250);
       dcMotor1.setSpeed(0);
       dcMotor2.setSpeed(0);
+// </tag:Function>
     }
     if (digitalRead(SW_E) == PRESSED) {
+// <tag:Function>
       dcMotor1.setSpeed(0);
       dcMotor2.setSpeed(50);
       delay(250);
       dcMotor1.setSpeed(0);
       dcMotor2.setSpeed(0);
+// </tag:Function>
     }
     if (digitalRead(SW_S) == PRESSED) {
+// <tag:Function>
       dcMotor1.setSpeed(-50);
       dcMotor2.setSpeed(-50);
       delay(250);
       dcMotor1.setSpeed(0);
       dcMotor2.setSpeed(0);
+// </tag:Function>
     }
 
     if (digitalRead(SW_W) == PRESSED) {
+// <tag:Function>
       dcMotor1.setSpeed(50);
       dcMotor2.setSpeed(0);
       delay(250);
       dcMotor1.setSpeed(0);
       dcMotor2.setSpeed(0);
+// </tag:Function>
     }
 
     if (digitalRead(SW_C) == PRESSED) {
+// <tag:Loop>
       LEDS = 0b11111111;
       delay(250);
       LEDS = 0b00000000;
@@ -56,6 +65,7 @@ void loop()
       delay(250);
       LEDS = 0b00000000;
       delay(250);
+// </tag:Loop>
     }
 }`,
   advice: ["Vraag Carla wat ze kan doen om herhaling in de code te vermijden."],

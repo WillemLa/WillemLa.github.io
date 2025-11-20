@@ -7,29 +7,38 @@ window.exerciseData = {
 DCMotor dcMotor2(MOTOR_2_0, MOTOR_2_1);  
 
 void links() {
+// <tag:Function>
   dcMotor1.setSpeed(100);
   delay(250);
   stop();
+// </tag:Function>
 }
 
 void rechts() {
+// <tag:Function>
   dcMotor2.setSpeed(100);
   delay(250);
   stop();
+// </tag:Function>
+
 }
 
 void vooruit() {
+// <tag:Function>
   dcMotor1.setSpeed(100);
   dcMotor2.setSpeed(100);
   delay(250);
   stop();
+// </tag:Function>
 }
 
 void achteruit() {
+// <tag:Function>
   dcMotor1.setSpeed((-100));
   dcMotor2.setSpeed((-100));
   delay(250);
   stop();
+// </tag:Function>
 }
 
 void knipper() {

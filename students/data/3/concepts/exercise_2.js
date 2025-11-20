@@ -26,7 +26,10 @@ void loop()
       }
     }
     if (digitalRead(SW_E) == PRESSED) {
+// <tag:Conditional>
       if (LedGetal = 2) {
+// </tag:Conditional>
+
         LedGetal = LedGetal / 2;
         LEDS = LedGetal;
         dwenguinoLCD.print(String(LedGetal));

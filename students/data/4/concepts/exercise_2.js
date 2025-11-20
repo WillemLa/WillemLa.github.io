@@ -37,6 +37,7 @@ void loop()
         dwenguinoLCD.clear();
         dwenguinoLCD.setCursor(0,1);
         dwenguinoLCD.print(String("Proficiat!"));
+// </tag:Loop>
         LEDS = 0b11111111;
         delay(250);
         LEDS = 0b00000000;
@@ -49,6 +50,7 @@ void loop()
         delay(250);
         LEDS = 0b00000000;
         delay(250);
+// </tag:Loop>
         dwenguinoLCD.clear();
         Doel = (random(0, 255));
         HuidigGetal = 0;
