@@ -7,31 +7,39 @@ window.exerciseData = {
 DCMotor dcMotor2(MOTOR_2_0, MOTOR_2_1);
 
 void Links() {
+// <tag:Function>
   dcMotor1.setSpeed(100);
   delay(250);
   Stop();
+// </tag:Function>
 }
 
 DCMotor dcMotor2(MOTOR_2_0, MOTOR_2_1);
 
 void Rechts() {
+// <tag:Function>
   dcMotor2.setSpeed(100);
   delay(250);
   Stop();
+// </tag:Function>
 }
 
 void Vooruit() {
+// <tag:Function>
   dcMotor1.setSpeed(100);
   dcMotor2.setSpeed(100);
   delay(250);
   Stop();
+// </tag:Function>
 }
 
 void Achteruit() {
+// <tag:Function>
   dcMotor1.setSpeed((-100));
   dcMotor2.setSpeed((-100));
   delay(250);
   Stop();
+// </tag:Function>
 }
 
 void Stop() {
@@ -71,7 +79,7 @@ void loop()
     }
 }`,
   advice: [
-    "Bespreek met Daniel welke concepten hij heeft gebruikt in zijn code en hoe deze bijdragen aan de functionaliteit.",
+    "Bespreek met Daniel hoe herhaalde logica in de functies kan worden vermeden.",
   ],
   metrics: { elapsedSeconds: 7 * 60, wroteTests: false, usedDebugger: false },
   concepts: ["for", "function"],

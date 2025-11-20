@@ -212,7 +212,7 @@ var resultsByCriterion = {
     1: { 1: ["correct"], 2: ["correct"] },
     2: { 1: ["function"], 2: ["correct"] },
     3: { 1: ["multipleIssues"], 2: ["conditional"] },
-    4: { 1: ["correct"], 2: ["loop"] },
+    4: { 1: ["function"], 2: ["loop"] },
   },
   testDebug: {},
   time: {},
