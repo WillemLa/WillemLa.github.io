@@ -1,7 +1,6 @@
 window.exerciseData = {
   student: "Alice Morgan",
-  code: `
-DCMotor dcMotor1(MOTOR_1_0, MOTOR_1_1);
+  code: `DCMotor dcMotor1(MOTOR_1_0, MOTOR_1_1);
 DCMotor dcMotor2(MOTOR_2_0, MOTOR_2_1);
 
 void setup()

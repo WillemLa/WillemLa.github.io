@@ -1,39 +1,57 @@
 window.exerciseData = {
   student: "Alice Morgan",
-  context:
-    "Laat om de beurt de leds van rechts naar links knipperen. Zodra de meest linkse LED knippert herbegin je helemaal rechts",
-  code: `#include <Wire.h>
+  code: `int LedGetal;
+int HuidigGetal;
+int Doel;
 
-#include <Dwenguino.h>
-
-#include <LiquidCrystal.h>
-
-int led;
-
-void schrijfNaarLCD(int tekst) {
+void ZetKlaar() {
   dwenguinoLCD.clear();
+  Doel = (random(0, 255));
+  HuidigGetal = 0;
+  LedGetal = 1;
   dwenguinoLCD.setCursor(0,0);
-  dwenguinoLCD.print(tekst);
+  dwenguinoLCD.print(String("Doel: ") + String(Doel));
+  LEDS = LedGetal;
 }
-
+  
 void setup()
 {
   initDwenguino();
-
-  led = 1;
+  ZetKlaar();
 }
-
 
 void loop()
 {
-    for ( int i = 0 ; i <= 7 ; i+=1) {
-      schrijfNaarLCD(String(led));
-      LEDS = led;
-      delay(300);
-      led = led * 2;
+    if (digitalRead(SW_W) == PRESSED) {
+      if (LedGetal <= 64) {
+        LedGetal = LedGetal * 2;
+        LEDS = LedGetal;
+      }
     }
-    led = 1;
-
+    if (digitalRead(SW_E) == PRESSED) {
+      if (LedGetal >= 2) {
+        LedGetal = LedGetal / 2;
+        LEDS = LedGetal;
+      }
+    }
+    if (digitalRead(SW_C) == PRESSED) {
+      HuidigGetal = HuidigGetal + LedGetal;
+      if (Doel == HuidigGetal) {
+        dwenguinoLCD.clear();
+        dwenguinoLCD.setCursor(0,1);
+        dwenguinoLCD.print(String("Proficiat!"));
+        for ( int i = 0 ; i < 3 ; i+=1) {
+          LEDS = 0b11111111;
+          delay(250);
+          LEDS = 0b00000000;
+          delay(250);
+        }
+        ZetKlaar();
+      } else {
+        dwenguinoLCD.setCursor(0,1);
+        dwenguinoLCD.print(String("Huidig: ") + String(HuidigGetal));
+      }
+    }
 }`,
   advice: [
     "Bespreek met Alice hoe meerdere LEDs aangestuurd worden en welke concepten dat toont.",

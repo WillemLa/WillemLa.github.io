@@ -29,6 +29,12 @@ void loop()
         dwenguinoLCD.clear();
         dwenguinoLCD.setCursor(0,1);
         dwenguinoLCD.print(String("Proficiat!"));
+        for ( int i = 0 ; i < 3 ; i+=1) {
+          LEDS = 0b11111111;
+          delay(250);
+          LEDS = 0b00000000;
+          delay(250);
+        }
       } else {
         dwenguinoLCD.setCursor(0,1);
         dwenguinoLCD.print(String("Huidig: ") + String(HuidigGetal));
@@ -45,7 +51,8 @@ void loop()
     finished: false,
     sections: [
       { minutes: 3, type: "programming" },
-      { minutes: 2, type: "testing" },
+      { minutes: 1, type: "testing" },
+      { minutes: 1, type: "programming" },
       { minutes: 1, type: "debugger" },
       { minutes: 3, type: "programming" },
       { minutes: 1, type: "programming" },

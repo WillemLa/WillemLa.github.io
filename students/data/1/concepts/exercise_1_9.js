@@ -1,7 +1,20 @@
 window.exerciseData = {
   student: "Alice Morgan",
-  code: `DCMotor dcMotor1(MOTOR_1_0, MOTOR_1_1);
+  code: `
+DCMotor dcMotor1(MOTOR_1_0, MOTOR_1_1);
 DCMotor dcMotor2(MOTOR_2_0, MOTOR_2_1);
+
+void BestuurMotors(int motor1, int motor2) {
+  dcMotor1.setSpeed(motor1);
+  dcMotor2.setSpeed(motor2);
+  delay(250);
+  Stop();
+}
+
+void Stop() {
+  dcMotor1.setSpeed(0);
+  dcMotor2.setSpeed(0);
+}
 
 void setup()
 {
@@ -11,16 +24,19 @@ void setup()
 void loop()
 {
     if (digitalRead(SW_N) == PRESSED) {
-      
+      BestuurMotors(100, 100);
+
     }
     if (digitalRead(SW_E) == PRESSED) {
-    
+      BestuurMotors(0, 100);
+
     }
     if (digitalRead(SW_S) == PRESSED) {
-        
+      BestuurMotors(-100, -100);
     }
+
     if (digitalRead(SW_W) == PRESSED) {
-      
+      BestuurMotors(100, 0);
     }
 }
 `,

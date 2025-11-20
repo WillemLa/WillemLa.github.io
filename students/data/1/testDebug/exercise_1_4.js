@@ -1,7 +1,6 @@
 window.exerciseData = {
   student: "Alice Morgan",
-  code: `
-DCMotor dcMotor1(MOTOR_1_0, MOTOR_1_1);
+  code: `DCMotor dcMotor1(MOTOR_1_0, MOTOR_1_1);
 DCMotor dcMotor2(MOTOR_2_0, MOTOR_2_1);
 
 void setup()
@@ -39,6 +38,21 @@ void loop()
         delay(250);
         dcMotor1.setSpeed(0);
         dcMotor2.setSpeed(0);
+    }
+
+    if (digitalRead(SW_C) == PRESSED) {
+      LEDS = 0b11111111;
+      delay(250);
+      LEDS = 0b00000000;
+      delay(250);
+      LEDS = 0b11111111;
+      delay(250);
+      LEDS = 0b00000000;
+      delay(250);
+      LEDS = 0b11111111;
+      delay(250);
+      LEDS = 0b00000000;
+      delay(250);
     }
 }
 `,
