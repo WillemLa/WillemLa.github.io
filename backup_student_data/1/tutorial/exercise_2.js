@@ -1,0 +1,81 @@
+window.exerciseData = {
+  student: "Alice Morgan",
+  context:
+    "Maak het volgende spel: kies machten van 2 (1, 2, 4, ..., 128) waarvan de som een doelgetal tussen 0 en 255 vormt.",
+  code: `
+int LedGetal;
+int HuidigGetal;
+int Doel;
+
+void ZetKlaar() {
+  dwenguinoLCD.clear();
+  Doel = (random(0, 255));
+  HuidigGetal = 0;
+  LedGetal = 1;
+  dwenguinoLCD.setCursor(0,0);
+  dwenguinoLCD.print(String("Doel: ") + String(Doel));
+  LEDS = LedGetal;
+}
+  
+void setup()
+{
+  initDwenguino();
+  ZetKlaar();
+}
+
+void loop()
+{
+// <tag:Highlight 3>
+
+    if (digitalRead(SW_W) == PRESSED) {
+      if (LedGetal <= 64) {
+        LedGetal = LedGetal * 2;
+        LEDS = LedGetal;
+      }
+    }
+    if (digitalRead(SW_E) == PRESSED) {
+      if (LedGetal >= 2) {
+        LedGetal = LedGetal / 2;
+        LEDS = LedGetal;
+      }
+    }
+    if (digitalRead(SW_C) == PRESSED) {
+      HuidigGetal = HuidigGetal + LedGetal;
+      if (Doel == HuidigGetal) {
+        dwenguinoLCD.clear();
+        dwenguinoLCD.setCursor(0,1);
+        dwenguinoLCD.print(String("Proficiat!"));
+        delay(150);
+        ZetKlaar();
+      } else {
+        dwenguinoLCD.setCursor(0,1);
+        dwenguinoLCD.print(String("Huidig: ") + String(HuidigGetal));
+      }
+    }
+      // </tag:Highlight 3>
+
+}`,
+  advice: [
+    "Hier komt er advies dat u kunt gebruiken om Alice te helpen met haar code.",
+  ],
+  metrics: {
+    elapsedSeconds: 14 * 60,
+    wroteTests: false,
+    usedDebugger: true,
+    finished: false,
+    sections: [
+      { minutes: 3, type: "programming" },
+      { minutes: 1, type: "testing" },
+      { minutes: 2, type: "debugger" },
+      { minutes: 2, type: "programming" },
+      { minutes: 1, type: "testing" },
+      { minutes: 3, type: "debugger" },
+      { minutes: 2, type: "programming" },
+      { minutes: 1, type: "testing" },
+    ],
+    timeAdvice:
+      "Flinke debugsessies tussen programmeerblokken. Focus op hypothesen vooraf.",
+    tdAdvice:
+      "Stuur op systematische debugstappen en laat korte program/test-cycli zien.",
+  },
+};
