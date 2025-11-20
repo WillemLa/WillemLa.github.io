@@ -34,6 +34,14 @@ void Stop() {
   dcMotor2.setSpeed(0);
 }
 
+void Knipper() {
+  for ( int i = 0 ; i < 3 ; i+=1) {
+  LEDS = 0b11111111;
+  delay(250);
+  LEDS = 0b00000000;
+  delay(250);
+}
+
 void setup()
 {
   initDwenguino();
@@ -41,6 +49,9 @@ void setup()
 
 void loop()
 {
+    if (digitalRead(SW_C) == PRESSED) {
+      Knipper();
+    }
     if (digitalRead(SW_N) == PRESSED) {
       Vooruit();
     }
@@ -64,8 +75,8 @@ void loop()
     sections: [
       { minutes: 3, type: "programming" },
       { minutes: 1, type: "testing" },
-      { minutes: 2, type: "debugger" },
-      { minutes: 2, type: "programming" },
+      { minutes: 1, type: "debugger" },
+      { minutes: 3, type: "programming" },
       { minutes: 1, type: "testing" },
       { minutes: 2, type: "trial" },
       { minutes: 1, type: "testing" },
