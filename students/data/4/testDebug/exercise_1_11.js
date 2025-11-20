@@ -44,14 +44,6 @@ void Knipper() {
   delay(250);
 }
 
-void Knipper() {
-  for ( int i = 0 ; i < 3 ; i+=1) {
-  LEDS = 0b11111111;
-  delay(250);
-  LEDS = 0b00000000;
-  delay(250);
-}
-
 void setup()
 {
   initDwenguino();
