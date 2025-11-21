@@ -33,7 +33,7 @@ function getExcerciseDescription(criterion, exerciseNum) {
       if (condition) {
         return "Laat een wagentje met twee wielen vooruit/achteruit rijden met de NOORD/ZUID knoppen, en links/rechts draaien met de ZUID/WEST knoppen. Laat ook alle LEDs 3x knipperen bij het indrukken van de CENTRALE knop.";
       } else {
-        return "Maak het volgende spel: kies machten van 2 (1, 2, 4, ..., 128) waarvan de som een willekeurig doelgetal tussen 0 en 255 vormt. Duid gekozen machten aan met de LEDs. Laat bij een juist antwoord de gekozen leds 3x knipperen.";
+        return "Maak het volgende spel: kies machten van 2 (1, 2, 4, ..., 128) waarvan de som een willekeurig doelgetal tussen 0 en 255 vormt. Duid gekozen machten aan met de LEDs (LED 0 = 1; LED 1 = 2, LED 2 = 4, ...). Laat bij een juist antwoord de gekozen leds 3x knipperen.";
       }
       break;
     default:
