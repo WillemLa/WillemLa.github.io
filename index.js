@@ -66,7 +66,26 @@ const alertDefsByCriterion = {
       title: "",
     },
   },
-  tutorial: {}, // will be populated from readability below
+  tutorial: {
+    multipleIssues: {
+      type: "issue",
+      icon: "‼️",
+      text: "Meerdere Opmerkingen",
+      title: "Meerdere opmerkingen",
+    },
+    singleIssue: {
+      type: "issue",
+      icon: "⚠️",
+      text: "Eén opmerking",
+      title: "Eén opmerking",
+    },
+    correct: {
+      type: "correct",
+      icon: "✅",
+      text: "Correct",
+      title: "Geen Opmerkingen",
+    },
+  }, // will be populated from readability below
   concepts: {
     multipleIssues: {
       type: "issue",
@@ -77,19 +96,19 @@ const alertDefsByCriterion = {
     loop: {
       type: "issue",
       icon: "⚠️",
-      text: "Loop",
+      text: "Loop (for/while/do-while)",
       title: "Loop (for/while/do-while)",
     },
     function: {
       type: "issue",
       icon: "⚠️",
-      text: "Function",
+      text: "Functie",
       title: "Functie",
     },
     conditional: {
       type: "issue",
       icon: "⚠️",
-      text: "Conditional",
+      text: "Voorwaarde (if/else/switch)",
       title: "Voorwaarde (if/else/switch)",
     },
     correct: {
@@ -157,47 +176,7 @@ const alertDefsByCriterion = {
 };
 
 // Make tutorial share the same alert definitions as readability
-alertDefsByCriterion.tutorial = { ...alertDefsByCriterion.readability };
-
-// Map: results[studentId][exerciseId] = array of alert keys (empty = correct)
-const results = {
-  1: {
-    1: ["correct"],
-    2: ["correct"],
-    3: ["oneletter"], // error: naming
-    4: ["correct"],
-    5: ["correct"],
-    6: ["correct"],
-    7: ["comments"], // error: comments
-  },
-  2: {
-    1: ["correct"],
-    2: ["correct"],
-    3: ["correct"],
-    4: ["oneletter"], // error: oneletter
-    5: ["correct"],
-    6: ["correct"],
-    7: ["correct"],
-  },
-  3: {
-    1: ["multipleIssues"],
-    2: ["multipleIssues"], // error: mixed
-    3: ["correct"],
-    4: ["correct"],
-    5: ["correct"],
-    6: ["correct"],
-    7: ["correct"],
-  },
-  4: {
-    1: ["correct"],
-    2: ["oneletter"],
-    3: ["correct"],
-    4: ["correct"],
-    5: ["correct"],
-    6: ["naming", "oneletter"], // error: naming + oneletter
-    7: ["correct"],
-  },
-};
+//alertDefsByCriterion.tutorial = { ...alertDefsByCriterion.readability };
 
 // Criterion-aware results container
 var resultsByCriterion = {
@@ -207,7 +186,12 @@ var resultsByCriterion = {
     3: { 1: ["multipleIssues"], 2: ["multipleIssues"] },
     4: { 1: ["correct"], 2: ["oneletter"] },
   },
-  tutorial: {}, // will be populated from readability below
+  tutorial: {
+    1: { 1: ["correct"], 2: ["correct"] },
+    2: { 1: ["singleIssue"], 2: ["singleIssue"] },
+    3: { 1: ["singleIssue"], 2: ["multipleIssues"] },
+    4: { 1: ["correct"], 2: ["multipleIssues"] },
+  }, // will be populated from readability below
   concepts: {
     1: { 1: ["correct"], 2: ["correct"] },
     2: { 1: ["function"], 2: ["correct"] },
@@ -228,7 +212,12 @@ if (Number(q.version) == 1) {
       3: { 1: ["base"], 2: ["base"] },
       4: { 1: ["base"], 2: ["base"] },
     },
-    tutorial: {}, // will be populated from readability below
+    tutorial: {
+      1: { 1: ["base"], 2: ["base"] },
+      2: { 1: ["base"], 2: ["base"] },
+      3: { 1: ["base"], 2: ["base"] },
+      4: { 1: ["base"], 2: ["base"] },
+    },
     concepts: {
       1: { 1: ["base"], 2: ["base"] },
       2: { 1: ["base"], 2: ["base"] },
@@ -239,11 +228,6 @@ if (Number(q.version) == 1) {
     time: {},
   };
 }
-
-// Mirror readability results into tutorial by default
-resultsByCriterion.tutorial = JSON.parse(
-  JSON.stringify(resultsByCriterion.readability)
-);
 
 function metricsKey(studentId, exerciseId) {
   return `exerciseMetrics:${studentId}:${exerciseId}`;
