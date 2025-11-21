@@ -16,7 +16,6 @@ window.exerciseData = {
     ],
     timeAdvice:
       "Flinke debugsessies tussen programmeerblokken. Focus op hypothesen vooraf.",
-    tdAdvice:
-      "Stuur op systematische debugstappen en laat korte program/test-cycli zien.",
+    tdAdvice: "Mooi patroon van programmeren, testen en debuggen.",
   },
 };

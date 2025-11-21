@@ -41,9 +41,7 @@ void loop()
       }
     }
 }`,
-  advice: [
-    "Stuur op systematische debugstappen en laat korte program/test-cycli zien.",
-  ],
+  advice: ["Mooi patroon van programmeren, testen en debuggen."],
   metrics: {
     elapsedSeconds: 14 * 60,
     wroteTests: false,
@@ -60,7 +58,6 @@ void loop()
     ],
     timeAdvice:
       "Flinke debugsessies tussen programmeerblokken. Focus op hypothesen vooraf.",
-    tdAdvice:
-      "Stuur op systematische debugstappen en laat korte program/test-cycli zien.",
+    tdAdvice: "Mooi patroon van programmeren, testen en debuggen.",
   },
 };
