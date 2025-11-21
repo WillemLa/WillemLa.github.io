@@ -15,13 +15,6 @@ function getExcerciseDescription(criterion, exerciseNum) {
         return "Hier komt een beschrijving van de oefening. ";
       }
       break;
-    case "concepts":
-      if (condition) {
-        return "Laat eerst de LEDs op positie 0, 2, 4, 6 en vervolgens de LEDs op positie 1, 3, 5, 7 branden. Zorg dat dit proces zich blijft herhalen.";
-      } else {
-        return "Laat om de beurt de leds van rechts naar links knipperen. Zodra de meest linkse LED knippert herbegin je helemaal rechts";
-      }
-      break;
     case "readability":
       if (condition) {
         return "Laat een wagentje met twee wielen in een vierkant rijden";
@@ -30,6 +23,7 @@ function getExcerciseDescription(criterion, exerciseNum) {
       }
       break;
     case "testDebug":
+    case "concepts":
       if (condition) {
         return "Laat een wagentje met twee wielen vooruit/achteruit rijden met de NOORD/ZUID knoppen, en links/rechts draaien met de ZUID/WEST knoppen. Laat ook alle LEDs 3x knipperen bij het indrukken van de CENTRALE knop.";
       } else {
